@@ -34,7 +34,7 @@ python -m saycue
 # Lista urządzeń audio / testy / benchmark / ewaluacja
 python -m saycue --list-devices
 pytest -m "not models"
-python bench/asr_latency.py
+python bench/asr_latency.py      # lub: python bench/run_when_idle.py (mierzy, gdy CPU wolny)
 python eval/run_eval.py
 ```
 
