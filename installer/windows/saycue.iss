@@ -18,7 +18,7 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=..\dist\installer
+OutputDir=dist\installer
 OutputBaseFilename=saycue-setup-{#MyAppVersion}
 Compression=lzma2
 SolidCompression=yes
@@ -36,7 +36,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "autostart"; Description: "Uruchamiaj SayCue przy logowaniu"; Flags: unchecked
 
 [Files]
-Source: "..\dist\saycue\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\saycue\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

@@ -33,7 +33,7 @@ jobs:
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.6
         with:
           path: installer/windows/saycue.iss
-          options: /O+ /DMyAppVersion=${{ env.APP_VERSION }}
+          options: /DMyAppVersion=${{ env.APP_VERSION }}
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
