@@ -5,6 +5,9 @@ on:
   push:
     tags: ["v*"]
 
+permissions:
+  contents: write
+
 jobs:
   windows-installer:
     name: PyInstaller onedir + Inno Setup (windows-latest)
