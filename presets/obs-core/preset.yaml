@@ -1,0 +1,137 @@
+# SayCue preset — OBS (obs-websocket v5)
+# Cel: sterowanie transmisją bez alt-tabu. Wymaga OBS >= 28 z obs-websocket v5.
+# Zasady: dłuższa fraza wygrywa (§2.3). Preset OBS ma wyłączność na frazy "scena …",
+# "nagrywaj", "stop nagrywania", "replay" — inne presety ich nie używają.
+id: obs-core
+version: 1.1.0
+name: OBS Studio — transmisja
+kind: obs
+platforms: [win, linux-x11, linux-wayland]
+author: SayCue contributors
+license: MIT
+requires:
+  obs: true
+  min_obs_version: 28
+
+# Sugerowane nazwy scen — MUSISZ je dopasować do swoich scen w OBS (menu Integracje → OBS).
+scenes:
+  - { id: starting_soon, name: "Starting Soon" }
+  - { id: live, name: "Live" }
+  - { id: gameplay, name: "Gameplay" }
+  - { id: break_scene, name: "BRB" }
+  - { id: ending, name: "Ending" }
+  - { id: pvp, name: "PVP" }
+
+# Mapowanie źródeł OBS (nazwy mogą zawierać spacje).
+sources:
+  - { id: mic, name: "Mic/Aux" }
+  - { id: desktop, name: "Desktop Audio" }
+  - { id: alerts, name: "Alerts" }
+
+# Frazy presetu — używane też jako initial_prompt dla Whisper (nazwy scen, źródła).
+phrases:
+  - scena
+  - scena liva
+  - następna scena
+  - poprzednia scena
+  - wycisz mikrofon
+  - odcisz mikrofon
+  - mikrofon
+  - nagrywaj
+  - stop nagrywania
+  - zapisz replay
+  - replay
+  - cisza na wizji
+  - wracam za chwilę
+  - koniec streamu
+
+commands:
+  - id: obs_scene_live
+    intent: obs.scene
+    phrases: ["scena live", "przełącz na live", "daj live", "scene live", "live scene"]
+    slots: { scene: "Live" }
+
+  - id: obs_scene_gameplay
+    intent: obs.scene
+    phrases: ["scena gameplay", "przełącz na gameplay", "daj gameplay", "scene gameplay"]
+    slots: { scene: "Gameplay" }
+
+  - id: obs_scene_pvp
+    intent: obs.scene
+    phrases: ["scena pvp", "przełącz na pvp", "daj pvp", "scena do walki", "pvp scene"]
+    slots: { scene: "PVP" }
+
+  - id: obs_scene_starting_soon
+    intent: obs.scene
+    phrases: ["scena startowa", "scena początek", "ekran startowy", "starting soon"]
+    slots: { scene: "Starting Soon" }
+
+  - id: obs_scene_brb
+    intent: obs.scene
+    phrases: ["wracam za chwilę", "scena przerwa", "przerwa", "be right back"]
+    slots: { scene: "BRB" }
+
+  - id: obs_scene_ending
+    intent: obs.scene
+    phrases: ["kończymy stream", "ending scene", "scena koniec", "koniec streamu"]
+    slots: { scene: "Ending" }
+
+  - id: obs_next_scene
+    intent: obs.scene
+    phrases: ["następna scena", "następna", "dalej scena", "next scene"]
+    slots: { scene: "__next__" }
+
+  - id: obs_prev_scene
+    intent: obs.scene
+    phrases: ["poprzednia scena", "wstecz scena", "poprzednia", "previous scene"]
+    slots: { scene: "__prev__" }
+
+  - id: obs_mic_mute
+    intent: obs.mute
+    phrases: ["wycisz mikrofon", "wycisz mic", "cisza na mikrofonie", "mute microphone", "mute mic"]
+    slots: { source: "Mic/Aux", state: "on" }
+
+  - id: obs_mic_unmute
+    intent: obs.mute
+    phrases: ["odcisz mikrofon", "włącz mikrofon", "mikrofon na antenę", "unmute microphone", "unmute mic"]
+    slots: { source: "Mic/Aux", state: "off" }
+
+  - id: obs_mic_toggle
+    intent: obs.mute
+    phrases: ["przełącz mikrofon", "mikrofon", "mic toggle", "mute"]
+    slots: { source: "Mic/Aux", state: toggle }
+
+  - id: obs_desktop_mute
+    intent: obs.mute
+    phrases: ["wycisz dźwięk pulpitu", "wycisz dźwięk gry", "cisza na pulpicie", "desktop mute"]
+    slots: { source: "Desktop Audio", state: "on" }
+
+  - id: obs_record_start
+    intent: obs.record
+    phrases: ["nagrywaj", "zacznij nagrywać", "nagraj", "start recording", "nagram teraz"]
+    slots: { action: start }
+
+  - id: obs_record_stop
+    intent: obs.record
+    phrases: ["stop nagrywania", "przestań nagrywać", "koniec nagrywania", "stop nagrywanie", "stop recording"]
+    slots: { action: stop }
+
+  - id: obs_replay_save
+    intent: obs.replay
+    phrases: ["zapisz replay", "zapisz powtórkę", "zachowaj replay", "replay", "save replay"]
+    slots: { buffer: save }
+
+  - id: obs_replay_start
+    intent: obs.replay
+    phrases: ["włącz replay buffer", "uruchom powtórkę", "start replay buffer"]
+    slots: { buffer: start }
+
+  - id: obs_alerts_toggle
+    intent: obs.source_toggle
+    phrases: ["wycisz powiadomienia", "ukryj alerty", "wyłącz alerty", "toggle alerts"]
+    slots: { source: "Alerts", state: toggle }
+
+notes: |
+  Sceny "__next__"/"__prev__" to miejsca na implementację "scena następna/poprzednia" w akcji obs.scene
+  (listowanie scen z obs-websocket). Wartości scen należy dopasować w GUI — preset nie wie,
+  jak nazywają się Twoje sceny. Źródło mikrofonu w nowym OBS to zwykle "Mic/Aux".

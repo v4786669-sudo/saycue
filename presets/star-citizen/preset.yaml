@@ -1,0 +1,100 @@
+# SayCue preset — Star Citizen (FLIGHT)
+# AKTYWNY JEDNOCZEŚNIE Z JEDNĄ GRĄ: presety gier dzielą frazy (np. "podwozie" jest tylko w ED).
+# Dlatego komendy SC mają prefiks "star" i unikalne słowa kluczowe.
+# Tylko pojedyncze bindy z Keybindings (Flight). Bez sekwencji i makr.
+id: star-citizen
+version: 1.0.0
+name: Star Citizen
+kind: game
+platforms: [win, linux-x11]
+game: star_citizen
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+keys:
+  sc_lights: ["l"]
+  sc_landing_gear: ["n"]
+  sc_master_mode: ["m"]
+  sc_scan_mode: ["v"]
+  sc_quantum: ["b"]
+  sc_brake: ["x"]
+  sc_power_down: ["u"]
+  sc_mobiglas: ["f1"]
+  sc_starmap: ["f2"]
+  sc_comms: ["alt+n"]
+  sc_boost: ["shift"]
+
+phrases:
+  - star światła
+  - star podwozie
+  - star tryb walki
+  - star skan
+  - star quantum
+  - star hamulec
+  - star mobiglas
+  - star mapa
+  - star komunikacja
+  - star dopalacz
+
+commands:
+  - id: sc_lights
+    intent: input.keys
+    phrases: ["star światła", "star włącz światła", "star wyłącz światła", "star lights"]
+    slots: { keybind: sc_lights }
+
+  - id: sc_landing_gear
+    intent: input.keys
+    phrases: ["star podwozie", "star opuść podwozie", "star schowaj podwozie", "star landing gear"]
+    slots: { keybind: sc_landing_gear }
+
+  - id: sc_master_mode
+    intent: input.keys
+    phrases: ["star tryb walki", "star master mode", "star przełącz tryb lotu", "star combat mode"]
+    slots: { keybind: sc_master_mode }
+
+  - id: sc_scan_mode
+    intent: input.keys
+    phrases: ["star skan", "star skanuj", "star tryb skanowania", "star scan mode"]
+    slots: { keybind: sc_scan_mode }
+
+  - id: sc_quantum_travel
+    intent: input.keys
+    phrases: ["star skok kwantowy", "star quantum", "star uruchom quantum", "star quantum travel"]
+    slots: { keybind: sc_quantum }
+
+  - id: sc_space_brake
+    intent: input.keys
+    phrases: ["star hamulec", "star hamuj", "star space brake", "star zatrzymaj statek"]
+    slots: { keybind: sc_brake }
+
+  - id: sc_power_down
+    intent: input.keys
+    phrases: ["star wyłącz zasilanie", "star power down", "star zamknij silniki", "star power off"]
+    slots: { keybind: sc_power_down }
+
+  - id: sc_mobiglas
+    intent: input.keys
+    phrases: ["star mobiglas", "star otwórz mobiglas", "star mobi glas", "star mobi"]
+    slots: { keybind: sc_mobiglas }
+
+  - id: sc_starmap
+    intent: input.keys
+    phrases: ["star mapa gwiazd", "star starmap", "star otwórz mapę", "star mapa układu"]
+    slots: { keybind: sc_starmap }
+
+  - id: sc_comms
+    intent: input.keys
+    phrases: ["star komunikacja", "star comms", "star otwórz komunikację", "star czat głosowy"]
+    slots: { keybind: sc_comms }
+
+  - id: sc_booster
+    intent: input.keys
+    phrases: ["star dopalacz", "star przyspiesz", "star boost", "star afterburner"]
+    slots: { keybind: sc_boost }
+
+notes: |
+  Dlaczego prefiks "star": aktywne presety dzielą jedną gramatykę (§2.3), a "podwozie", "światła"
+  i "hamulec" należą do presetu Elite Dangerous. Prefiks gracza (np. "star") rozwiązuje to bez
+  ukrytej logiki. Tak samo można zmienić go w GUI, jeśli wolisz "sc" albo "star citizen".
+  Bindy SC są w profilach (Flight / On Foot) — komendy dotyczą Flight.

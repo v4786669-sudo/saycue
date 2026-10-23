@@ -1,0 +1,127 @@
+# SayCue preset — narzędzia streamera i sterowanie systemem
+# Universal preset: głośność systemu + przeglądarka/monitory/planer/panel subów (jako aplikacje i linki).
+# NIE zawiera: czatu OBS, sciezek, alertów (to obs-core) ani komend w grze (to presety gier).
+id: apps-streaming
+version: 1.0.0
+name: Narzędzia streamera
+kind: apps
+platforms: [win, linux-x11, linux-wayland]
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+apps:
+  - id: streamdeck
+    name: Panel streamera (ElCamino)
+    win: "https://elgato.com/elgato-home"
+    linux: firefox.desktop
+    url: "https://www.elgato.com/elgato-home"
+    aliases: ["stream deck"]
+  - id: analytics
+    name: Statystyki Twitch
+    win: msedge.exe
+    linux: firefox.desktop
+    url: "https://dashboard.twitch.tv"
+    aliases: ["statystyki", "panel twitch"]
+  - id: chat
+    name: Czat na żywo (przeglądarka)
+    win: msedge.exe
+    linux: firefox.desktop
+    url: "https://www.twitch.tv/popout/"
+    aliases: ["czat streama", "popout"]
+  - id: planer
+    name: Planer (kalendarz)
+    win: msedge.exe
+    linux: firefox.desktop
+    url: "https://calendar.google.com"
+    aliases: ["planer", "kalendarz"]
+  - id: monitor2
+    name: Drugi monitor (system)
+    win: "explorer.exe shell:::{5C4C3332-344D-483C-8739-259E934C9CC8}"
+    linux: gnome-control-center.desktop
+    aliases: ["drugi monitor", "ustawienia ekranów"]
+  - id: mixer
+    name: Mikser głośności
+    win: sndvol.exe
+    linux: pavucontrol.desktop
+    aliases: ["mikser", "mikser głośności"]
+  - id: vlc
+    name: VLC
+    win: vlc.exe
+    linux: vlc.desktop
+    aliases: ["vlc", "odtwarzacz"]
+  - id: obsidian
+    name: Notatki (Obsidian)
+    win: Obsidian.exe
+    linux: obsidian.desktop
+    aliases: ["notatki", "obsidian"]
+
+phrases:
+  - głosniej
+  - ciszej
+  - wycisz
+  - odcisz
+  - otwórz statystyki
+  - otwórz czat
+  - otwórz planer
+  - otwórz mikser
+  - otwórz notatki
+
+commands:
+  - id: volume_up
+    intent: system.volume
+    phrases: ["głośniej", "podgłośnij", "volume up", "daj głośniej"]
+    slots: { direction: up, step: 2 }
+
+  - id: volume_down
+    intent: system.volume
+    phrases: ["ciszej", "przycisz", "daj ciszej dol", "volume down"]
+    slots: { direction: down, step: 2 }
+
+  - id: volume_mute
+    intent: system.volume
+    phrases: ["wycisz system", "cisza w kompie", "wycisz wszystko", "mute system audio"]
+    slots: { direction: down, step: 30 }
+
+  # UWAGA (§2.3): gołe "wycisz" jest zarezerwowane dla obs.mute (mikrofon), a nie głośników,
+  # bo dłuższa fraza wygrywa i użytkownik mówi "wycisz" mając na myśli mikrofon na streamie.
+
+  - id: open_analytics
+    intent: app.open
+    phrases: ["otwórz statystyki", "włącz statystyki", "open analytics", "pokaz statystyki"]
+    slots: { target: analytics }
+
+  - id: open_chat_panel
+    intent: app.open
+    phrases: ["otwórz czat", "włącz czat", "open chat", "pokaż czat streama"]
+    slots: { target: chat }
+
+  - id: open_planner
+    intent: app.open
+    phrases: ["otwórz planer", "włącz kalendarz", "open planner", "pokaż plan"]
+    slots: { target: planer }
+
+  - id: open_mixer
+    intent: app.open
+    phrases: ["otwórz mikser", "włącz mikser", "open mixer", "pokaż głośność"]
+    slots: { target: mixer }
+
+  - id: open_notes
+    intent: app.open
+    phrases: ["otwórz notatki", "włącz notatki", "open notes", "zapisz notatkę"]
+    slots: { target: obsidian }
+
+  - id: open_vlc
+    intent: app.open
+    phrases: ["otwórz vlc", "włącz odtwarzacz", "open vlc"]
+    slots: { target: vlc }
+
+  - id: focus_streamdeck
+    intent: window.focus
+    phrases: ["przełącz na panel", "focus stream deck", "pokaż panel streamera"]
+    slots: { target: streamdeck }
+
+notes: |
+  Głośność: `system.volume` z `direction: down, step: 30` używa całego zakresu do wyciszenia
+  systemu, ale NIE tłumi mikrofonu (od tego jest obs.mute w obs-core — celowa separacja §2.3).
+  "otwórz czat" to panel czatu w przeglądarce; "otwórz discord" (apps-open) otwiera Discorda.

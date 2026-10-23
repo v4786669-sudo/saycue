@@ -1,0 +1,124 @@
+# SayCue preset — Elite Dangerous
+# Tylko pojedyncze bindy, które gra udostępnia w Ship Controls. Bez sekwencji i makr (PLAN.md §3).
+# Ważne: ustaw bindy "klawiatura" na te same, które są w `keys` — resztę preset pokazuje w GUI.
+id: elite-dangerous
+version: 1.0.0
+name: Elite Dangerous
+kind: game
+platforms: [win, linux-x11]
+game: elite_dangerous
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+# Domyślne bindy (odwołania w slotach input.keys przez keybind).
+# Standardowy binding ED dla świateł to L (Lights). Sprawdź w Options → Controls → Ship Controls.
+keys:
+  ed_lights: ["l"]
+  ed_gear: ["g"]
+  ed_hardpoints: ["u"]
+  ed_supercruise: ["j"]
+  ed_brake: ["x"]
+  ed_silent: ["delete"]
+  ed_galaxy_map: ["m"]
+  ed_system_map: ["n"]
+  ed_docking: ["shift+m"]
+  ed_boost: ["shift+x"]
+  ed_throttle_full: ["Home"]
+  ed_throttle_zero: ["End"]
+  ed_throttle_75: ["Home", "End", "End"]
+  ed_target_next: ["t"]
+  ed_target_hostile: ["T", "="]
+
+phrases:
+  - światła
+  - podwozie
+  - uzbrojenie
+  - supercruise
+  - hamulec
+  - mapa galaktyki
+  - mapa systemu
+  - dokowanie
+  - boost
+  - przepustnica
+
+commands:
+  - id: ed_lights
+    intent: input.keys
+    phrases: ["elite światła", "elite włącz światła", "elite wyłącz światła", "elite lights"]
+    slots: { keybind: ed_lights }
+
+  - id: ed_landing_gear
+    intent: input.keys
+    phrases: ["elite podwozie", "elite opuść podwozie", "elite schowaj podwozie", "elite landing gear"]
+    slots: { keybind: ed_gear }
+
+  - id: ed_hardpoints
+    intent: input.keys
+    phrases: ["elite uzbrojenie", "elite wyciągnij uzbrojenie", "elite schowaj uzbrojenie", "elite hardpoints"]
+    slots: { keybind: ed_hardpoints }
+
+  - id: ed_supercruise
+    intent: input.keys
+    phrases: ["elite supercruise", "elite napęd supercruise", "elite wejdź w supercruise", "elite do supercruise"]
+    slots: { keybind: ed_supercruise }
+
+  - id: ed_brakes
+    intent: input.keys
+    phrases: ["elite hamulec", "elite hamuj", "elite wstrzymaj statek", "elite brakes"]
+    slots: { keybind: ed_brake }
+
+  - id: ed_silent_running
+    intent: input.keys
+    phrases: ["elite cisza radiowa", "elite działaj po cichu", "elite tryb cichy", "elite silent running"]
+    slots: { keybind: ed_silent }
+
+  - id: ed_galaxy_map
+    intent: input.keys
+    phrases: ["elite mapa galaktyki", "elite otwórz mapę galaktyki", "elite galaxy map", "elite galmap"]
+    slots: { keybind: ed_galaxy_map }
+
+  - id: ed_system_map
+    intent: input.keys
+    phrases: ["elite mapa systemu", "elite otwórz mapę systemu", "elite system map"]
+    slots: { keybind: ed_system_map }
+
+  - id: ed_request_docking
+    intent: input.keys
+    phrases: ["elite dokowanie", "elite prośba o lądowanie", "elite poproś o dokowanie", "elite docking"]
+    slots: { keybind: ed_docking }
+
+  - id: ed_boost
+    intent: input.keys
+    phrases: ["elite boost", "elite przyspiesz", "elite doładowanie silników", "elite afterburner"]
+    slots: { keybind: ed_boost }
+
+  - id: ed_throttle_full
+    intent: input.keys
+    phrases: ["elite przepustnica maks", "elite pełny gaz", "elite gaz do oporu", "elite full throttle"]
+    slots: { keybind: ed_throttle_full }
+
+  - id: ed_throttle_zero
+    intent: input.keys
+    phrases: ["elite przepustnica zero", "elite zatrzymaj statek", "elite zero gazu", "elite throttle zero"]
+    slots: { keybind: ed_throttle_zero }
+
+  - id: ed_throttle_75
+    intent: input.keys
+    phrases: ["elite siedemdziesiąt pięć procent", "elite przepustnica siedemdziesiąt pięć", "elite cruise speed", "elite seventy five"]
+    slots: { keybind: ed_throttle_75 }
+
+  - id: ed_target_next
+    intent: input.keys
+    phrases: ["elite następny cel", "elite target next", "elite przełącz cel", "elite wybierz cel"]
+    slots: { keybind: ed_target_next }
+
+  - id: ed_target_hostile
+    intent: input.keys
+    phrases: ["elite cel wrogi", "elite następny wrogi cel", "elite target hostile", "elite wybierz wroga"]
+    slots: { keybind: ed_target_hostile }
+
+notes: |
+  Preset nie wykonuje sekwencji w czasie (to już makro i ryzyko anticheat) — każda komenda to jeden bind.
+  "przepustnica 75%" używa dwóch bindów (100% i dwa razy minus), bo ED nie ma bind-a 75% domyślnie;
+  jeśli masz własny, ustaw go w `keys.md` jako jeden klawisz i edytuj slot.

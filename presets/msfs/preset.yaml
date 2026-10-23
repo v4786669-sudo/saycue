@@ -1,0 +1,88 @@
+# SayCue preset — Microsoft Flight Simulator (MSFS 2020 / 2024)
+# Tylko pojedyncze bindy z Controls (Keyboard). Bez makr i sekwencji.
+id: msfs
+version: 1.0.0
+name: Microsoft Flight Simulator
+kind: game
+platforms: [win]
+game: msfs
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+keys:
+  msfs_gear: ["g"]
+  msfs_flaps_inc: ["f"]
+  msfs_flaps_dec: ["shift+f"]
+  msfs_parking_brake: ["ctrl+space"]
+  msfs_autopilot: ["z"]
+  msfs_atc: ["grave"]
+  msfs_active_pause: ["pause"]
+  msfs_external_view: ["end"]
+  msfs_cockpit_view: ["home"]
+  msfs_map: ["v"]
+
+phrases:
+  - podwozie
+  - klapy
+  - hamulec postojowy
+  - autopilot
+  - atc
+  - widok
+  - mapa
+  - pauza
+
+commands:
+  - id: msfs_landing_gear
+    intent: input.keys
+    phrases: ["lot podwozie", "lot opuść podwozie", "lot schowaj podwozie", "lot landing gear"]
+    slots: { keybind: msfs_gear }
+
+  - id: msfs_flaps_extend
+    intent: input.keys
+    phrases: ["lot klapy w dół", "lot wypuść klapy", "lot flaps extend", "lot klapy plus"]
+    slots: { keybind: msfs_flaps_inc }
+
+  - id: msfs_flaps_retract
+    intent: input.keys
+    phrases: ["lot klapy w górę", "lot schowaj klapy", "lot flaps retract", "lot klapy minus"]
+    slots: { keybind: msfs_flaps_dec }
+
+  - id: msfs_parking_brake
+    intent: input.keys
+    phrases: ["lot hamulec postojowy", "lot parking brake", "lot zaciągnij hamulec"]
+    slots: { keybind: msfs_parking_brake }
+
+  - id: msfs_autopilot_master
+    intent: input.keys
+    phrases: ["lot autopilot", "lot włącz autopilota", "lot autopilot master", "lot wyłącz autopilota"]
+    slots: { keybind: msfs_autopilot }
+
+  - id: msfs_atc_window
+    intent: input.keys
+    phrases: ["lot atc", "lot otwórz atc", "lot kontrola ruchu", "lot wieża"]
+    slots: { keybind: msfs_atc }
+
+  - id: msfs_external_view
+    intent: input.keys
+    phrases: ["lot widok zewnętrzny", "lot external view", "lot kamera zewnętrzna", "lot widok z boku"]
+    slots: { keybind: msfs_external_view }
+
+  - id: msfs_cockpit_view
+    intent: input.keys
+    phrases: ["lot widok z kokpitu", "lot kokpit view", "lot kamera w kokpicie", "lot widok kokpit"]
+    slots: { keybind: msfs_cockpit_view }
+
+  - id: msfs_map
+    intent: input.keys
+    phrases: ["lot mapa lotu", "lot otwórz mapę", "lot flight map", "lot mapa"]
+    slots: { keybind: msfs_map }
+
+  - id: msfs_pause
+    intent: input.keys
+    phrases: ["lot pauza", "lot zatrzymaj grę", "lot pause", "lot wstrzymaj lot"]
+    slots: { keybind: msfs_active_pause }
+
+notes: |
+  Bindy MSFS są domyślne z profilu "Keyboard"; użytkownik może mieć własne — preset pokazuje
+  komendę + klawisz w GUI, żeby dało się to poprawić bez czytania dokumentacji.

@@ -1,0 +1,131 @@
+# SayCue preset — aplikacje: otwieranie i zamykanie
+# Universal preset (aktywny zawsze, obok jednej gry i OBS).
+# Mapowanie: id (slot target) → Win (exe/AUMID) i Linux (.desktop).
+id: apps-open
+version: 1.1.0
+name: Aplikacje — otwórz i zamknij
+kind: apps
+platforms: [win, linux-x11, linux-wayland]
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+# Aplikacja OBS jest w presecie obs-core (sceny/mute nagrywanie), tutaj tylko jej otwarcie.
+apps:
+  - id: obs
+    name: OBS Studio
+    win: obs64.exe
+    linux: com.obsproject.Studio.desktop
+    aliases: ["obs studio", "obs"]
+  - id: spotify
+    name: Spotify
+    win: Spotify.exe
+    linux: spotify.desktop
+    aliases: ["spoti", "spotify"]
+  - id: discord
+    name: Discord
+    win: Update.exe --processStart Discord.exe
+    linux: discord.desktop
+    aliases: ["discord"]
+  - id: browser
+    name: Przeglądarka
+    win: msedge.exe
+    linux: firefox.desktop
+    aliases: ["przeglądarka", "chrome", "edge"]
+  - id: notepad
+    name: Notatnik
+    win: notepad.exe
+    linux: org.gnome.TextEditor.desktop
+    aliases: ["notatnik", "notatniku"]
+  - id: chatgpt
+    name: ChatGPT (przeglądarka)
+    win: msedge.exe
+    linux: firefox.desktop
+    url: "https://chat.openai.com"
+    aliases: ["czat gpt", "gpt"]
+  - id: steam
+    name: Steam
+    win: steam.exe
+    linux: steam.desktop
+    aliases: ["steam"]
+  - id: explorer
+    name: Eksplorator plików
+    win: explorer.exe
+    linux: org.gnome.Nautilus.desktop
+    aliases: ["eksplorator", "pliki"]
+
+phrases:
+  - otwórz obs
+  - otwórz spotify
+  - otwórz discord
+  - otwórz przeglądarkę
+  - otwórz notatnik
+  - otwórz steam
+  - otwórz pliki
+  - zamknij przeglądarkę
+
+commands:
+  - id: open_obs
+    intent: app.open
+    phrases: ["otwórz obs", "włącz obs", "uruchom obs", "open obs"]
+    slots: { target: obs }
+
+  - id: close_obs
+    intent: app.close
+    phrases: ["zamknij obs", "wyłącz obs", "close obs"]
+    slots: { target: obs }
+
+  - id: open_spotify
+    intent: app.open
+    phrases: ["otwórz spotify", "włącz spotify", "uruchom spotify", "open spotify"]
+    slots: { target: spotify }
+
+  - id: close_spotify
+    intent: app.close
+    phrases: ["zamknij spotify", "wyłącz spotify", "close spotify"]
+    slots: { target: spotify }
+
+  - id: open_discord
+    intent: app.open
+    phrases: ["otwórz discord", "włącz discord", "uruchom discord", "open discord"]
+    slots: { target: discord }
+
+  - id: close_discord
+    intent: app.close
+    phrases: ["zamknij discord", "wyłącz discord", "close discord"]
+    slots: { target: discord }
+
+  - id: open_browser
+    intent: app.open
+    phrases: ["otwórz przeglądarkę", "włącz przeglądarkę", "uruchom przeglądarkę", "open browser"]
+    slots: { target: browser }
+
+  - id: close_browser
+    intent: app.close
+    phrases: ["zamknij przeglądarkę", "wyłącz przeglądarkę", "close browser"]
+    slots: { target: browser }
+
+  - id: open_notepad
+    intent: app.open
+    phrases: ["otwórz notatnik", "włącz notatnik", "uruchom notatnik", "open notepad"]
+    slots: { target: notepad }
+
+  - id: open_chatgpt
+    intent: app.open
+    phrases: ["otwórz czat gpt", "włącz czat gpt", "open chat gpt", "czat gpt"]
+    slots: { target: chatgpt }
+
+  - id: open_steam
+    intent: app.open
+    phrases: ["otwórz steam", "włącz steam", "uruchom steam", "open steam"]
+    slots: { target: steam }
+
+  - id: open_files
+    intent: app.open
+    phrases: ["otwórz pliki", "włącz eksplorator", "otwórz eksplorator", "open files"]
+    slots: { target: explorer }
+
+notes: |
+  Wartości `win`/`linux` są domyślne i często poprawne, ale na Linuksie nazwy .desktop bywają inne
+  (Sprawdź: `ls /usr/share/applications | grep -i obs`). Użytkownik może je nadpisać w GUI presetu.
+  Zamykanie aplikacji (`app.close`) wysyła grzeczny sygnał zamknięcia (nie zabija procesu bez pytania).

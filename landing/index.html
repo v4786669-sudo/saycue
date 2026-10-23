@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SayCue — Mówisz, stream się nie psuje. Offline.</title>
+  <meta name="description" content="Offline'owy asystent głosowy dla streamerów: scena OBS, mute mikrofonu, replay — komendą. Bez chmury, bez AI w ścieżce sterowania.">
+  <meta property="og:title" content="SayCue — Mówisz, stream się nie psuje.">
+  <meta property="og:description" content="Offline'owy asystent głosowy dla streamerów. OBS, aplikacje i gry — głosem. MIT.">
+  <meta property="og:type" content="website">
+  <!--
+    SayCue — strona walidacyjna (PLAN.md §4).
+    Zasady: ZERO zewnętrznych trackerów, ZERO zewnętrznych fontów/skryptów.
+    Własny licznik zdarzeń: {ts, event, utm_source, referrer_domain} — bez danych osobowych.
+    Szczegóły i podgląd zdarzeń: sekcja „Prywatność" poniżej.
+
+    LINKI — jedno miejsce prawdy (podmieniane przy publikacji W4):
+      GITHUB_URL   = https://github.com/<owner>/saycue           ← ustaw owner
+      DISCORD_URL  = https://discord.gg/<invite>                 ← załóż serwer, wklej invite
+      PRIVACY_MAIL = privacy@saycue.example                      ← po zakupie domeny: privacy@<domena>
+      DOWNLOAD_URL = https://github.com/<owner>/saycue/releases  ← release v0.1.0 (W4)
+    Do czasu publikacji repo: przycisk pobierania prowadzi do formularza „powiadom mnie".
+  -->
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙</text></svg>">
+</head>
+<body>
+  <a class="skip" href="#main">Przejdź do treści</a>
+
+  <!-- ============ 1. NAGŁÓWEK ============ -->
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">asystent głosowy dla streamerów · MIT · 100% offline</p>
+      <h1>Mówisz — stream się nie psuje.<br><span class="dim">Offline. Bez chmury.</span></h1>
+      <p class="lede">
+        „scena pvp" · „wycisz mikrofon" · „zapisz replay" — mówisz, a OBS reaguje.
+        Twój głos nie wychodzi z komputera, a asystent nie rozumie swobodnej mowy — bo nie musi:
+        wykonuje dokładnie to, co zdefiniujesz.
+      </p>
+      <div class="cta-row">
+        <!-- DOWNLOAD_URL: release v0.1.0 na GitHubie (W4). Do tego czasu prowadzi do formularza. -->
+        <a class="btn btn-primary" href="https://github.com/saycue/saycue/releases" data-ev="download_click" data-surface="hero" rel="noopener" data-download-link>
+          Pobierz za darmo (Windows)
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/saycue/saycue" data-ev="github_click" data-surface="hero" rel="noopener" id="github-link">
+          Kod na GitHubie
+        </a>
+      </div>
+      <p class="micro">
+        Windows 10/11 · Linux X11 · 0 zł · model ~500 MB pobierany raz · brak konta ·
+        <span class="muted">build v0.1.0 — <a href="#waitlist">daj znać, gdy będzie gotowy</a></span>
+      </p>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ 2. GIF 8 s (placeholder) ============ -->
+    <section class="section demo" id="demo">
+      <div class="wrap">
+        <figure class="gif-slot" data-gif-slot>
+          <!--
+            PLACEHOLDER GIF (PLAN.md §4 pkt 2).
+            Docelowo: 8 s, 960×540, ≤ 2 MB, 10 fps, bez audio (nie trzeba licencji muzyki).
+            Trzymać w assets/demo.gif i podmienić <img> poniżej.
+            Scenariusz do nagrania:
+              0.0–1.5 s  OBS: scena „Starting Soon", kursor poza oknem
+              1.5–3.5 s  użytkownik mówi „scena pvp" (dymek z tekstem, tray: LISTENING)
+              3.5–5.0 s  scena zmienia się na „PVP" · tray: ACTING · potwierdzenie
+              5.0–6.5 s  „wycisz" → ikona mikrofonu się zmienia · overlay „MIC MUTED"
+              6.5–8.0 s  stopka obrazu: „0 ms w chmurze · 0 ks. konfiguracji" + logo
+          -->
+          <img src="assets/demo.gif" alt="Krótkie nagranie: komenda głosowa zmienia scenę w OBS i wycisza mikrofon." hidden data-demo-img>
+          <div class="gif-placeholder" aria-hidden="true">
+            <span class="play" data-ev="gif_placeholder_click">▶</span>
+            <strong>Za chwilę: 8-sekundowe demo</strong>
+            <span>komenda → scena OBS → potwierdzenie w tray'u</span>
+            <small>Miejsce na demo.gif — nagranie pojawi się przed publikacją v0.1.0</small>
+          </div>
+        </figure>
+        <p class="caption">Bez klikania w OBS w środku akcji. Bez alt-tabu. Bez „czekaj, tylko wyciszę".</p>
+      </div>
+    </section>
+
+    <!-- ============ 3. TRZY KARTY BÓL → ODPOWIEDŹ ============ -->
+    <section class="section pains" id="pains">
+      <div class="wrap">
+        <h2>Trzy rzeczy, które psują stream</h2>
+        <div class="cards">
+          <article class="card">
+            <p class="pain">„Nie mogę kliknąć w OBS w środku walki."</p>
+            <p class="answer">Komenda zamiast hotkeya — przerzucasz scenę, cenzurujesz ekran i wracasz do gry, zanim cokolwiek zauważysz.</p>
+          </article>
+          <article class="card">
+            <p class="pain">„Mikrofon sam się wyciszył. Znowu."</p>
+            <p class="answer">Twarde słowo wybudzające + próg pewności + push-to-talk w zapasie. Widzisz licznik fałszywych wybudzeń na żywo w tray'u.</p>
+          </article>
+          <article class="card">
+            <p class="pain">„Nie chcę, żeby moje audio szło do chmury."</p>
+            <p class="answer">Rozpoznawanie mowy działa lokalnie. Zero żądań sieciowych poza jawnym pobraniem modelu. Kod jest otwarty — możesz sprawdzić.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. BLOK UCZCIWOŚCI ============ -->
+    <section class="section honesty" id="honesty">
+      <div class="wrap">
+        <h2>Co działa dziś — i czego jeszcze nie ma</h2>
+        <p class="lede small">Bo wolimy, żebyś sprawdził przed instalacją, a nie po.</p>
+        <table class="truth">
+          <caption class="sr-only">Stan wsparcia platform i funkcji</caption>
+          <tbody>
+            <tr><th scope="row">OBS 28 i nowszy</th><td class="yes">tak — sceny, mute, nagrywanie, replay</td></tr>
+            <tr><th scope="row">Windows 10 / 11</th><td class="yes">tak — pełna obsługa (klawisze, aplikacje, OBS)</td></tr>
+            <tr><th scope="row">Linux X11</th><td class="yes">tak — aplikacje i OBS; klawisze do gier „best effort"</td></tr>
+            <tr><th scope="row">Linux Wayland</th><td class="partial">częściowo — OBS i otwieranie aplikacji; wstrzykiwanie klawiszy zablokowane przez system</td></tr>
+            <tr><th scope="row">macOS</th><td class="no">nie — poza zakresem MVP</td></tr>
+            <tr><th scope="row">Swobodna mowa („no po prostu zrób coś sensownego")</th><td class="no">nie — to asystent komend, nie AI</td></tr>
+            <tr><th scope="row">Makra omijające anty-cheat</th><td class="no">nie — i nie będzie</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 5. PASEK CEN ============ -->
+    <section class="section pricing" id="pricing" data-observe="pricing_section_view">
+      <div class="wrap">
+        <h2>Za co się płaci</h2>
+        <p class="lede small">Nie za funkcje. Za <strong>czas, którego nie tracisz</strong> na konfigurację — i za spokój na wizji.</p>
+        <div class="prices">
+          <article class="price">
+            <h3>Core</h3>
+            <p class="amount">0 zł</p>
+            <p class="save"> pełna aplikacja + 20 presetów</p>
+            <p class="what">Nie płacisz za nic, bo silnik jest MIT. Sprawdź, czy w ogóle działa u ciebie.</p>
+          </article>
+          <article class="price">
+            <h3>Starter</h3>
+            <p class="amount">39 zł <small>jednorazowo</small></p>
+            <p class="save">oszczędzasz ~2–4 h wiązania klawiszy</p>
+            <p class="what">+35 gotowych presetów gier i OBS z mapowaniami pod twoje klawisze.</p>
+          </article>
+          <article class="price">
+            <h3>Pro</h3>
+            <p class="amount">79 zł <small>lub 99 zł z rokiem aktualizacji</small></p>
+            <p class="save">oszczędzasz czytanie changelogów i łowienie bugów</p>
+            <p class="what">+100 presetów (200+ fraz), testy na akcentach, priorytetowe poprawki.</p>
+          </article>
+          <article class="price price-hl">
+            <h3>Streamer</h3>
+            <p class="amount">19 zł <small>/ mies.</small> <em>lub 149 zł / rok</em></p>
+            <p class="save">oszczędzasz wpadkę na wizji</p>
+            <p class="what">Ochrona przed komendami z czatu, monitor fałszywych wybudzeń z auto-strojeniem progu, aktualizacje presetów dopóki subskrybujesz.</p>
+          </article>
+        </div>
+        <p class="micro">Dodatki do dowolnego pakietu: Porcupine Kit +29 zł, Bundle „All packs" 129 zł. <a href="#waitlist">Powiedz nam, co byłoby dla ciebie warte 39 zł →</a></p>
+      </div>
+    </section>
+
+    <!-- ============ 6. FORMULARZ ============ -->
+    <section class="section waitlist" id="waitlist">
+      <div class="wrap narrow">
+        <h2>Pokażemy, gdy packi będą gotowe</h2>
+        <p class="lede small">Jeden e-mail, zero spamu. Użyjemy go wyłącznie do powiadomienia o paczkach presetów i betach.</p>
+        <form id="waitlist-form" novalidate>
+          <label for="email">E-mail</label>
+          <div class="row">
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="ty@example.com">
+            <button class="btn btn-primary" type="submit">Zapisz mnie</button>
+          </div>
+          <label class="check">
+            <input type="checkbox" name="wants_paid" value="1">
+            Chcę informacji o płatnych paczkach (Starter / Pro / Streamer)
+          </label>
+          <!-- honeypot antyspamowy: ukryte dla ludzi, niewidoczne dla tabulatora -->
+          <div aria-hidden="true" class="hp">
+            <label for="website">Strona (zostaw puste)</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <p class="form-note" id="form-status" role="status" aria-live="polite"></p>
+          <p class="micro">Tylko po to, by wysłać powiadomienie. Szczegóły i usuwanie adresu: <a href="/privacy">Prywatność</a>.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ 7. STOPKA ============ -->
+    <footer class="footer" id="footer">
+      <div class="wrap">
+        <div class="foot-grid">
+          <div>
+            <p class="brand">SayCue</p>
+            <p class="micro">Asystent głosowy dla streamerów. Kod rdzenia: licencja MIT.</p>
+          </div>
+          <nav aria-label="Linki">
+            <ul>
+              <li><a href="https://github.com/saycue/saycue" rel="noopener" data-ev="github_click" data-surface="footer">GitHub</a></li>
+              <!-- DISCORD_URL: wklej invite po założeniu serwera (ops/channels/discord.md) -->
+              <li><a href="https://discord.gg/saycue" rel="noopener" data-ev="discord_click" data-surface="footer" data-discord-link>Discord</a></li>
+              <li><a href="/privacy">Prywatność</a></li>
+              <li><a href="https://github.com/saycue/saycue/blob/main/LICENSE" rel="noopener">Licencja MIT</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="privacy" id="privacy">
+          <h3>Prywatność — na piśmie</h3>
+          <ul>
+            <li><strong>Logi zostają u ciebie.</strong> Aplikacja zapisuje statystyki lokalnie; nic nie wysyła bez twojego kliknięcia.</li>
+            <li><strong>Ta strona nie ma trackerów.</strong> Nie ma Google Analytics, pikseli, fontów ani skryptów z obcych domen.</li>
+            <li><strong>Co zbieramy:</strong> wyłącznie zdarzenia bez danych osobowych —
+              <code>{ts, event, utm_source, referrer_domain}</code> (np. „odwiedzono sekcję cen z Reddita").
+              Bez adresu IP, bez identyfikatora urządzenia, bez Cookie. <a href="#events">Zobacz podgląd na żywo</a>.</li>
+            <li><strong>E-mail</strong> podajesz tylko wtedy, gdy sam chcesz powiadomienia. Usuniemy go na jedno słowo — napisz na <a href="mailto:privacy@saycue.example">privacy@saycue.example</a>.</li>
+            <li><strong>Model głosowy</strong> (faster-whisper small, ~500 MB) pobierasz raz z manifestu z sumą SHA-256 — i od tej chwili asystent działa bez sieci.</li>
+          </ul>
+          <p class="micro">Pełna lista zdarzeń i ich znaczenie: <a href="/privacy">/privacy</a>. Podgląd własnych zdarzeń tej karty (bez wysyłki) masz w konsoli: <code>SayCue.preview()</code>.</p>
+        </div>
+
+        <p class="micro">© 2026 SayCue · strona walidacyjna v0.2 · bez trackerów · <a href="/privacy">pełna informacja o prywatności</a></p>
+      </div>
+    </footer>
+  </main>
+
+  <script src="assets/collector.js" defer></script>
+  <script src="assets/download-hint.js" defer></script>
+</body>
+</html>

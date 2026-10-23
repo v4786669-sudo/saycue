@@ -1,0 +1,99 @@
+{
+  "apps-open": {
+    "name": "Aplikacje — otwórz i zamknij",
+    "version": "1.1.0",
+    "kind": "apps",
+    "platforms": [
+      "win",
+      "linux-x11",
+      "linux-wayland"
+    ],
+    "game": null,
+    "commands": 12,
+    "phrases": 44
+  },
+  "apps-streaming": {
+    "name": "Narzędzia streamera",
+    "version": "1.0.0",
+    "kind": "apps",
+    "platforms": [
+      "win",
+      "linux-x11",
+      "linux-wayland"
+    ],
+    "game": null,
+    "commands": 10,
+    "phrases": 38
+  },
+  "dcs": {
+    "name": "DCS World",
+    "version": "1.0.0",
+    "kind": "game",
+    "platforms": [
+      "win"
+    ],
+    "game": "dcs_world",
+    "commands": 11,
+    "phrases": 43
+  },
+  "elite-dangerous": {
+    "name": "Elite Dangerous",
+    "version": "1.0.0",
+    "kind": "game",
+    "platforms": [
+      "win",
+      "linux-x11"
+    ],
+    "game": "elite_dangerous",
+    "commands": 15,
+    "phrases": 59
+  },
+  "minecraft": {
+    "name": "Minecraft",
+    "version": "1.0.0",
+    "kind": "game",
+    "platforms": [
+      "win",
+      "linux-x11"
+    ],
+    "game": "minecraft",
+    "commands": 7,
+    "phrases": 28
+  },
+  "msfs": {
+    "name": "Microsoft Flight Simulator",
+    "version": "1.0.0",
+    "kind": "game",
+    "platforms": [
+      "win"
+    ],
+    "game": "msfs",
+    "commands": 10,
+    "phrases": 39
+  },
+  "obs-core": {
+    "name": "OBS Studio — transmisja",
+    "version": "1.1.0",
+    "kind": "obs",
+    "platforms": [
+      "win",
+      "linux-x11",
+      "linux-wayland"
+    ],
+    "game": null,
+    "commands": 17,
+    "phrases": 74
+  },
+  "star-citizen": {
+    "name": "Star Citizen",
+    "version": "1.0.0",
+    "kind": "game",
+    "platforms": [
+      "win",
+      "linux-x11"
+    ],
+    "game": "star_citizen",
+    "commands": 11,
+    "phrases": 44
+  }
+}

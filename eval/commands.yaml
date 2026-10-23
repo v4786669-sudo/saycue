@@ -1,0 +1,52 @@
+# eval/commands.yaml — 15 fraz PL na bramkę G1 (architektura §2.2 + §7.1)
+# Metryka G1: ≥85% poprawnie rozpoznanych INTENCJI (odsetek, nie klasyczny WER).
+# Kilka fraz może dzielić jedną intencję (np. obs.mute ×3) — patrz run_eval.py.
+version: 1
+language: pl
+threshold: 0.85  # próg poprawności frazy (normalizacja + fuzzy)
+phrases:
+  - id: g1_01
+    phrase: "otwórz spotify"
+    intent: app.open
+  - id: g1_02
+    phrase: "włącz spotify"
+    intent: app.open
+  - id: g1_03
+    phrase: "otwórz discord"
+    intent: app.open
+  - id: g1_04
+    phrase: "scena pvp"
+    intent: obs.scene
+  - id: g1_05
+    phrase: "przełącz na pvp"
+    intent: obs.scene
+  - id: g1_06
+    phrase: "wycisz mikrofon"
+    intent: obs.mute
+  - id: g1_07
+    phrase: "mute"
+    intent: obs.mute
+  - id: g1_08
+    phrase: "cisza"
+    intent: obs.mute
+  - id: g1_09
+    phrase: "rozpocznij nagrywanie"
+    intent: obs.record
+  - id: g1_10
+    phrase: "zatrzymaj nagrywanie"
+    intent: obs.record
+  - id: g1_11
+    phrase: "zapisz replay"
+    intent: obs.replay
+  - id: g1_12
+    phrase: "replay"
+    intent: obs.replay
+  - id: g1_13
+    phrase: "ciszej"
+    intent: system.volume
+  - id: g1_14
+    phrase: "głośniej"
+    intent: system.volume
+  - id: g1_15
+    phrase: "dasz"
+    intent: input.keys

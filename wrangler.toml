@@ -1,0 +1,19 @@
+# SayCue — konfiguracja Cloudflare Pages (strona walidacyjna + collector + zapis e-maili).
+# Plik leży w korzeniu repo `saycue/`. Publikacja: npx wrangler pages deploy public --project-name saycue
+# (Pages automatycznie wykrywa katalog `functions/` obok `public/`.)
+
+name = "saycue"
+compatibility_date = "2026-10-01"
+
+# Binding D1 — ID wstaw po `npx wrangler d1 create saycue-events`
+[[d1_databases]]
+binding = "DB"
+database_name = "saycue-events"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[vars]
+# Ustaw na finalną domenę, np. "https://saycue.dev" — przed publikacją.
+ALLOW_ORIGIN = "*"
+
+# Sekrety (nie w tym pliku):
+#   npx wrangler pages secret put RATE_SALT --project-name saycue

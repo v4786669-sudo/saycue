@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://saycue.dev/schemas/apps.schema.json",
+  "title": "SayCue apps (rdzeń, data/apps.yaml)",
+  "description": "Mapowanie nazw PL/EN aplikacji na identyfikatory systemowe (architektura §3.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "apps"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "apps": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/app" }
+    }
+  },
+  "$defs": {
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "windows": { "$ref": "#/$defs/launch" },
+        "linux": { "$ref": "#/$defs/launch" },
+        "url": { "type": "string" }
+      }
+    },
+    "launch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exe": { "type": "string" },
+        "app_id": { "type": "string" },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "desktop_id": { "type": "string" },
+        "cmd": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

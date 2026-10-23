@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "comment": "Modele SayCue (R10): wagi NIGDY nie trafiają do repo — tylko URL + SHA-256. Pobieranie: python scripts/download_models.py. Sumy przypinane po pierwszym zaufanym pobraniu (--pin).",
+  "models": [
+    {
+      "id": "whisper-small",
+      "kind": "multi-file",
+      "engine": "faster-whisper",
+      "model": "small",
+      "language": "pl+en (multilingual)",
+      "compute_type": "int8",
+      "beam_size": 1,
+      "url": "https://huggingface.co/Systran/faster-whisper-small/resolve/main",
+      "license": "MIT",
+      "files": [
+        {
+          "file": "model.bin",
+          "sha256": "3e305921506d8872816023e4c273e75d2419fb89b24da97b4fe7bce14170d671"
+        },
+        {
+          "file": "config.json",
+          "sha256": "b55496ac7940a7ae47d2c01eab40edfd8701feec1229d9cce3b40014383fb828"
+        },
+        {
+          "file": "tokenizer.json",
+          "sha256": "fb7b63191e9bb045082c79fd742a3106a12c99513ab30df4a0d47fa6cb6fd0ab"
+        },
+        {
+          "file": "vocabulary.txt",
+          "sha256": "34ce3fe1c5041027b3f8d42912270993f986dbc4bb34cf27f951e34a1e453913"
+        }
+      ],
+      "size_mb": 486
+    },
+    {
+      "id": "openwakeword-alexa",
+      "kind": "multi-file",
+      "engine": "openwakeword",
+      "model": "alexa_v0.1",
+      "license": "Apache-2.0",
+      "url": "https://github.com/dscripka/openWakeWord/releases/download/v0.5.1",
+      "notes": "wake-word proxy EN dla „hej asystent” (PL) — własny model PL w planie (R6)",
+      "files": [
+        {
+          "file": "alexa_v0.1.onnx",
+          "sha256": "6ff566a01d12670e8d9e3c59da32651db1575d17272a601b7f8a39283dfbae3e"
+        },
+        {
+          "file": "embedding_model.onnx",
+          "sha256": "70d164290c1d095d1d4ee149bc5e00543250a7316b59f31d056cff7bd3075c1f"
+        },
+        {
+          "file": "melspectrogram.onnx",
+          "sha256": "ba2b0e0f8b7b875369a2c89cb13360ff53bac436f2895cced9f479fa65eb176f"
+        },
+        {
+          "file": "silero_vad.onnx",
+          "sha256": "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28"
+        }
+      ],
+      "size_mb": 5
+    }
+  ]
+}

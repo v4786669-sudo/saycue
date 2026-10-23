@@ -1,0 +1,22 @@
+# apps.yaml — rdzeń: mapowanie nazw PL/EN → identyfikator systemowy
+# (architektura §3.3). Presety (apps-open, apps-streaming) dodają własne
+# wpisy apps[] — przy kolizji id wygrywa preset, aliasy się sumują.
+version: 1
+apps:
+  blender:
+    label: Blender
+    aliases: []
+    windows: { exe: "blender.exe" }
+    linux: { desktop_id: "blender.desktop", cmd: [blender] }
+
+  kalkulator:
+    label: Kalkulator
+    aliases: [calculator]
+    windows: { exe: "calc.exe" }
+    linux: { desktop_id: "org.gnome.Calculator.desktop", cmd: [gnome-calculator] }
+
+  discord:
+    label: Discord
+    aliases: [dc]
+    windows: { exe: "Discord.exe" }
+    linux: { desktop_id: "discord.desktop", cmd: [discord] }

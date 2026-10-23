@@ -1,0 +1,90 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "saycue"
+version = "0.1.0.dev0"
+description = "Offline'owy asystent głosowy dla streamerów: mówisz — stream się nie psuje. Bez chmury."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "SayCue contributors" }]
+keywords = ["voice", "assistant", "offline", "streaming", "obs", "whisper", "wake-word"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: Polish",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+
+dependencies = [
+    "faster-whisper>=1.0.0",
+    "numpy>=1.26",
+    "onnxruntime>=1.16",
+    "openwakeword>=0.6.0",
+    "platformdirs>=4.0",
+    "pynput>=1.7",
+    "pyyaml>=6.0",
+    "requests>=2.31",
+    "sounddevice>=0.4.6",
+]
+
+[project.optional-dependencies]
+# W2+: parser fuzzy matching + Aho-Corasick + walidacja YAML (t13, architektura §2.3/§2.5)
+parser = ["pyahocorasick>=2.0", "rapidfuzz>=3.0", "jsonschema>=4.18", "watchdog>=4.0"]
+# W2: OS actions (Linux X11 backend) + OBS WebSocket v5 (t13)
+actions = ["python-xlib>=0.33", "watchdog>=4.0", "jsonschema>=4.18", "websockets>=12"]
+# W2: OBS WebSocket v5 — goły `websockets`, nie obsws-python (decyzja t13: pełna
+# kontrola reconnectu, architektura §3.4)
+obs = ["websockets>=12"]
+# W2: backend Windows (lazy import; nieinstalowany na Linuxie)
+win = ["pydirectinput>=1.0", "pycaw>=20240210"]
+# W3: GUI + tray (explicitly out of scope for W1)
+ui = ["pystray>=0.19", "Pillow>=10.0", "PySide6>=6.6"]
+# Dev: tests, lint, eval TTS generation
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "piper-tts>=1.2",
+]
+
+[project.scripts]
+saycue = "saycue.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/saycue"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests", "bench", "eval", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = [
+    # Black-style conflicts handled by formatter defaults; keep simple
+    "E501", # line length enforced by formatter, not lint
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "models: tests that need downloaded ML models (skipped when absent)",
+    "audio_device: tests that need a physical/ALSA microphone",
+]
+
+[tool.hatch.version]
+# keep static version above

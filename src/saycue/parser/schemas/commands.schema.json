@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://saycue.dev/schemas/commands.schema.json",
+  "title": "SayCue commands (rdzeń, data/commands.yaml)",
+  "description": "Deklaratywna gramatyka rdzenia (architektura §2.2). Presety mają osobny schemat: presets/schema.json (t8).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "commands"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "language": { "type": "string", "minLength": 2, "maxLength": 8 },
+    "hotwords": {
+      "description": "Bias tokenów dla faster-whisper ≥1.2 (W1, patrz data/commands.yaml).",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/command" }
+    }
+  },
+  "$defs": {
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "phrases", "intent"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "phrases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "intent": { "type": "string", "minLength": 1 },
+        "slots": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["string", "number", "integer", "boolean", "array"]
+          }
+        }
+      }
+    }
+  }
+}

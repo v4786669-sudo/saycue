@@ -1,0 +1,72 @@
+# SayCue preset — Minecraft (Java Edition 1.20+)
+# Tylko pojedyncze klawisze gry. ZERO makr omijających anty-cheat serwerów (PLAN.md §3).
+# Uwaga: na serwerach z anty-cheatem automatyczne sekwencje mogą być banowane — tu ich nie ma.
+id: minecraft
+version: 1.0.0
+name: Minecraft
+kind: game
+platforms: [win, linux-x11]
+game: minecraft
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+keys:
+  mc_inventory: ["e"]
+  mc_chat: ["t"]
+  mc_scoreboard: ["tab"]
+  mc_advancements: ["l"]
+  mc_perspective: ["f5"]
+  mc_sneak: ["shift"]
+  mc_sprint: ["ctrl"]
+  mc_drop: ["q"]
+
+phrases:
+  - ekwipunek
+  - czat
+  - tablica wyników
+  - osiągnięcia
+  - perspektywa
+  - kucnij
+  - sprint
+  - wyrzuć przedmiot
+
+commands:
+  - id: mc_inventory
+    intent: input.keys
+    phrases: ["mine ekwipunek", "mine otwórz ekwipunek", "mine inventory", "mine plecak"]
+    slots: { keybind: mc_inventory }
+
+  - id: mc_chat
+    intent: input.keys
+    phrases: ["mine czat", "mine otwórz czat", "mine chat", "mine wpisz wiadomość"]
+    slots: { keybind: mc_chat }
+
+  - id: mc_scoreboard
+    intent: input.keys
+    phrases: ["mine tablica wyników", "mine lista graczy", "mine tab list", "mine kto jest online"]
+    slots: { keybind: mc_scoreboard }
+
+  - id: mc_advancements
+    intent: input.keys
+    phrases: ["mine osiągnięcia", "mine advancements", "mine otwórz osiągnięcia", "mine lista osiągnięć"]
+    slots: { keybind: mc_advancements }
+
+  - id: mc_perspective
+    intent: input.keys
+    phrases: ["mine perspektywa", "mine zmień perspektywę", "mine trzecia osoba", "mine perspective"]
+    slots: { keybind: mc_perspective }
+
+  - id: mc_sneak
+    intent: input.keys
+    phrases: ["mine kucnij", "mine schowaj się", "mine sneak", "mine crouch"]
+    slots: { keybind: mc_sneak }
+
+  - id: mc_sprint
+    intent: input.keys
+    phrases: ["mine sprint", "mine biegnij", "mine zwiększ prędkość", "mine run"]
+    slots: { keybind: mc_sprint }
+
+notes: |
+  Podstawowe klawisze: E (ekwipunek), T (czat), Tab (lista), L (osiągnięcia), F5 (perspektywa),
+  Shift (kucanie), Ctrl (sprint). Preset nie wykonuje żadnych sekwencji (brak ryzyka auto-ban).

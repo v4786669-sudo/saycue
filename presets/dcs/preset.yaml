@@ -1,0 +1,97 @@
+# SayCue preset — DCS World
+# Tylko pojedyncze bindy z modułu samolotu (Settings → Controls). Bez sekwencji i makr.
+# Uwaga: DCS ma własne bindy per samolot — preset pokazuje więc komenda→funkcja, a klawisz ustawiasz w DCS.
+id: dcs
+version: 1.0.0
+name: DCS World
+kind: game
+platforms: [win]
+game: dcs_world
+author: SayCue contributors
+license: MIT
+requires: { obs: false }
+
+keys:
+  dcs_gear: ["g"]
+  dcs_flaps: ["f"]
+  dcs_airbrake: ["b"]
+  dcs_wheel_brake: ["w"]
+  dcs_afterburner: ["shift+z"]
+  dcs_throttle_plus: ["pageup"]
+  dcs_throttle_minus: ["pagedown"]
+  dcs_radar: ["r"]
+  dcs_ecm: ["e"]
+  dcs_countermeasures: ["c"]
+  dcs_autopilot: ["a"]
+  dcs_view_target: ["enter"]
+
+phrases:
+  - podwozie
+  - klapy
+  - hamulec aerodynamiczny
+  - dopalacz
+  - ciąg
+  - radar
+  - zakłócenia
+  - pułapki cieplne
+  - autopilot
+
+commands:
+  - id: dcs_landing_gear
+    intent: input.keys
+    phrases: ["dcs podwozie", "dcs opuść podwozie", "dcs schowaj podwozie", "dcs landing gear"]
+    slots: { keybind: dcs_gear }
+
+  - id: dcs_flaps
+    intent: input.keys
+    phrases: ["dcs klapy", "dcs wypuść klapy", "dcs flaps", "dcs klapy w dół"]
+    slots: { keybind: dcs_flaps }
+
+  - id: dcs_airbrake
+    intent: input.keys
+    phrases: ["dcs hamulec aerodynamiczny", "dcs spowalniacze", "dcs hamuj w powietrzu", "dcs airbrake"]
+    slots: { keybind: dcs_airbrake }
+
+  - id: dcs_wheel_brakes
+    intent: input.keys
+    phrases: ["dcs hamulec kół", "dcs wheel brake", "dcs hamuj na pasie"]
+    slots: { keybind: dcs_wheel_brake }
+
+  - id: dcs_afterburner
+    intent: input.keys
+    phrases: ["dcs dopalacz", "dcs afterburner", "dcs maksymalny ciąg", "dcs pełny ciąg"]
+    slots: { keybind: dcs_afterburner }
+
+  - id: dcs_throttle_up
+    intent: input.keys
+    phrases: ["dcs ciąg w górę", "dcs więcej ciągu", "dcs throttle up", "dcs przyspiesz"]
+    slots: { keybind: dcs_throttle_plus }
+
+  - id: dcs_throttle_down
+    intent: input.keys
+    phrases: ["dcs ciąg w dół", "dcs mniej ciągu", "dcs throttle down", "dcs zwolnij"]
+    slots: { keybind: dcs_throttle_minus }
+
+  - id: dcs_radar
+    intent: input.keys
+    phrases: ["dcs radar", "dcs włącz radar", "dcs radar on", "dcs skan radarem"]
+    slots: { keybind: dcs_radar }
+
+  - id: dcs_ecm
+    intent: input.keys
+    phrases: ["dcs zakłócenia", "dcs włącz ecm", "dcs ecm on", "dcs zakłócaj"]
+    slots: { keybind: dcs_ecm }
+
+  - id: dcs_countermeasures
+    intent: input.keys
+    phrases: ["dcs pułapki cieplne", "dcs odpalenie flar", "dcs flares", "dcs countermeasures"]
+    slots: { keybind: dcs_countermeasures }
+
+  - id: dcs_autopilot
+    intent: input.keys
+    phrases: ["dcs autopilot", "dcs włącz autopilota", "dcs autopilot on", "dcs poziom lot"]
+    slots: { keybind: dcs_autopilot }
+
+notes: |
+  Preset zakłada domyślne bindy z kilku popularnych modułów (F/A-18, A-10C, Su-25). DCS pojedyncze
+  klawisze bywają zajęte inaczej per moduł — komenda pokazuje funkcję, a REMAP klawisza robisz w DCS.
