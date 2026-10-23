@@ -1,8 +1,12 @@
-"""CLI SayCue (W1): pętla audio→ASR bez GUI.
+"""CLI SayCue (W2): pętla audio → ASR → parser → akcje (bez GUI).
 
-python -m saycue                     # pętla na żywo (wake-word + PTT)
-python -m saycue --file x.wav        # transkrypcja pliku (demo/eval)
+python -m saycue                     # pętla na żywo (wake-word + PTT), akcje dry-run
+python -m saycue --live              # jak wyżej, ale akcje NAPRAWDĘ wykonują się w systemie
+python -m saycue --file x.wav        # demo end-to-end: plik → transkrypcja → intencja → akcja
 python -m saycue --list-devices      # urządzenia audio
+
+Bezpieczeństwo: domyślnie `--dry-run` (akcje tylko planowane, nic nie dotyka
+systemu). `--live` włącza realne wykonanie (xdotool/pactl/gio/OBS).
 """
 
 from __future__ import annotations
@@ -14,14 +18,16 @@ from pathlib import Path
 
 from . import __version__
 
+DEFAULT_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
+
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="saycue",
-        description="SayCue — offline'owy asystent głosowy dla streamerów (W1: audio→ASR).",
+        description="SayCue — offline'owy asystent głosowy dla streamerów (W2: audio→ASR→akcje).",
     )
     p.add_argument("--version", action="version", version=f"saycue {__version__}")
-    p.add_argument("--file", type=Path, help="transkrypcja pliku WAV/FLAC/MP3 zamiast mikrofonu")
+    p.add_argument("--file", type=Path, help="demo end-to-end z pliku WAV/FLAC/MP3")
     p.add_argument("--list-devices", action="store_true", help="lista urządzeń audio i wyjście")
     p.add_argument(
         "--model",
@@ -46,6 +52,19 @@ def _build_parser() -> argparse.ArgumentParser:
         type=float,
         default=8.0,
         help="maks. długość wypowiedzi w s (domyślnie: 8)",
+    )
+    p.add_argument(
+        "--presets",
+        default=",".join(DEFAULT_PRESETS),
+        help="aktywne presety (przecinkami; domyślnie: obs-core,apps-open,apps-streaming,elite-dangerous)",
+    )
+    p.add_argument(
+        "--live",
+        action="store_true",
+        help="realne wykonanie akcji (domyślnie: dry-run — tylko plan akcji)",
+    )
+    p.add_argument(
+        "--obs", default=None, help="OBS WebSocket URL (host:port[:hasło]) — np. 127.0.0.1:4455"
     )
     p.add_argument(
         "--debug-audio",
@@ -73,6 +92,26 @@ def _cmd_list_devices() -> int:
         return 0
 
 
+def _build_components(args):
+    """Parser + rejestr akcji + kontekst (wspólne dla live i file)."""
+    from .actions import ActionContext, build_default_registry
+    from .parser import IntentParser
+
+    parser = IntentParser(active_presets=args.presets.split(","))
+    registry = build_default_registry()
+    ctx = ActionContext(apps=parser.config.apps, obs=None, dry_run=not args.live)
+    if args.obs:
+        from .actions.obs import ObsClient
+
+        parts = args.obs.split(":")
+        host, port = parts[0], int(parts[1]) if len(parts) > 1 else 4455
+        password = parts[2] if len(parts) > 2 else ""
+        obs = ObsClient(host=host, port=port, password=password)
+        obs.connect()
+        ctx.obs = obs
+    return parser, registry, ctx
+
+
 def _cmd_file(args) -> int:
     from .asr.whisper import ASREngine, transcribe_file
 
@@ -84,13 +123,24 @@ def _cmd_file(args) -> int:
         f"ASR  : {result.elapsed_s * 1000:.0f} ms | język {result.language} | "
         f"audio {result.audio_seconds:.2f} s | lang_prob {result.language_probability:.2f}"
     )
-    return 0
+    parser, registry, ctx = _build_components(args)
+    parsed = parser.parse(result.text)
+    if parsed is None:
+        cand = ", ".join(c.phrase for c in parser.candidates(result.text, 3)) or "—"
+        print(f"intencja: BRAK — czy chodziło ci o: {cand}")
+        return 1
+    action_result = registry.execute(parsed.intent, parsed.slots, ctx)
+    print(f"intencja: {parsed.intent} {dict(parsed.slots)} [{parsed.source}/{parsed.origin}]")
+    print(
+        f"akcja  : {'✓ ' + action_result.message if action_result.ok else '✗ ' + (action_result.message or action_result.error)}"
+    )
+    return 0 if action_result.ok else 1
 
 
 def _cmd_live(args) -> int:
     from .asr.whisper import ASREngine
     from .audio.capture import AudioCapture
-    from .pipeline import Pipeline
+    from .orchestrator import Orchestrator
     from .vad.silero import SileroVAD
     from .wakeword.openwakeword import WakeWordDetector
     from .wakeword.ptt import PushToTalk
@@ -102,6 +152,7 @@ def _cmd_live(args) -> int:
     capture = AudioCapture(device=args.device, alsa_device=args.alsa_device)
     vad = SileroVAD()
     asr = ASREngine(model_size=args.model, language=args.language)
+    parser, registry, ctx = _build_components(args)
     wake = WakeWordDetector() if use_wake else None
     ptt = PushToTalk() if use_ptt else None
     if use_vad_gate:
@@ -109,23 +160,28 @@ def _cmd_live(args) -> int:
     if wake is None and ptt is None and not use_vad_gate:
         logging.warning("brak trybu wyzwalania — używam VAD-gate (awaryjny tryb wejścia).")
 
+    mode = "DRY-RUN (plan akcji)" if ctx.dry_run else "LIVE (realne akcje)"
     print(
-        "SayCue W1 — pętla audio → ASR. Wyzwalanie: "
+        f"SayCue W2 — audio → ASR → parser → akcje. Tryb: {mode} | wyzwalanie: "
         + ("wake-word + PTT (Ctrl+Alt+Space)" if args.input == "auto" else args.input)
+        + f" | presety: {args.presets}"
     )
     print(f"Powiedz komendę (maks. {args.max_utterance:.0f} s). Ctrl+C kończy.")
 
-    pipeline = Pipeline(
+    orchestrator = Orchestrator(
         asr=asr,
         capture=capture,
         vad=vad,
         wake=wake,
         ptt=ptt,
+        parser=parser,
+        registry=registry,
+        ctx=ctx,
         end_silence_s=args.end_silence,
         max_utterance_s=args.max_utterance,
         debug_audio_dir=args.debug_audio,
     )
-    pipeline.run_forever()
+    orchestrator.run_forever()
     return 0
 
 

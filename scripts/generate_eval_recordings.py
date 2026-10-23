@@ -110,6 +110,12 @@ def mix_speech_noise(speech: np.ndarray, noise: np.ndarray, snr_db: float) -> np
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--commands",
+        type=Path,
+        default=ROOT / "eval" / "commands.yaml",
+        help="plik z frazami (domyślnie eval/commands.yaml; G2: eval/g2_commands.yaml)",
+    )
     ap.add_argument("--voice", default=DEFAULT_VOICE, help="głos piper (pl_PL-gosia-medium)")
     ap.add_argument("--snr-db", type=float, default=15.0, help="SNR szumu pokoju (domyślnie 15)")
     ap.add_argument("--pad-s", type=float, default=0.35, help="cisza przed/po mowie (s)")
@@ -121,15 +127,22 @@ def main() -> int:
         raise SystemExit("brak piper w PATH (uv pip install piper-tts)")
     voice_model = ensure_piper_voice(args.voice)
 
-    commands = yaml.safe_load((ROOT / "eval" / "commands.yaml").read_text(encoding="utf-8"))
+    commands = yaml.safe_load(args.commands.read_text(encoding="utf-8"))
     phrases = commands["phrases"]
     args.out.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(42)
 
-    print(f"generuję {len(phrases)} nagrań (SNR {args.snr_db} dB, pad {args.pad_s} s)…")
+    print(
+        f"generuję {len(phrases)} nagrań z {args.commands.name} (SNR {args.snr_db} dB, pad {args.pad_s} s)…"
+    )
     for entry in phrases:
         pid, phrase = entry["id"], entry["phrase"]
-        wav = args.out / f"{pid}.wav"
+        # G2: tylko frazy z własnym wav (g1_XX są współdzielone z G1)
+        wav_name = entry.get("wav", f"{pid}.wav")
+        if wav_name.startswith("g1_"):
+            print(f"  {wav_name}: współdzielone z G1 — pomijam")
+            continue
+        wav = args.out / wav_name
         synthesize(piper, voice_model, phrase, wav)
         speech = load_f32(wav.with_suffix(".f32"))
         wav.with_suffix(".f32").unlink(missing_ok=True)

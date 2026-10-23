@@ -1,0 +1,27 @@
+# eval/g2_commands.yaml — 20 fraz PL na bramkę G2 (PLAN §5: ≥90% wykonanych, p95 ≤1,2 s)
+# = 15 fraz G1 (eval/commands.yaml) + 5 rozszerzeń z rdzenia commands.yaml.
+# Pole `wav` wskazuje nagranie (g1_XX współdzielone z G1; g2_XX generowane osobno).
+# `intent` = oczekiwana intencja parsera; `slots` = oczekiwane sloty (o ile stałe).
+version: 1
+language: pl
+phrases:
+  - { id: g2_01, phrase: "otwórz spotify", intent: app.open, slots: { target: spotify }, wav: g1_01.wav }
+  - { id: g2_02, phrase: "włącz spotify", intent: app.open, slots: { target: spotify }, wav: g1_02.wav }
+  - { id: g2_03, phrase: "otwórz discord", intent: app.open, slots: { target: discord }, wav: g1_03.wav }
+  - { id: g2_04, phrase: "scena pvp", intent: obs.scene, slots: { scene: PVP }, wav: g1_04.wav }
+  - { id: g2_05, phrase: "przełącz na pvp", intent: obs.scene, slots: { scene: PVP }, wav: g1_05.wav }
+  - { id: g2_06, phrase: "wycisz mikrofon", intent: obs.mute, wav: g1_06.wav }
+  - { id: g2_07, phrase: "mute", intent: obs.mute, wav: g1_07.wav }
+  - { id: g2_08, phrase: "cisza", intent: obs.mute, wav: g1_08.wav }
+  - { id: g2_09, phrase: "rozpocznij nagrywanie", intent: obs.record, slots: { state: start }, wav: g1_09.wav }
+  - { id: g2_10, phrase: "zatrzymaj nagrywanie", intent: obs.record, slots: { state: stop }, wav: g1_10.wav }
+  - { id: g2_11, phrase: "zapisz replay", intent: obs.replay, wav: g1_11.wav }
+  - { id: g2_12, phrase: "replay", intent: obs.replay, wav: g1_12.wav }
+  - { id: g2_13, phrase: "ciszej", intent: system.volume, wav: g1_13.wav }
+  - { id: g2_14, phrase: "głośniej", intent: system.volume, wav: g1_14.wav }
+  - { id: g2_15, phrase: "dasz", intent: input.keys, slots: { keys: [shift, space] }, wav: g1_15.wav }
+  - { id: g2_16, phrase: "otwórz obs", intent: app.open, slots: { target: obs }, wav: g2_16.wav }
+  - { id: g2_17, phrase: "scena startowa", intent: obs.scene, wav: g2_17.wav }
+  - { id: g2_18, phrase: "nagrywaj", intent: obs.record, slots: { state: start }, wav: g2_18.wav }
+  - { id: g2_19, phrase: "ścisz", intent: system.volume, wav: g2_19.wav }
+  - { id: g2_20, phrase: "uniki", intent: input.keys, slots: { keys: [shift, space] }, wav: g2_20.wav }

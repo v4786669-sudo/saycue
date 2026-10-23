@@ -56,7 +56,9 @@ commands:
     slots: { state: stop }
 
   - id: obs_replay
-    phrases: ["zapisz replay", "zapisz powtórkę", "replay"]
+    # „replej/replejk" = warianty fonetyczne (t9, G2): Whisper słyszy zapożyczenie
+    # EN wymawiane po polsku jako „teplejt/teplejk" — mechanizm §2.3 („spoty fi")
+    phrases: ["zapisz replay", "zapisz powtórkę", "replay", "replej", "replejk"]
     intent: obs.replay
     slots: {}
 

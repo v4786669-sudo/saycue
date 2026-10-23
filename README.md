@@ -2,8 +2,8 @@
 
 **Offline'owy asystent głosowy dla streamerów i graczy.** Wypowiadasz krótką komendę bez klikania → asystent w ≤1,2 s (p95) wykonuje akcję (scena OBS, mute, nagrywanie, replay, klawisze, aplikacje) → w trayu widzisz, co się stało. Zero chmury w ścieżce sterowania, zero treści wypowiedzi w telemetrii.
 
-> **Status: tydzień 1 / 4 MVP** — „słuch i tekst": mikrofon → wake-word / push-to-talk → VAD → transkrypcja.
-> Wyniki bramki G1 (dokładność i latencja ASR): [notes/g1-report.md](notes/g1-report.md).
+> **Status: tydzień 2 / 4 MVP** — „rozpoznaj i zrób": mikrofon → wake-word/PTT → VAD → ASR → parser → akcje OS/OBS (dry-run domyślnie).
+> Wyniki bramek: [G1](notes/g1-report.md) (dokładność ASR) · [G2](notes/g2-report.md) (pętla end-to-end).
 
 ## Trzy filary
 
@@ -25,17 +25,20 @@ uv pip install -e ".[dev]"
 # 2. Modele (pobierane z manifestu models/manifest.json, weryfikacja SHA-256)
 python scripts/download_models.py            # ~530 MB → ~/.cache/saycue/models/
 
-# 3. Demo: transkrypcja pliku WAV (bez mikrofonu)
-python -m saycue --file eval/recordings/g1_04.wav
+# 3. Transkrypcja pliku WAV (sam ASR — poprzedni krok obejmuje już pełną pętlę)
 
-# 4. Demo: pełna pętla audio → ASR na mikrofonie (wake-word + hotkey PTT Ctrl+Alt+Space)
-python -m saycue
+# 4. Demo: pełna pętla audio → ASR → parser → akcja (wake-word + hotkey PTT Ctrl+Alt+Space)
+python -m saycue            # akcje dry-run (bezpieczne); --live = realne wykonanie
+
+# Demo end-to-end z pliku (bez mikrofonu): transkrypcja → intencja → akcja
+python -m saycue --file eval/recordings/g1_01.wav
 
 # Lista urządzeń audio / testy / benchmark / ewaluacja
 python -m saycue --list-devices
 pytest -m "not models"
-python bench/asr_latency.py      # lub: python bench/run_when_idle.py (mierzy, gdy CPU wolny)
+python bench/asr_latency.py      # ASR | bench/e2e_latency.py — end-to-end | run_when_idle.py — gdy CPU wolny
 python eval/run_eval.py
+python bench/stress_session.py --minutes 30   # sesja stabilności G2
 ```
 
 **Interakcja (pętla na żywo):** powiedz **„hej asystent"** (openWakeWord, model EN — własny model PL w planie, ryzyko R6) **albo** przytrzymaj **Ctrl+Alt+Space** (push-to-talk, fallback), powiedz komendę (maks. 8 s, koniec po 600 ms ciszy), zobacz transkrypcję na ekranie. Ctrl+C kończy.
@@ -74,7 +77,7 @@ Rdzeń: **MIT** (patrz [LICENSE](LICENSE)). Modele: faster-whisper (MIT), Silero
 
 | Tydzień | Cel | Bramka |
 |---|---|---|
-| **W1 (tu jesteśmy)** | audio → wake-word/VAD → transkrypcja | **G1:** ≥85% komend, ASR p95 ≤500 ms |
-| W2 | parser + akcje OS + OBS | G2: ≥90% komend, p95 ≤1,2 s |
+| W1 | audio → wake-word/VAD → transkrypcja | **G1:** ≥85% komend, ASR p95 ≤500 ms — **GO** (93,3%) |
+| **W2 (tu jesteśmy)** | orchestrator: parser + akcje OS + OBS | **G2:** ≥90% komend, p95 ≤1,2 s — **GO** (90,0%, 18/20) |
 | W3 | GUI/tray, instalator, `doctor`, presety YAML | G3: ≥60% testerów „first command" ≤10 min |
 | W4 | hardening, akcenty, **v0.1.0 publiczne** | G4 wstępne (T0+14 dni) |
