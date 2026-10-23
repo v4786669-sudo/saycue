@@ -27,6 +27,7 @@ jobs:
         run: .venv\Scripts\python -m PyInstaller installer/saycue.spec --clean --noconfirm
 
       - name: Set version (bez prefiksu v)
+        shell: bash
         run: echo "APP_VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
 
       - name: Compile installer (Inno Setup)
