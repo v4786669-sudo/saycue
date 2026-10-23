@@ -191,3 +191,39 @@ def test_registry_receives_parsed_slots():
     orch._last_speech_ts = 1000.0
     orch._process_utterance(np.zeros(SR, dtype=np.float32))
     assert registry.calls == [("input.keys", {"keys": ["shift", "space"]})]
+
+
+def test_silence_never_triggers_pipeline():
+    """Niezmiennik „cisza ≠ komenda": VAD-gate nie wybudza na czystej ciszy.
+
+    To jest prawdziwa ochrona przed hallucinacjami ASR na ciszy (flaky
+    tests/test_asr.py pod obciążeniem) — ASR nigdy nie dostaje ciszy od VAD.
+    Używa prawdziwego Silero VAD (model wbudowany w faster-whisper)."""
+    import threading
+
+    from g2_harness import FakeCapture
+    from saycue.vad.silero import SileroVAD
+
+    outcomes: list[Outcome] = []
+    done = threading.Event()
+    capture = FakeCapture(np.zeros(3 * SR, dtype=np.float32), pad_silence_s=1.0)
+    orch = Orchestrator(
+        asr=FakeASR(text="cisza"),  # gdyby ASR dostał ciszę, „usłyszałby" komendę
+        capture=capture,
+        vad=SileroVAD(),
+        wake=None,
+        ptt=None,
+        parser=FakeParser(make_result(intent="obs.mute", slots={"source": "Mic/Aux"})),
+        registry=FakeRegistry(),
+        ctx=SimpleNamespace(dry_run=True),
+        on_outcome=lambda o: (outcomes.append(o), done.set()),
+    )
+    thread = threading.Thread(target=orch.run_forever, daemon=True)
+    thread.start()
+    try:
+        # 4 s ciszy — VAD-gate nie może wybudzić sesji
+        assert not done.wait(timeout=4.0)
+    finally:
+        orch._stop = True
+        thread.join(timeout=5)
+    assert outcomes == [], f"cisza wywołała komendę: {outcomes}"
