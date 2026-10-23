@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv venv --python 3.11 .venv
-          uv pip install --python .venv/Scripts/python -e ".[dev]" pyinstaller
+          uv pip install --python .venv/Scripts/python.exe -e ".[dev]" pyinstaller
 
       - name: Build with PyInstaller (onedir)
         run: .venv\Scripts\python -m PyInstaller installer/saycue.spec --clean --noconfirm
