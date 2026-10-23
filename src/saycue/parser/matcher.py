@@ -66,8 +66,10 @@ def _parse_template(original: str) -> tuple[str, str, str] | None:
     if len(found) > 1:
         raise ValueError(f"fraza szablonowa może mieć tylko jeden slot: {original!r}")
     m = found[0]
-    prefix = normalize_text(original[: m.start()])
-    suffix = normalize_text(original[m.end() :])
+    # definicje fraz/szablonów normalizujemy BEZ usuwania wypełniaczy
+    # (R-01: fillery usuwane tylko z wypowiedzi, nie z definicji)
+    prefix = normalize_text(original[: m.start()], remove_fillers=False)
+    suffix = normalize_text(original[m.end() :], remove_fillers=False)
     return prefix, suffix, m.group(1)
 
 
@@ -119,7 +121,7 @@ class Matcher:
             for phrase in cmd.get("phrases") or []:
                 original = str(phrase)
                 tpl = _parse_template(original)
-                norm = normalize_text(original)
+                norm = normalize_text(original, remove_fillers=False)
                 if tpl is None:
                     self._exact.append(_ExactEntry(cmd, norm, original, order))
                 else:

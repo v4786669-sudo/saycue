@@ -61,9 +61,10 @@ def build_slot_vocabs(
     vocabs: dict[str, dict[str, Any]] = {}
     app_vocab: dict[str, Any] = {}
     for app_id, entry in (apps or {}).items():
-        app_vocab[normalize_text(str(app_id))] = str(app_id)
+        # słowniki slotów to definicje — bez usuwania wypełniaczy (R-01)
+        app_vocab[normalize_text(str(app_id), remove_fillers=False)] = str(app_id)
         for alias in entry.get("aliases") or []:
-            app_vocab[normalize_text(str(alias))] = str(app_id)
+            app_vocab[normalize_text(str(alias), remove_fillers=False)] = str(app_id)
     if app_vocab:
         vocabs["app"] = app_vocab
         vocabs["target"] = dict(app_vocab)
@@ -71,7 +72,7 @@ def build_slot_vocabs(
         slots = cmd.get("slots") or {}
         for name, value in slots.items():
             if isinstance(value, str):
-                vocabs.setdefault(name, {})[normalize_text(value)] = value
+                vocabs.setdefault(name, {})[normalize_text(value, remove_fillers=False)] = value
             elif isinstance(value, (int, float)):
                 vocabs.setdefault(name, {})[normalize_text(str(value))] = value
     return vocabs
