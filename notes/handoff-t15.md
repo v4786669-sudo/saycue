@@ -51,3 +51,35 @@ Architektura v0.3 §2.3 (nie istnieje jeszcze w repo — t11 nie zdążył jej
 zapisać) powinna odzwierciedlać: `min_phrase_coverage=0.7` (tokeny),
 `allow_free_text` dla szablonów, `min_action_score=0.8`, `rewritten_fillers`
 = licznik/tokeny stałego słownika (nigdy treść mowy), ASK z allowed_values.
+
+## 5. N-01 (researcher → t17 → engineer2): frazy gier przeniesione z rdzenia
+
+Decyzja (2026-10-23, właściciel parsera/danych): **pełne usunięcie press_dash z
+rdzenia** (opcja researchera nr 2 — rdzeń to OBS/apps/system, klawisze gier =
+presety; gołe „dash" w rdzeniu cieniowało bindy T2/HOTAS i odpalało shift+space
+w symulatorach lotu przy mishearze ASR).
+
+Zmiany:
+* `data/commands.yaml` — press_dash (dasz/uniki/shift dash/dash/wiki) USUNIĘTY z rdzenia;
+* `presets/arcade-dash/preset.yaml` — NOWY preset (kind: game, bez pola `game`):
+  te same 5 fraz, slots keys [shift, space]; aktywny tylko gdy gracz chce;
+* `presets/index.json` — przegenerowany (validate.py --index, 0 błędów);
+* aktywacje zaktualizowane: tests/test_g2.py ACTIVE_PRESETS, tests/conftest.py
+  RECOMMENDED_PRESETS, test_grammar_consistency G2_ACTIVATION (+ dedup vs
+  WSZYSTKIE presety z katalogu).
+
+Efekt (zweryfikowany): bez arcade-dash „dash" → None (ASK); z arcade-dash
+wszystkie 5 fraz działa (origin=arcade-dash); „podwozie" z dcs → ASK z
+„dcs podwozie" (0.8) na 1. miejscu. G1/G2 YAML-e eval NIE ruszane — frazy
+zapewnia preset w aktywacji bramki.
+
+ASR/PROMPT (dla engineera — cli/orchestrator to Twoje moduły): load_initial_prompt
+czyta tylko data/commands.yaml, więc po przeniesieniu frazy straciły bias.
+ZMIERZONE na G2: (1) prompt = core-only → g2_20 „uniki"→„wyjki" (fail);
+(2) prompt = wszystkie frazy aktywne (~220 fraz) → DEGENERACJA greedy (14/20:
+„otwórz"→„tłuszcz", „cisza"→„tisha" — zgodne z ostrzeżeniem z G1 o nadmiernym
+biasie); (3) prompt = rdzeń + arcade-dash (= dokładnie dawny zestaw) → baseline
+16/20 (wariancja ASR 16–20/20, porażki = krótkie frazy PL: tisze/shift/zana —
+ta sama klasa co w raporcie G2 §4). Sugestia: prompt = frazy rdzenia + frazy
+aktywnych presetów NIE-growych lub krótkich (≤2 tokeny) — do pomiaru w W4;
+hotwords bez zmian (≤3 słowa).

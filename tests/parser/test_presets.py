@@ -15,6 +15,7 @@ def test_list_available(presets_dir):
     assert set(ids) == {
         "apps-open",
         "apps-streaming",
+        "arcade-dash",
         "dcs",
         "elite-dangerous",
         "minecraft",

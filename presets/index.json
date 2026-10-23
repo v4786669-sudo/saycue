@@ -25,6 +25,18 @@
     "commands": 10,
     "phrases": 38
   },
+  "arcade-dash": {
+    "name": "Unik i skok (arcade)",
+    "version": "1.0.0",
+    "kind": "game",
+    "platforms": [
+      "win",
+      "linux-x11"
+    ],
+    "game": null,
+    "commands": 1,
+    "phrases": 5
+  },
   "dcs": {
     "name": "DCS World",
     "version": "1.0.0",

@@ -70,13 +70,6 @@ commands:
     intent: system.volume
     slots: { delta: 20 }
 
-  - id: press_dash
-    # „wiki" = wariant fonetyczny (t9, decyzja kapitana 2026-10-23): Whisper
-    # słyszy „uniki" jako „wiki" (rapidfuzz 0,667 < 0,78). Brak kolizji.
-    phrases: ["dasz", "uniki", "shift dash", "dash", "wiki"]
-    intent: input.keys
-    slots: { keys: [shift, space] }
-
   - id: open_kalkulator
     phrases: ["otwórz kalkulator", "włącz kalkulator", "kalkulator"]
     intent: app.open

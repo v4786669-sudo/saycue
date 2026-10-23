@@ -20,9 +20,10 @@ CORE_PATH = ROOT / "data" / "commands.yaml"
 PRESETS_DIR = ROOT / "presets"
 G1_YAML = ROOT / "eval" / "commands.yaml"
 G2_YAML = ROOT / "eval" / "g2_commands.yaml"
-G2_ACTIVATION = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
+# arcade-dash: frazy dash przeniesione z rdzenia (N-01/t15)
+G2_ACTIVATION = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous", "arcade-dash"]
 
-TARGET_PRESETS = ["obs-core", "apps-open", "apps-streaming"]
+TARGET_PRESETS = None  # None = WSZYSTKIE presety z katalogu (silniejszy test)
 
 
 def _core_phrases() -> dict[str, str]:
@@ -42,7 +43,8 @@ def _core_phrases() -> dict[str, str]:
 def _preset_phrases(presets_dir=PRESETS_DIR) -> dict[str, str]:
     loader = PresetLoader(presets_dir)
     phrases: dict[str, str] = {}
-    for preset_id in TARGET_PRESETS:
+    target = TARGET_PRESETS or loader.list_available()
+    for preset_id in target:
         preset = loader.load(preset_id)
         for cmd in preset.commands:
             for phrase in cmd.get("phrases") or []:
@@ -113,4 +115,4 @@ def test_merged_grammar_has_no_cross_source_collision_errors():
     loader = RulesLoader(ROOT / "data")
     cfg = loader.load(G2_ACTIVATION, PresetLoader(PRESETS_DIR))
     assert cfg.commands
-    assert len(cfg.active_presets) == 4
+    assert cfg.active_presets == G2_ACTIVATION

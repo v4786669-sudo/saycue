@@ -38,7 +38,8 @@ from saycue.vad.silero import SileroVAD  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 G2_YAML = ROOT / "eval" / "g2_commands.yaml"
 GATE_MIN_CORRECT = 0.90  # ≥90% (18/20)
-ACTIVE_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
+# arcade-dash: g2_15 (dasz) i g2_20 (uniki) żyją w presecie od N-01/t15
+ACTIVE_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous", "arcade-dash"]
 TIMEOUT_S = 120
 
 
@@ -66,7 +67,20 @@ def env(recordings_dir):
     parser = IntentParser(active_presets=ACTIVE_PRESETS)
     registry = build_default_registry()
     ctx = ActionContext(apps=parser.config.apps, obs=obs, dry_run=True)
-    engine = ASREngine(model_size="small", language="pl")
+    # N-01/t15: prompt = rdzeń + frazy przeniesione do arcade-dash — IDENTYCZNY
+    # zestaw co przed przeniesieniem (rdzeń miał wtedy dasz/uniki/shift dash/
+    # dash/wiki). Biasowanie WSZYSTKICH fraz presetów degeneruje greedy
+    # decoding (zmierzone, G1) — dlatego NIE bierzemy tu elite/apps/obs-core.
+    prompt_phrases = [
+        p
+        for cmd in parser.config.commands
+        if cmd.get("origin") in ("core", "arcade-dash")
+        for p in (cmd.get("phrases") or [])
+        if "{" not in str(p)
+    ]
+    engine = ASREngine(
+        model_size="small", language="pl", initial_prompt=", ".join(prompt_phrases)
+    )
     yield {"parser": parser, "registry": registry, "ctx": ctx, "engine": engine, "server": server}
     obs.close()
     server.stop()

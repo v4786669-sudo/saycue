@@ -28,7 +28,8 @@ PRESETS_DIR = ROOT / "presets"
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
 SAMPLE_RATE = 16000
 
-RECOMMENDED_PRESETS = ["obs-core", "apps-open", "apps-streaming"]
+# arcade-dash: frazy dash (dasz/uniki) przeniesione z rdzenia (N-01, t15)
+RECOMMENDED_PRESETS = ["obs-core", "apps-open", "apps-streaming", "arcade-dash"]
 
 
 def _write_wav(path: Path, samples: list[float]) -> None:
