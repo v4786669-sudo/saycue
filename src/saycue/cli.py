@@ -254,14 +254,33 @@ def _cmd_presets(args) -> int:
     import sys as _sys
 
     script = Path(__file__).resolve().parents[2] / "presets" / "validate.py"
-    if not script.is_file():
-        print("presets/validate.py nie znaleziony — uruchom z katalogu repozytorium.")
-        return 2
-    cmd = [_sys.executable, str(script)]
-    if args.json:
-        cmd.append("--json")
-    cmd.extend(args.paths)
-    return subprocess.call(cmd)
+    if script.is_file():
+        cmd = [_sys.executable, str(script)]
+        if args.json:
+            cmd.append("--json")
+        cmd.extend(args.paths)
+        return subprocess.call(cmd)
+    # B-05: instalacja (bundle) bez skryptu dev — walidacja schematu przez loader
+    from .config.paths import presets_dir
+    from .parser.presets import PresetError, PresetLoader
+
+    loader = PresetLoader(presets_dir(), validate=True)
+    errors: list[str] = []
+    for preset_id in sorted(loader.list_available()):
+        try:
+            loader.load(preset_id)
+            print(f"✓ {preset_id}")
+        except (PresetError, ValueError) as exc:
+            errors.append(f"{preset_id}: {exc}")
+            print(f"✗ {preset_id}: {exc}")
+    if errors:
+        print(
+            f"{len(errors)} preset(ów) z błędami (pełna walidacja: tryb dev — "
+            "repozytorium, `python presets/validate.py`)."
+        )
+        return 1
+    print(f"OK — {len(loader.list_available())} presetów zgodnych ze schematem.")
+    return 0
 
 
 def main(argv=None) -> int:

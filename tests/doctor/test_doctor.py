@@ -55,7 +55,11 @@ def test_check_wakeword_fp_ok():
 def test_check_offline_requires_models(monkeypatch):
     result = check_offline()
     assert result.status in ("ok", "warn")
-    assert "offline" in result.message
+    # komunikat zależy od stanu cache: „wszystkie modele lokalne… offline"
+    # albo „brak modeli w cache…" — sprawdzamy, że mówi o modelach i ma naprawę
+    assert "model" in result.message
+    if result.status == "warn":
+        assert result.fix
 
 
 def test_format_checks_has_fix_lines():

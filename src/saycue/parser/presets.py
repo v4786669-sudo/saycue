@@ -43,6 +43,15 @@ def _repo_root() -> Path:
         return Path(__file__).resolve().parents[3]
 
 
+def _default_presets_dir() -> Path:
+    try:
+        from saycue.config.paths import presets_dir
+
+        return presets_dir()
+    except Exception:  # pragma: no cover
+        return _repo_root() / "presets"
+
+
 @dataclass
 class Preset:
     id: str
@@ -94,9 +103,9 @@ class PresetLoader:
     """Ładowanie i walidacja presetów z katalogu ``presets/``."""
 
     def __init__(self, presets_dir: Path | None = None, *, validate: bool = True):
-        self.presets_dir = (
-            Path(presets_dir) if presets_dir is not None else _repo_root() / "presets"
-        )
+        # B-03 (build-defects-g3.md): w bundle PyInstallera presety leżą w
+        # _internal/presets — rozstrzyga paths.presets_dir() (fallback _internal).
+        self.presets_dir = Path(presets_dir) if presets_dir is not None else _default_presets_dir()
         self.validate = validate
 
     @property

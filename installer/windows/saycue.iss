@@ -11,7 +11,7 @@
 #define MyAppExeName "saycue.exe"
 
 [Setup]
-AppId={{8F4A6C2E-3B1D-4E5A-9C77-SAYCUE000001}
+AppId={{8F4A6C2E-3B1D-4E5A-9C77-1B2C3D4E5F01}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "saycue"
-version = "0.1.0rc1"
+version = "0.1.0rc2"
 description = "Offline'owy asystent głosowy dla streamerów: mówisz — stream się nie psuje. Bez chmury."
 readme = "README.md"
 license = { file = "LICENSE" }
