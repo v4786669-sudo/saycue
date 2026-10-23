@@ -3,7 +3,7 @@
 **Offline'owy asystent głosowy dla streamerów i graczy.** Wypowiadasz krótką komendę bez klikania → asystent w ≤1,2 s (p95) wykonuje akcję (scena OBS, mute, nagrywanie, replay, klawisze, aplikacje) → w trayu widzisz, co się stało. Zero chmury w ścieżce sterowania, zero treści wypowiedzi w telemetrii.
 
 > **Status: tydzień 1 / 4 MVP** — „słuch i tekst": mikrofon → wake-word / push-to-talk → VAD → transkrypcja.
-> Wyniki bramki G1 (dokładność i latencja ASR): `notes/g1-report.md` w głównym repozytorium projektu.
+> Wyniki bramki G1 (dokładność i latencja ASR): [notes/g1-report.md](notes/g1-report.md).
 
 ## Trzy filary
 

@@ -160,10 +160,12 @@ def list_devices() -> list[dict]:
                 idx = line.split()[0]
                 cards[idx] = line[line.index("[") + 1 : line.index("]")]
         for line in open("/proc/asound/pcm", encoding="utf-8", errors="replace"):
-            parts = line.split(":")
-            if len(parts) < 3 or "capture" not in parts[2]:
+            if "capture" not in line:
                 continue
-            hwid = parts[1].strip()
+            parts = line.split(":")
+            if len(parts) < 2:
+                continue
+            hwid = parts[0].strip()  # np. "00-00"
             card = hwid.split("-")[0]
             name = cards.get(card, hwid)
             devices.append(
