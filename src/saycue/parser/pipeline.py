@@ -35,6 +35,9 @@ class IntentParser:
         presets_dir: Path | None = None,
         active_presets: list[str] | None = None,
         fuzzy_threshold: float = 0.78,
+        min_action_score: float = 0.8,
+        min_phrase_coverage: float = 0.7,
+        allow_free_text: bool = True,
         watch: bool = False,
         watcher_cls: type | None = None,
         on_reload: Callable[[RulesConfig], None] | None = None,
@@ -43,6 +46,10 @@ class IntentParser:
         self.preset_loader = PresetLoader(presets_dir)
         self.active_presets: list[str] = list(active_presets or [])
         self.fuzzy_threshold = float(fuzzy_threshold)
+        # R-02/R-01 (v0.3 §2.3): progi utwardzenia przekazywane do Matchera
+        self.min_action_score = float(min_action_score)
+        self.min_phrase_coverage = float(min_phrase_coverage)
+        self.allow_free_text = bool(allow_free_text)
         self._lock = threading.Lock()
         self._matcher: Matcher | None = None
         self._config: RulesConfig | None = None
@@ -70,7 +77,14 @@ class IntentParser:
         return self.reload()
 
     def _apply_config(self, cfg: RulesConfig) -> None:
-        matcher = Matcher(cfg.commands, cfg.apps, fuzzy_threshold=self.fuzzy_threshold)
+        matcher = Matcher(
+            cfg.commands,
+            cfg.apps,
+            fuzzy_threshold=self.fuzzy_threshold,
+            min_action_score=self.min_action_score,
+            min_phrase_coverage=self.min_phrase_coverage,
+            allow_free_text=self.allow_free_text,
+        )
         with self._lock:
             self._config = cfg
             self._matcher = matcher

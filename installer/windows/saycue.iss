@@ -4,7 +4,9 @@
 ; Autostart: HKCU\Software\Microsoft\Windows\CurrentVersion\Run.
 
 #define MyAppName "SayCue"
-#define MyAppVersion "0.1.0"
+#ifndef MyAppVersion
+#define MyAppVersion "0.1.0-rc1"
+#endif
 #define MyAppPublisher "SayCue contributors"
 #define MyAppExeName "saycue.exe"
 

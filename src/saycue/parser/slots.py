@@ -23,6 +23,13 @@ class SlotResolver:
         self._vocabs = {k: dict(v) for k, v in (vocabs or {}).items()}
         self._threshold = float(threshold)
 
+    def allowed(self, slot: str) -> list[str]:
+        """Dozwolone wartości slotu (posortowane, unikalne) — lista dla widoku
+        ASK, gdy wartość nie została rozpoznana (R-02: nigdy akcja z surowym
+        tekstem, zamiast tego propozycje)."""
+        vocab = self._vocabs.get(slot) or {}
+        return sorted({str(v) for v in vocab.values()})
+
     def resolve(self, slot: str, raw: str) -> Any | None:
         vocab = self._vocabs.get(slot) or {}
         if not vocab:

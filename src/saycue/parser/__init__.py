@@ -10,7 +10,13 @@ loader rdzenia i presetów (JSON Schema) oraz ``IntentParser`` z hot-reload.
 from __future__ import annotations
 
 from .matcher import Matcher
-from .normalize import FILLER_TOKENS, fold_diacritics, normalize, normalize_text
+from .normalize import (
+    FILLER_TOKENS,
+    fold_diacritics,
+    normalize,
+    normalize_text,
+    normalize_verbose,
+)
 from .pipeline import IntentParser
 from .presets import Preset, PresetError, PresetLoader
 from .rules import (
@@ -48,5 +54,6 @@ __all__ = [
     "load_yaml",
     "normalize",
     "normalize_text",
+    "normalize_verbose",
     "validate_doc",
 ]
