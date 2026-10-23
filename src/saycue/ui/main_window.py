@@ -300,6 +300,18 @@ class MainWindow:
         obs_btn.clicked.connect(self._test_obs)
         form.addRow(obs_btn, self.obs_status)
 
+        self.live_check = QtWidgets.QCheckBox(
+            "Wykonuj akcje naprawdę (live) — odznaczone = dry-run (plan akcji)"
+        )
+        self.live_check.setChecked(not self.settings.dry_run)
+        form.addRow(self.live_check)
+        form.addRow(
+            QtWidgets.QLabel(
+                "UWAGA: live = realne klawisze/aplikacje/OBS w systemie. "
+                "Dla testera G3: zaznacz, jeśli chcesz widzieć efekty."
+            )
+        )
+
         self.events_check = QtWidgets.QCheckBox(
             "events.jsonl (zdarzenia G4 — bez treści wypowiedzi)"
         )
@@ -328,8 +340,10 @@ class MainWindow:
     def _save_integrations(self) -> None:
         self.settings.events_enabled = self.events_check.isChecked()
         self.settings.metrics_enabled = self.metrics_check.isChecked()
+        # N-02 (t17): domyślnie dry-run; live = świadoma decyzja użytkownika/testera
+        self.settings.dry_run = not self.live_check.isChecked()
         self.settings.save()
-        self.obs_status.setText("zapisano")
+        self.obs_status.setText("zapisano — restart orchestrationa (Stop→Start) wczyta tryb live")
 
     # ---------------------------------------------------------- Statystyki
 
