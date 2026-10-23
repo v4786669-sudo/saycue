@@ -67,6 +67,8 @@ def main() -> int:
     ap.add_argument("--max-wait-min", type=int, default=150)
     ap.add_argument("--n", type=int, default=20)
     ap.add_argument("--model", default="small")
+    ap.add_argument("--bench", default="asr_latency.py",
+                    help="skrypt benchmarku (asr_latency.py | e2e_latency.py)")
     args = ap.parse_args()
 
     deadline = time.monotonic() + args.max_wait_min * 60
@@ -106,7 +108,7 @@ def main() -> int:
                         cwd=ROOT,
                     )
                     # dopisz medianę sondy do najnowszego raportu
-                    results = sorted((ROOT / "bench" / "results").glob("asr_latency_*.json"))
+                    results = sorted((ROOT / "bench" / "results").glob(args.bench.replace(".py", "_*.json")))
                     if results:
                         rep = json.loads(results[-1].read_text(encoding="utf-8"))
                         rep["probe_median_ms"] = round(median, 1)

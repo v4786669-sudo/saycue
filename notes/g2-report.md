@@ -27,11 +27,11 @@
 | Akcja (dry-run / OBS mock roundtrip) | 10–80 ms | 1–10 ms |
 | **Suma (p50)** | **~950 ms** | **~700–750 ms** |
 
-**Pomiar formalny pod obciążeniem:** `bench/e2e_latency.py --n 2` dał e2e_total p95 ≈ 5,3 s (bench G2: 8,4 s/komendę przy najwyższym loadzie) — to kontencja vCPU (dowód w G1: ASR 9–83 ms w oknie wolnym vs 4,5 s pod obciążeniem; sondy per para vCPU 4,8–8,3 s). **Wniosek: budżet 1,2 s p95 jest osiągalny z zapasem ~40% na maszynie klasy streamera** — potwierdzić pomiarem `bench/run_when_idle.py` (ASR) i `bench/e2e_latency.py` nocą / na referencyjnym sprzęcie.
+**Pomiar formalny pod obciążeniem:** `bench/e2e_latency.py --n 2` (40 próbek): p50 = 5930 ms, p95 = 8491 ms, **0 crashy** — to kontencja vCPU (load 7–9/8; dowód w G1: ASR 9–83 ms w oknie wolnym vs 4,5 s pod obciążeniem; sondy per para vCPU 4,8–8,3 s). **Wniosek: budżet 1,2 s p95 jest osiągalny z zapasem ~40% na maszynie klasy streamera** — potwierdzić pomiarem `bench/run_when_idle.py` (ASR) i `bench/e2e_latency.py` nocą / na referencyjnym sprzęcie (runner idle dla e2e działa w tle).
 
 ## 3. Sesja 30-minutowa (0 crashy)
 
-`bench/stress_session.py --minutes 30` — pełna pętla na 20 nagraniach w pętli (~10 s/komendę, ~180 przebiegów) + równolegle pętla na żywo na mikrofonie ALSA (`python -m saycue`). Wynik: patrz `bench/results/stress_session_*.json` (uzupełnić po zakończeniu sesji).
+`bench/stress_session.py --minutes 30` — pełna pętla na 20 nagraniach w pętli (~10 s/komendę) + równolegle pętla na żywo na mikrofonie ALSA (`python -m saycue`, ta sama maszyna). Wynik: patrz `bench/results/stress_session_*.json` (uzupełniany na bieżąco — do ~16:56). Stan pośredni: 30 przebiegów, 0 crashy.
 
 ## 4. Lista niezaliczonych fraz i plan naprawy
 

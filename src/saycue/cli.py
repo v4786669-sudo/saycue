@@ -101,14 +101,19 @@ def _build_components(args):
     registry = build_default_registry()
     ctx = ActionContext(apps=parser.config.apps, obs=None, dry_run=not args.live)
     if args.obs:
-        from .actions.obs import ObsClient
+        from .actions.obs import ObsClient, ObsError
 
         parts = args.obs.split(":")
         host, port = parts[0], int(parts[1]) if len(parts) > 1 else 4455
         password = parts[2] if len(parts) > 2 else ""
         obs = ObsClient(host=host, port=port, password=password)
-        obs.connect()
-        ctx.obs = obs
+        try:
+            obs.connect()
+        except ObsError as exc:
+            print(f"OBS niedostępny ({exc}) — akcje obs.* będą zwracać obs_not_connected.")
+        else:
+            ctx.obs = obs
+            print(f"OBS: połączono z {host}:{port}")
     return parser, registry, ctx
 
 
