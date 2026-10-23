@@ -5,7 +5,6 @@ Każdy preset to **jeden katalog** z jednym plikiem `preset.yaml` — dane, nie 
 ```
 presets/
 ├── schema.json                 # JSON Schema (draft 2020-12) — twardy kontrakt pliku
-├── presets.schema.json         # alias nazwy (kompatybilność z architekturą §2.5)
 ├── validate.py                 # walidator: schemat + reguły jakości + kolizje fraz
 ├── test_validate.py            # testy walidatora (negatywne przypadki; bez zależności)
 ├── README.md                   # format i zasady fraz (ten plik)

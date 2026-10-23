@@ -94,6 +94,7 @@ class Orchestrator:
         on_outcome: Callable[[Outcome], None] | None = None,
         on_text: Callable[[str, State], None] | None = None,
         debug_audio_dir: Path | None = None,
+        telemetry: Any = None,  # Telemetry (W3): events.jsonl + metrics.jsonl
     ):
         self.asr = asr
         self.capture = capture
@@ -110,6 +111,7 @@ class Orchestrator:
         self.on_outcome = on_outcome or self._print_outcome
         self.on_text = on_text
         self.debug_audio_dir = debug_audio_dir
+        self.telemetry = telemetry
         self._stop = False
         self.state = State.IDLE
         self._triggered_at: float | None = None
@@ -126,6 +128,7 @@ class Orchestrator:
     # ----------------------------------------------------------------- pętla
 
     def run_forever(self) -> None:
+        self._finish_reason = "eos"
         self.capture.start()
         if self.ptt is not None:
             self.ptt.start()
@@ -145,6 +148,8 @@ class Orchestrator:
             if self.ptt is not None:
                 self.ptt.stop()
             self.capture.stop()
+            if self.telemetry is not None:
+                self.telemetry.close()
 
     def _loop(self) -> None:
         recorder: UtteranceRecorder | None = None
@@ -198,6 +203,8 @@ class Orchestrator:
                     continue
             elif session.timed_out:
                 log.info("■ timeout: brak mowy przez 2.0 s po wybudzeniu")
+                if self.telemetry is not None and self._trigger_name == "wakeword":
+                    self.telemetry.wakeword_fp(1)  # wybudzenie bez mowy = FP (G4f)
                 recorder, session = None, None
                 continue
 
@@ -254,6 +261,10 @@ class Orchestrator:
             outcome.state = State.ASK
             if self.parser is not None:
                 outcome.candidates = self.parser.candidates(outcome.text, k=3)
+            if self.telemetry is not None:
+                # intent_guess = fraza z commands.yaml (string z listy) lub null (§2.4)
+                guess = outcome.candidates[0].phrase if outcome.candidates else None
+                self.telemetry.command_miss(intent_guess=guess)
             self._emit(outcome)
             return
 
@@ -279,6 +290,16 @@ class Orchestrator:
         outcome.e2e_total_ms = outcome.e2e_ms + vad_wait_ms
         outcome.state = State.FEEDBACK if outcome.action_ok else State.ASK
         self._set_state(outcome.state)
+        if self.telemetry is not None:
+            if outcome.action_ok:
+                self.telemetry.first_command(success=True)  # raz na instalację (G4a)
+            # metrics.jsonl: tylko przy świadomej zgodzie (asr_text tylko tam)
+            self.telemetry.log_metric(
+                outcome.intent,
+                bool(outcome.action_ok),
+                outcome.e2e_total_ms,
+                asr_text=outcome.text,
+            )
         self._emit(outcome)
 
     def _emit(self, outcome: Outcome) -> None:

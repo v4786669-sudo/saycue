@@ -49,7 +49,9 @@ def test_normalize_text(text, expected):
 def test_filler_tokens_only_as_whole_words():
     assert normalize_text("ok") == ""
     assert normalize_text("ok ok") == ""
-    assert normalize_text("spotify ok") == "spotify"
+    # R-01 (t10): fillery usuwane TYLKO na początku wypowiedzi —
+    # „spotify ok" zostaje nienaruszone („ok" na końcu to nie wypełniacz).
+    assert normalize_text("spotify ok") == "spotify ok"
 
 
 def test_normalize_text_idempotent():

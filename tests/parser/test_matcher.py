@@ -57,11 +57,13 @@ def test_template_resolves_vocab(matcher):
     assert r.score == 1.0
 
 
-def test_template_unresolved_keeps_raw(matcher):
+def test_template_unresolved_goes_ask(matcher):
+    # R-02 (t10): nierozpoznana wartość slotu NIE wykonuje akcji → ASK.
     r = matcher.parse("scena stream")
-    assert r is not None and r.intent == "obs.scene"
-    assert dict(r.slots) == {"scene": "stream"}
-    assert r.score == 0.9
+    assert r is None
+    # surowa wartość zostaje w kandydatach dla widoku ASK
+    cands = matcher.candidates("scena stream", k=5)
+    assert any(c.source == "template" and c.slots.get("scene") == "stream" for c in cands)
 
 
 def test_fuzzy_below_threshold_returns_none(matcher):
@@ -77,12 +79,14 @@ def test_fuzzy_above_threshold(matcher):
     assert 0.78 <= r.score < 1.0
 
 
-def test_substring_exact_beats_fuzzy(matcher):
-    # "wlancz discord" zawiera dokładną frazę "discord" → exact (determinizm)
+def test_substring_exact_does_not_fire(matcher):
+    # R-01 (t10): fragment w środku wypowiedzi NIE odpala akcji.
+    # „wlancz discord" nie może trafić w podciąg „discord" — dopiero fuzzy
+    # na CAŁYM zdaniu („wlancz discord" vs „wlacz discord") daje intencję.
     r = matcher.parse("wlancz discord")
     assert r is not None and r.intent == "app.open"
-    assert r.source == "exact"
-    assert r.matched == ("discord",)
+    assert r.source == "fuzzy"
+    assert "discord" in r.matched[0]
 
 
 def test_parse_empty_and_none(matcher):

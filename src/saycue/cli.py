@@ -24,9 +24,30 @@ DEFAULT_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="saycue",
-        description="SayCue — offline'owy asystent głosowy dla streamerów (W2: audio→ASR→akcje).",
+        description="SayCue — offline'owy asystent głosowy dla streamerów (W3: audio→ASR→akcje + doctor + presety).",
     )
     p.add_argument("--version", action="version", version=f"saycue {__version__}")
+    sub = p.add_subparsers(dest="command")
+
+    # saycue doctor [--json] [--faq] [--obs URL] [--mic-time N]
+    dp = sub.add_parser(
+        "doctor", help="self-diagnostyka: mikrofon, OBS, modele, FP/h, offline (kody 0/1/2)"
+    )
+    dp.add_argument("--json", action="store_true", help="wynik maszynowo-czytelny")
+    dp.add_argument("--faq", action="store_true", help="wygeneruj docs/faq.md i zakończ")
+    dp.add_argument("--obs", default="", help="OBS WebSocket URL (host:port[:hasło])")
+    dp.add_argument("--mic-time", type=float, default=2.0, help="czas pomiaru mikrofonu (s)")
+
+    # saycue gui [--no-tray] [--offscreen]
+    gp = sub.add_parser("gui", help="GUI + tray (W3); --offscreen dla testów")
+    gp.add_argument("--no-tray", action="store_true", help="bez ikony w trayu")
+    gp.add_argument("--offscreen", action="store_true", help="platforma offscreen (testy/CI)")
+
+    # saycue presets validate [path...] [--json]
+    pp = sub.add_parser("presets", help="presety YAML (§2.5): walidacja JSON Schema + reguły S2–S6")
+    pp.add_argument("--validate", action="store_true", dest="validate", help="waliduj presets/")
+    pp.add_argument("paths", nargs="*", help="katalogi presetów (domyślnie: wszystkie)")
+    pp.add_argument("--json", action="store_true", help="wynik maszynowo-czytelny")
     p.add_argument("--file", type=Path, help="demo end-to-end z pliku WAV/FLAC/MP3")
     p.add_argument("--list-devices", action="store_true", help="lista urządzeń audio i wyjście")
     p.add_argument(
@@ -190,12 +211,73 @@ def _cmd_live(args) -> int:
     return 0
 
 
+def _cmd_doctor(args) -> int:
+    from .doctor import format_checks, generate_faq, run_checks, verdict
+
+    if args.faq:
+        faq_path = Path(__file__).resolve().parents[2] / "docs" / "faq.md"
+        faq_path.parent.mkdir(parents=True, exist_ok=True)
+        faq_path.write_text(generate_faq(), encoding="utf-8")
+        print(f"FAQ wygenerowane: {faq_path}")
+        return 0
+    checks, duration = run_checks(obs_url=args.obs, mic_s=args.mic_time)
+    code, summary = verdict(checks)
+    if args.json:
+        import json
+
+        print(
+            json.dumps(
+                {
+                    "ok": code == 0,
+                    "exit_code": code,
+                    "summary": summary,
+                    "duration_s": round(duration, 2),
+                    "errors": len([c for c in checks if c.status == "error"]),
+                    "warnings": len([c for c in checks if c.status == "warn"]),
+                    "checks": [
+                        {"name": c.name, "status": c.status, "message": c.message, "fix": c.fix}
+                        for c in checks
+                    ],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+    else:
+        print(f"saycue doctor — {summary} ({duration:.1f} s)")
+        print(format_checks(checks))
+    return code
+
+
+def _cmd_presets(args) -> int:
+    import subprocess
+    import sys as _sys
+
+    script = Path(__file__).resolve().parents[2] / "presets" / "validate.py"
+    if not script.is_file():
+        print("presets/validate.py nie znaleziony — uruchom z katalogu repozytorium.")
+        return 2
+    cmd = [_sys.executable, str(script)]
+    if args.json:
+        cmd.append("--json")
+    cmd.extend(args.paths)
+    return subprocess.call(cmd)
+
+
 def main(argv=None) -> int:
     args = _build_parser().parse_args(argv)
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
     )
+    if args.command == "doctor":
+        return _cmd_doctor(args)
+    if args.command == "gui":
+        from .ui.app import run_gui
+
+        return run_gui(no_tray=args.no_tray, offscreen=args.offscreen)
+    if args.command == "presets":
+        return _cmd_presets(args)
     if args.list_devices:
         return _cmd_list_devices()
     if args.file:

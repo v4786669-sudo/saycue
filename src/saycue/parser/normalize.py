@@ -40,7 +40,12 @@ def normalize(text: str) -> str:
 
 def normalize_text(text: str | None, *, remove_fillers: bool = True) -> str:
     """Pełna normalizacja §2.3: ``normalize`` + usunięcie zwrotów
-    „proszę / hej / asystent / ok" (całe tokeny, nie podciągi — „skok"
+    „proszę / hej / asystent / ok".
+
+    WAŻNE (fix R-01, t10): fillery usuwane TYLKO z początku wypowiedzi
+    („hej, proszę otwórz spotify" → „otworz spotify"). Usuwanie w środku/
+    na końcu potrafi zostawić goły token (np. „…na spotkanie o 8" → „o"),
+    który trafia w fragment frazy. Całe tokeny, nie podciągi („skok"
     zostaje „skok").
 
     Zwraca ``""`` dla pustego/None. Idempotentna.
@@ -49,7 +54,10 @@ def normalize_text(text: str | None, *, remove_fillers: bool = True) -> str:
         return ""
     norm = normalize(text)
     if remove_fillers and norm:
-        norm = " ".join(w for w in norm.split() if w not in FILLER_TOKENS)
+        words = norm.split()
+        while words and words[0] in FILLER_TOKENS:
+            words.pop(0)
+        norm = " ".join(words)
     return norm
 
 

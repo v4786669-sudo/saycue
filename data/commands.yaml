@@ -1,12 +1,10 @@
 # commands.yaml — rdzeń SayCue (PL, architektura §2.2 + PLAN §5)
 # W1: frazy zasilają initial_prompt Whisper. W2 (t13): parser + rejestr akcji.
 #
-# Komendy OBS/aplikacji domyślnie mieszkają w PRESETACH (presets/ — t8):
-#   obs-core (sceny/mute/nagrywanie/replay), apps-open (otwórz/zamknij),
-#   apps-streaming (głośność/narzędzia). Parser łączy rdzeń z AKTYWNYMI
-#   presetami (patrz parser/rules.py — przy identycznej frazie wygrywa
-#   później aktywowany preset). Niżej zostają komendy, które działają
-#   bez presetów, oraz szablony z dynamicznymi slotami ({app}/{scene}).
+# DEDUPLIKACJA (t10, kapitan): frazy obecne w PRESETACH (obs-core/apps-open/
+# apps-streaming) usunięte z rdzenia — wygrywa preset (parser/rules.py), a logi
+# „fraza zduplikowana" znikają. Niżej zostają wyłącznie frazy rdzeniowe.
+# Szablony z dynamicznym slotem ({target}/{scene}) rozwiązują W2.
 version: 1
 language: pl
 # hotwords: punktowy bias tokenów (faster-whisper ≥1.2) TYLKO dla krótkich,
@@ -16,70 +14,68 @@ language: pl
 hotwords: ["cisza", "replay"]
 commands:
   - id: open_spotify
-    phrases: ["otwórz spotify", "włącz spotify", "spotify"]
+    phrases: ["spotify"]
     intent: app.open
     slots: { target: spotify }
 
   - id: open_discord
-    phrases: ["otwórz discord", "włącz discord", "discord"]
+    phrases: ["discord"]
     intent: app.open
     slots: { target: discord }
 
   - id: open_obs
-    phrases: ["otwórz obs", "włącz obs", "obs"]
+    phrases: ["obs"]
     intent: app.open
     slots: { target: obs }
 
   - id: obs_scene_pvp
-    phrases: ["scena pvp", "przełącz na pvp", "pvp"]
+    phrases: ["pvp"]
     intent: obs.scene
     slots: { scene: "PVP" }
 
   - id: obs_scene_start
-    phrases: ["scena startowa", "przełącz na startową", "ekran startowy"]
+    phrases: ["przełącz na startową"]
     intent: obs.scene
     slots: { scene: "Starting Soon" }
 
   - id: mute_mic
-    phrases: ["cisza", "wycisz", "wycisz mikrofon", "mute"]
+    phrases: ["cisza", "wycisz"]  # gołe „wycisz" = mikrofon (decyzja t13)
     intent: obs.mute
     slots: { source: mic, state: toggle }
 
   - id: obs_record_start
-    phrases: ["rozpocznij nagrywanie", "start nagrywania", "nagrywaj"]
+    phrases: ["rozpocznij nagrywanie", "start nagrywania"]
     intent: obs.record
     slots: { state: start }
 
   - id: obs_record_stop
-    phrases: ["zatrzymaj nagrywanie", "stop nagrywania", "koniec nagrywania"]
+    phrases: ["zatrzymaj nagrywanie"]
     intent: obs.record
     slots: { state: stop }
 
   - id: obs_replay
     # „replej/replejk" = warianty fonetyczne (t9, G2): Whisper słyszy zapożyczenie
     # EN wymawiane po polsku jako „teplejt/teplejk" — mechanizm §2.3 („spoty fi")
-    phrases: ["zapisz replay", "zapisz powtórkę", "replay", "replej", "replejk"]
+    phrases: ["replej", "replejk"]
     intent: obs.replay
     slots: {}
 
   - id: volume_down
-    phrases: ["ciszej", "ścisz", "zmniejsz głośność", "cichutko"]
+    phrases: ["ścisz", "zmniejsz głośność", "cichutko"]
     intent: system.volume
     slots: { delta: -20 }
 
   - id: volume_up
-    phrases: ["głośniej", "podgłośnij", "zwiększ głośność"]
+    phrases: ["zwiększ głośność"]
     intent: system.volume
-    slots: { delta: +20 }
+    slots: { delta: 20 }
 
   - id: press_dash
     # „wiki" = wariant fonetyczny (t9, decyzja kapitana 2026-10-23): Whisper
-    # słyszy „uniki" jako „wiki" (rapidfuzz 0,667 < 0,78). Brak kolizji w słowniku.
+    # słyszy „uniki" jako „wiki" (rapidfuzz 0,667 < 0,78). Brak kolizji.
     phrases: ["dasz", "uniki", "shift dash", "dash", "wiki"]
     intent: input.keys
     slots: { keys: [shift, space] }
-
-  # ---- dodatki t13 (rdzeń niezależny od presetów) ----
 
   - id: open_kalkulator
     phrases: ["otwórz kalkulator", "włącz kalkulator", "kalkulator"]
@@ -89,6 +85,7 @@ commands:
   # Szablony z dynamicznym slotem (architektura §2.3 krok 6):
   # "otwórz {target}" — wartość slotu wycinana z tekstu i rozwiązywana po
   # apps.yaml + apps[] presetów; "scena {scene}" — po scenach aktywnych komend.
+  # R-02 (t10): nierozpoznana wartość slotu → ASK (nigdy akcja z surową wartością).
   - id: open_app_template
     phrases: ["otwórz {target}", "uruchom {target}", "odpal {target}", "włącz {target}"]
     intent: app.open

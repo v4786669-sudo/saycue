@@ -1,11 +1,12 @@
-"""Telemetria — SZKIELET (tydzień 3, twardy wymóg §2.4).
+"""Telemetria: metrics.jsonl + events.jsonl (architektura §2.4).
 
-Kontrakt na W3:
-- `metrics.jsonl` (opt-in): {ts, intent, ok, latency_ms, asr_text?} — asr_text
-  tylko przy świadomej zgodzie;
-- `events.jsonl` (włączony, jawny opt-out): 9 typów zdarzeń G4a–G4h,
-  NIGDY treści wypowiedzi — zakazane pola: asr_text/text/phrase/transcript
-  (test CI tests/telemetry/test_privacy.py);
-- rotacja 30 dni / 2 MB, eksport do schowka w GUI.
-W1: moduł istnieje, ale nic nie zapisuje (metryki startują w tyg. 3).
+- `events.jsonl` — 9 zdarzeń G4a–G4h, rdzeń OSS ON z jawnym opt-out,
+  NIGDY treści wypowiedzi (zakazane pola: asr_text/text/phrase/transcript);
+- `metrics.jsonl` — opt-in, jedyne miejsce na `asr_text` (po zgodzie).
+Rotacja 30 dni / 2 MB, lokalnie, zero wysyłki. Test prywatności w CI:
+`tests/telemetry/test_privacy.py`.
 """
+
+from .telemetry import FORBIDDEN_FIELDS, JsonlStore, Telemetry
+
+__all__ = ["Telemetry", "JsonlStore", "FORBIDDEN_FIELDS"]

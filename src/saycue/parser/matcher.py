@@ -90,8 +90,12 @@ class Matcher:
         apps: Mapping[str, Any] | None = None,
         *,
         fuzzy_threshold: float = 0.78,
+        min_action_score: float = 0.8,
     ):
         self.fuzzy_threshold = float(fuzzy_threshold)
+        # R-02 (t10): fuzzy w [fuzzy_threshold, min_action_score) NIE wykonuje
+        # akcji — trafia do ASK (kandydaci). 1.0 = dokładne/szablon.
+        self.min_action_score = float(min_action_score)
         self.apps: dict[str, Any] = dict(apps or {})
         self._exact: list[_ExactEntry] = []
         self._templates: list[_TemplateEntry] = []
@@ -140,17 +144,17 @@ class Matcher:
         tpl = self._match_template(norm)
         if tpl is not None:
             entry, raw, resolved = tpl
+            if resolved is None:
+                # R-02 (t10): nierozpoznana wartość slotu NIE wykonuje akcji
+                # („scena 3" → obs.scene „3" to było naruszenie §2.3).
+                # Wartość surowa zostaje w kandydatach dla widoku ASK.
+                return None
             slots = dict(entry.command.get("slots") or {})
-            if resolved is not None:
-                slots[entry.slot] = resolved
-                score = 1.0
-            else:
-                slots[entry.slot] = raw
-                score = 0.9
+            slots[entry.slot] = resolved
             return ParseResult(
                 intent=entry.command["intent"],
                 slots=slots,
-                score=score,
+                score=1.0,
                 matched=(entry.original,),
                 source="template",
                 command_id=entry.command["id"],
@@ -180,6 +184,13 @@ class Matcher:
         for _end, indices in self._automaton.iter(norm):
             for idx in indices:
                 entry = self._exact[idx]
+                # pyahocorasick: _end = indeks OSTATNIEGO znaku dopasowania (0-based)
+                start = _end - len(entry.phrase) + 1
+                end_exclusive = _end + 1
+                # R-01 (t10): dopasowanie musi objąć CAŁĄ wypowiedź, nie fragment
+                # („…na spotkanie o 8" nie może odpalić frazy „o …" w środku).
+                if start != 0 or end_exclusive != len(norm):
+                    continue
                 if idx not in best or len(entry.phrase) > len(best[idx][1]):
                     best[idx] = (entry, entry.phrase)
         if not best:
@@ -217,6 +228,15 @@ class Matcher:
         )
         best_score, best = ranked[0]
         if best_score < self.fuzzy_threshold:
+            return None
+        if best_score < self.min_action_score:
+            # R-02 (t10): poniżej progu wykonania → ASK (kandydaci pokażą frazę)
+            log.info(
+                "fuzzy %.3f w [%.2f, %.2f) → ASK, nie wykonuję",
+                best_score,
+                self.fuzzy_threshold,
+                self.min_action_score,
+            )
             return None
         return best, best_score
 

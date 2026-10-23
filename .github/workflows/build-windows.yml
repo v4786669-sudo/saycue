@@ -1,0 +1,39 @@
+name: Build Windows installer
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  windows-installer:
+    name: PyInstaller onedir + Inno Setup (windows-latest)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python 3.11
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: |
+          uv venv --python 3.11 .venv
+          uv pip install --python .venv/bin/python -e ".[dev]" pyinstaller
+
+      - name: Build with PyInstaller (onedir)
+        run: .venv\Scripts\python -m PyInstaller installer/saycue.spec --clean --noconfirm
+
+      - name: Compile installer (Inno Setup)
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.6
+        with:
+          path: installer/windows/saycue.iss
+          options: /O+
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: saycue-setup-windows
+          path: dist/installer/*.exe

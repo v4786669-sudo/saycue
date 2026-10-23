@@ -52,8 +52,6 @@ CASES = [
     ("następna scena", "obs.scene", {"scene": "__next__"}),
     ("poprzednia", "obs.scene", {"scene": "__prev__"}),
     ("scena brb", "obs.scene", {"scene": "BRB"}),  # szablon → słownik scen
-    ("scena stream", "obs.scene", {"scene": "stream"}),  # szablon, brak w słowniku
-    ("scena pvn", "obs.scene", {"scene": "pvn"}),  # poniżej progu fuzzy słownika
     # ------------------------------ obs.mute (rdzeń + obs-core)
     ("cisza", "obs.mute", {"source": "mic", "state": "toggle"}),
     ("wycisz", "obs.mute", {"source": "mic", "state": "toggle"}),  # gołe: mikrofon!
@@ -109,6 +107,8 @@ CASES = [
     ("dusz", None, None),  # 0.75 < próg
     ("zupełny bełkot", None, None),
     ("włącz", None, None),  # sam szablon bez wartości slotu
+    ("scena stream", None, None),  # R-02: slot nierozwiązany → ASK, nie akcja
+    ("scena pvn", None, None),  # R-02: poniżej progu fuzzy słownika → ASK
     ("elite podwozie", None, None),  # gra nieaktywna w tej aktywacji
 ]
 

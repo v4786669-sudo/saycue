@@ -40,3 +40,23 @@ jobs:
         with:
           python-version: "3.11"
       - run: python scripts/check_manifest.py
+
+  presets:
+    name: presety YAML (§2.5) — schemat + reguły S2–S6 + zakaz kodu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Walidacja presetów (presets/validate.py, t8)
+        run: |
+          pip install pyyaml jsonschema
+          python presets/validate.py --json
+      - name: Zakaz plików wykonywalnych w katalogach presetów (R-04)
+        run: |
+          # wyjątek: presets/validate.py + test_validate.py = narzędzia walidacji (t8)
+          if find presets -mindepth 2 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.exe" -o -name "*.dll" -o -name "*.bat" -o -name "*.ps1" \) | grep -q .; then
+            echo "FAIL: kod w katalogu presetu — presety to YAML, nie kod (§2.5)"; exit 1
+          fi
+          echo "OK: presety czysto deklaratywne"
