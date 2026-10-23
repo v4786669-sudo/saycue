@@ -44,8 +44,11 @@ def probe() -> float | None:
         cpu_threads=4,
     )
     model.transcribe(
-        np.zeros(16000, dtype=np.float32), language="pl", beam_size=1,
-        temperature=0, vad_filter=False,
+        np.zeros(16000, dtype=np.float32),
+        language="pl",
+        beam_size=1,
+        temperature=0,
+        vad_filter=False,
     )  # warm-up
     times = []
     for _ in range(5):
@@ -71,22 +74,35 @@ def main() -> int:
     while True:
         load = load_avg(1)
         if load <= args.load:
-            print(f"[run_when_idle] load {load:.2f} ≤ {args.load} — sonda (5 przebiegów)…",
-                  flush=True)
+            print(
+                f"[run_when_idle] load {load:.2f} ≤ {args.load} — sonda (5 przebiegów)…", flush=True
+            )
             try:
                 median = probe()
             except Exception as exc:
                 print(f"[run_when_idle] sonda nieudana: {exc}", flush=True)
                 median = None
             if median is not None:
-                print(f"[run_when_idle] sonda: mediana {median:.0f} ms "
-                      f"({'OK' if median < 300 else 'za wolno — dalej czekam'})", flush=True)
+                print(
+                    f"[run_when_idle] sonda: mediana {median:.0f} ms "
+                    f"({'OK' if median < 300 else 'za wolno — dalej czekam'})",
+                    flush=True,
+                )
                 if median < 300:
-                    print(f"[run_when_idle] start pełnego benchmarku "
-                          f"(po {waited / 60:.1f} min oczekiwania)", flush=True)
+                    print(
+                        f"[run_when_idle] start pełnego benchmarku "
+                        f"(po {waited / 60:.1f} min oczekiwania)",
+                        flush=True,
+                    )
                     r = subprocess.run(
-                        [str(PY), str(ROOT / "bench" / "asr_latency.py"),
-                         "--n", str(args.n), "--model", args.model],
+                        [
+                            str(PY),
+                            str(ROOT / "bench" / "asr_latency.py"),
+                            "--n",
+                            str(args.n),
+                            "--model",
+                            args.model,
+                        ],
                         cwd=ROOT,
                     )
                     # dopisz medianę sondy do najnowszego raportu
@@ -100,9 +116,11 @@ def main() -> int:
                         )
                     return r.returncode
         if time.monotonic() > deadline:
-            print(f"[run_when_idle] timeout po {args.max_wait_min} min; load wciąż {load:.2f} "
-                  f"(próg {args.load}). Pomiar pominięty — uruchom ponownie w nocy.",
-                  flush=True)
+            print(
+                f"[run_when_idle] timeout po {args.max_wait_min} min; load wciąż {load:.2f} "
+                f"(próg {args.load}). Pomiar pominięty — uruchom ponownie w nocy.",
+                flush=True,
+            )
             return 2
         time.sleep(20)
 
