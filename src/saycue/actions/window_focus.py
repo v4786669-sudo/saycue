@@ -53,7 +53,9 @@ class WindowFocusAction(Action):
                 )
             count = focus_process_window(names) if names else 0
             if count == 0:
-                return ActionResult(False, error="window_not_found", message=f"brak okna procesu {names}")
+                return ActionResult(
+                    False, error="window_not_found", message=f"brak okna procesu {names}"
+                )
             return ActionResult(
                 True,
                 message=f"fokus na {app_id}",
@@ -76,12 +78,16 @@ class WindowFocusAction(Action):
                     timeout=5,
                 )
             except FileNotFoundError:
-                return ActionResult(False, error="missing_dependency:xdotool", message="brak xdotool")
+                return ActionResult(
+                    False, error="missing_dependency:xdotool", message="brak xdotool"
+                )
             except subprocess.TimeoutExpired:
                 return ActionResult(False, error="xdotool_timeout", message="xdotool zawiesił się")
             window_ids = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
             if not window_ids:
-                return ActionResult(False, error="window_not_found", message=f"brak okna klasy {app_id!r}")
+                return ActionResult(
+                    False, error="window_not_found", message=f"brak okna klasy {app_id!r}"
+                )
             subprocess.run(
                 ["xdotool", "windowactivate", "--sync", window_ids[0]],
                 capture_output=True,

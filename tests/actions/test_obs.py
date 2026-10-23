@@ -88,14 +88,18 @@ class MockObsServer:
     def _handler(self, ws) -> None:
         self._conns.append(ws)
         self.connection_count += 1
-        ws.send(json.dumps({
-            "op": 0,
-            "d": {
-                "obsWebSocketVersion": "5.5.5",
-                "rpcVersion": 1,
-                "authentication": {"challenge": "challenge", "salt": "salt"},
-            },
-        }))
+        ws.send(
+            json.dumps(
+                {
+                    "op": 0,
+                    "d": {
+                        "obsWebSocketVersion": "5.5.5",
+                        "rpcVersion": 1,
+                        "authentication": {"challenge": "challenge", "salt": "salt"},
+                    },
+                }
+            )
+        )
         ident = json.loads(ws.recv(timeout=5))
         if self.password:
             expected = _auth_string("salt", "challenge", self.password)
@@ -114,15 +118,19 @@ class MockObsServer:
                 if self.drop_after_requests is not None and served > self.drop_after_requests:
                     ws.close()  # zerwanie POZA odpowiedzią → klient się reconnectuje
                     return
-                ws.send(json.dumps({
-                    "op": 7,
-                    "d": {
-                        "requestType": d["requestType"],
-                        "requestId": d["requestId"],
-                        "requestStatus": {"code": 100, "result": True},
-                        "responseData": self._canned(d["requestType"]),
-                    },
-                }))
+                ws.send(
+                    json.dumps(
+                        {
+                            "op": 7,
+                            "d": {
+                                "requestType": d["requestType"],
+                                "requestId": d["requestId"],
+                                "requestStatus": {"code": 100, "result": True},
+                                "responseData": self._canned(d["requestType"]),
+                            },
+                        }
+                    )
+                )
 
     def _run(self) -> None:
         self._server = _ws_serve(self._handler, self.host, self.port)
@@ -269,9 +277,7 @@ def test_record_and_replay_actions(client, server):
 
 def test_filter_and_source_toggle_actions(client, server):
     ctx = ActionContext(obs=client)
-    r = ObsFilterAction().execute(
-        {"source": "kamera", "filter": "Censor", "state": "on"}, ctx
-    )
+    r = ObsFilterAction().execute({"source": "kamera", "filter": "Censor", "state": "on"}, ctx)
     assert r.ok is True
     assert server.requests[-1] == (
         "SetSourceFilterEnabled",
@@ -326,8 +332,11 @@ def test_reconnect_after_drop():
     srv.start()
     try:
         client = ObsClient(
-            host=srv.host, port=srv.port, timeout=3.0,
-            reconnect=True, backoff=(0.05, 0.05),
+            host=srv.host,
+            port=srv.port,
+            timeout=3.0,
+            reconnect=True,
+            backoff=(0.05, 0.05),
         )
         _connect_wait(client)
         assert client.connected is True

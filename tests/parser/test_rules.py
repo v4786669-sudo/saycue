@@ -79,8 +79,12 @@ def test_config_store_reload(tmp_data):
     n0 = len(store.config.commands)
     doc = yaml.safe_load((tmp_data / "commands.yaml").read_text(encoding="utf-8"))
     doc["commands"].append(
-        {"id": "test_extra", "phrases": ["testowa fraza t13"], "intent": "app.open",
-         "slots": {"target": "spotify"}}
+        {
+            "id": "test_extra",
+            "phrases": ["testowa fraza t13"],
+            "intent": "app.open",
+            "slots": {"target": "spotify"},
+        }
     )
     (tmp_data / "commands.yaml").write_text(yaml.safe_dump(doc), encoding="utf-8")
     assert store.poll_once() is True

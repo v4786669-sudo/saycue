@@ -51,8 +51,12 @@ def test_hot_reload_via_store(tmp_path, data_dir, presets_dir):
         assert parser.parse("testowa fraza hot") is None
         doc = yaml.safe_load((dst / "commands.yaml").read_text(encoding="utf-8"))
         doc["commands"].append(
-            {"id": "test_hot", "phrases": ["testowa fraza hot"], "intent": "app.open",
-             "slots": {"target": "spotify"}}
+            {
+                "id": "test_hot",
+                "phrases": ["testowa fraza hot"],
+                "intent": "app.open",
+                "slots": {"target": "spotify"},
+            }
         )
         (dst / "commands.yaml").write_text(yaml.safe_dump(doc), encoding="utf-8")
         assert parser.store.poll_once() is True

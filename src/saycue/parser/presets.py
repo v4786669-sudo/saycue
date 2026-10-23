@@ -94,7 +94,9 @@ class PresetLoader:
     """Ładowanie i walidacja presetów z katalogu ``presets/``."""
 
     def __init__(self, presets_dir: Path | None = None, *, validate: bool = True):
-        self.presets_dir = Path(presets_dir) if presets_dir is not None else _repo_root() / "presets"
+        self.presets_dir = (
+            Path(presets_dir) if presets_dir is not None else _repo_root() / "presets"
+        )
         self.validate = validate
 
     @property
@@ -161,7 +163,9 @@ class PresetLoader:
             )
             raise PresetError(preset_id, f"niezgodny ze schematem — {detail}")
 
-    def _normalize_commands(self, preset_id: str, doc: Mapping[str, Any], path: Path) -> list[dict[str, Any]]:
+    def _normalize_commands(
+        self, preset_id: str, doc: Mapping[str, Any], path: Path
+    ) -> list[dict[str, Any]]:
         keys_map: dict[str, list[str]] = {k: list(v) for k, v in (doc.get("keys") or {}).items()}
         out: list[dict[str, Any]] = []
         for raw in doc.get("commands") or []:
@@ -178,7 +182,9 @@ class PresetLoader:
             if intent == "input.keys" and "keybind" in slots:
                 keybind = str(slots.pop("keybind"))
                 if keybind not in keys_map:
-                    raise PresetError(preset_id, f"komenda {cmd['id']!r}: nieznany keybind {keybind!r}")
+                    raise PresetError(
+                        preset_id, f"komenda {cmd['id']!r}: nieznany keybind {keybind!r}"
+                    )
                 slots["keys"] = list(keys_map[keybind])
             if intent == "obs.record" and "action" in slots:
                 slots["state"] = slots.pop("action")

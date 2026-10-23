@@ -122,9 +122,7 @@ def _merge_preset_app(app_id: str, raw: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _merge_apps(
-    core_apps: Mapping[str, Any], presets: list[Preset]
-) -> dict[str, Any]:
+def _merge_apps(core_apps: Mapping[str, Any], presets: list[Preset]) -> dict[str, Any]:
     """Rdzeń + apps[] presetów (kolejność aktywacji = priorytet; aliasy się sumują)."""
     merged: dict[str, Any] = {}
     for app_id, entry in core_apps.items():

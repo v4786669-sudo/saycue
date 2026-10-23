@@ -38,18 +38,29 @@ def main() -> int:
     while True:
         load = load_avg(1)
         if load <= args.load:
-            print(f"[run_when_idle] load {load:.2f} ≤ {args.load} — start pomiaru "
-                  f"(po {waited / 60:.1f} min oczekiwania)", flush=True)
+            print(
+                f"[run_when_idle] load {load:.2f} ≤ {args.load} — start pomiaru "
+                f"(po {waited / 60:.1f} min oczekiwania)",
+                flush=True,
+            )
             r = subprocess.run(
-                [str(PY), str(ROOT / "bench" / "asr_latency.py"),
-                 "--n", str(args.n), "--model", args.model],
+                [
+                    str(PY),
+                    str(ROOT / "bench" / "asr_latency.py"),
+                    "--n",
+                    str(args.n),
+                    "--model",
+                    args.model,
+                ],
                 cwd=ROOT,
             )
             return r.returncode
         if time.monotonic() > deadline:
-            print(f"[run_when_idle] timeout po {args.max_wait_min} min; load wciąż {load:.2f} "
-                  f"(próg {args.load}). Pomiar pominięty — uruchom ponownie w nocy.",
-                  flush=True)
+            print(
+                f"[run_when_idle] timeout po {args.max_wait_min} min; load wciąż {load:.2f} "
+                f"(próg {args.load}). Pomiar pominięty — uruchom ponownie w nocy.",
+                flush=True,
+            )
             return 2
         time.sleep(20)
 

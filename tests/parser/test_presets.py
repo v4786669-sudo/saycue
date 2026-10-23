@@ -58,13 +58,21 @@ def test_parse_launch_strings():
         "args": ["--processStart", "Discord.exe"],
         "app_id": None,
     }
-    assert parse_win_launch("shell:AppsFolder\\Foo.Bar_123")["app_id"] == "shell:AppsFolder\\Foo.Bar_123"
+    assert (
+        parse_win_launch("shell:AppsFolder\\Foo.Bar_123")["app_id"]
+        == "shell:AppsFolder\\Foo.Bar_123"
+    )
     assert parse_linux_launch("firefox.desktop") == {"desktop_id": "firefox.desktop", "cmd": None}
-    assert parse_linux_launch("obs --studio-mode") == {"desktop_id": None, "cmd": ["obs", "--studio-mode"]}
+    assert parse_linux_launch("obs --studio-mode") == {
+        "desktop_id": None,
+        "cmd": ["obs", "--studio-mode"],
+    }
 
 
 def test_game_preset_active_switches_grammar(presets_dir):
-    parser = IntentParser(active_presets=["obs-core", "apps-open", "apps-streaming", "elite-dangerous"])
+    parser = IntentParser(
+        active_presets=["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
+    )
     r = parser.parse("elite podwozie")
     assert r is not None and r.intent == "input.keys"
     assert dict(r.slots) == {"keys": ["g"]}
@@ -80,7 +88,9 @@ def test_game_preset_active_switches_grammar(presets_dir):
 
 def test_game_prefixes_share_vocabulary(presets_dir):
     """Gry dzielą słownictwo — prefiks gry rozstrzyga (decyzja t13/kapitan)."""
-    parser = IntentParser(active_presets=["obs-core", "apps-open", "apps-streaming", "elite-dangerous"])
+    parser = IntentParser(
+        active_presets=["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
+    )
     assert parser.parse("elite podwozie") is not None
     # "podwozie" bez prefiksu nie uruchamia akcji gry
     assert parser.parse("podwozie") is None
@@ -126,7 +136,9 @@ def test_cross_intent_phrase_collision_fails(tmp_path, presets_dir, data_dir):
     (bad_dir / "schema.json").write_text(
         (presets_dir / "schema.json").read_text(encoding="utf-8"), encoding="utf-8"
     )
-    schema_ok_doc = yaml.safe_load((presets_dir / "apps-open" / "preset.yaml").read_text(encoding="utf-8"))
+    schema_ok_doc = yaml.safe_load(
+        (presets_dir / "apps-open" / "preset.yaml").read_text(encoding="utf-8")
+    )
 
     def write_preset(pid: str, phrases: list[str], intent: str) -> None:
         doc = dict(schema_ok_doc)
@@ -139,7 +151,9 @@ def test_cross_intent_phrase_collision_fails(tmp_path, presets_dir, data_dir):
         (d / "preset.yaml").write_text(yaml.safe_dump(doc, allow_unicode=True), encoding="utf-8")
 
     write_preset("aaa-first", ["dziwna fraza", "dziwna fraza dwa", "dziwna fraza trzy"], "app.open")
-    write_preset("bbb-second", ["dziwna fraza", "inna fraza druga", "inna fraza trzecia"], "input.keys")
+    write_preset(
+        "bbb-second", ["dziwna fraza", "inna fraza druga", "inna fraza trzecia"], "input.keys"
+    )
     from saycue.parser.rules import RulesLoader
 
     data = tmp_path / "data"

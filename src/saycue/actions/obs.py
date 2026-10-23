@@ -46,9 +46,7 @@ OP_EVENT = 5
 OP_REQUEST = 6
 OP_REQUEST_RESPONSE = 7
 
-OBS_REQUIREMENTS = (
-    "wymagany OBS ≥ 28 z włączonym obs-websocket (Narzędzia → WebSocket Server)"
-)
+OBS_REQUIREMENTS = "wymagany OBS ≥ 28 z włączonym obs-websocket (Narzędzia → WebSocket Server)"
 
 
 class ObsError(Exception):
@@ -102,7 +100,9 @@ class ObsClient:
         """Łączy i identyfikuje (Hello → Identify → Identified). Raises ObsError."""
         self.close()
         if not _WS_AVAILABLE:
-            raise ObsError("missing_dependency", "zainstaluj `websockets` (pip install websockets>=12)")
+            raise ObsError(
+                "missing_dependency", "zainstaluj `websockets` (pip install websockets>=12)"
+            )
         try:
             self._ws = _ws_connect(self.uri, open_timeout=self.timeout, legacy=True)
         except Exception as exc:
@@ -178,10 +178,9 @@ class ObsClient:
             if remaining <= 0:
                 raise TimeoutError(f"OBS nie odpowiedział na żądanie {request_id} w czasie")
             msg = self._recv(op_timeout=max(0.05, remaining))
-            if (
-                msg.get("op") == OP_REQUEST_RESPONSE
-                and (msg.get("d") or {}).get("requestId") == str(request_id)
-            ):
+            if msg.get("op") == OP_REQUEST_RESPONSE and (msg.get("d") or {}).get(
+                "requestId"
+            ) == str(request_id):
                 return msg
 
     # ----------------------------------------------------------------- request
@@ -220,9 +219,7 @@ class ObsClient:
             status = (msg.get("d") or {}).get("requestStatus") or {}
             code = status.get("code")
             if code != 100:
-                raise ObsError(
-                    str(code), str(status.get("comment") or "błąd OBS"), request_type
-                )
+                raise ObsError(str(code), str(status.get("comment") or "błąd OBS"), request_type)
             return (msg["d"].get("responseData") or {}) if msg.get("d") else {}
         raise ObsError("request_failed", "wyczerpano retry", request_type)  # pragma: no cover
 
@@ -278,7 +275,9 @@ class ObsClient:
     def stop_replay_buffer(self) -> dict[str, Any]:
         return self.request("StopReplayBuffer")
 
-    def set_source_filter_enabled(self, source: str, filter_name: str, enabled: bool) -> dict[str, Any]:
+    def set_source_filter_enabled(
+        self, source: str, filter_name: str, enabled: bool
+    ) -> dict[str, Any]:
         return self.request(
             "SetSourceFilterEnabled",
             {"sourceName": source, "filterName": filter_name, "filterEnabled": bool(enabled)},
@@ -394,7 +393,10 @@ class ObsMuteAction(Action):
             )
         except ObsError as exc:
             return ActionResult(
-                False, error=f"obs_error:{exc.code}:{exc.message}", message=str(exc), latency_ms=_latency(t0)
+                False,
+                error=f"obs_error:{exc.code}:{exc.message}",
+                message=str(exc),
+                latency_ms=_latency(t0),
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -426,7 +428,10 @@ class ObsRecordAction(Action):
             return ActionResult(True, message=f"record → {state}", latency_ms=_latency(t0))
         except ObsError as exc:
             return ActionResult(
-                False, error=f"obs_error:{exc.code}:{exc.message}", message=str(exc), latency_ms=_latency(t0)
+                False,
+                error=f"obs_error:{exc.code}:{exc.message}",
+                message=str(exc),
+                latency_ms=_latency(t0),
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -458,7 +463,10 @@ class ObsReplayAction(Action):
             return ActionResult(True, message=f"replay → {action}", latency_ms=_latency(t0))
         except ObsError as exc:
             return ActionResult(
-                False, error=f"obs_error:{exc.code}:{exc.message}", message=str(exc), latency_ms=_latency(t0)
+                False,
+                error=f"obs_error:{exc.code}:{exc.message}",
+                message=str(exc),
+                latency_ms=_latency(t0),
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -499,7 +507,10 @@ class ObsFilterAction(Action):
             )
         except ObsError as exc:
             return ActionResult(
-                False, error=f"obs_error:{exc.code}:{exc.message}", message=str(exc), latency_ms=_latency(t0)
+                False,
+                error=f"obs_error:{exc.code}:{exc.message}",
+                message=str(exc),
+                latency_ms=_latency(t0),
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -533,7 +544,10 @@ class ObsSourceToggleAction(Action):
             )
         except ObsError as exc:
             return ActionResult(
-                False, error=f"obs_error:{exc.code}:{exc.message}", message=str(exc), latency_ms=_latency(t0)
+                False,
+                error=f"obs_error:{exc.code}:{exc.message}",
+                message=str(exc),
+                latency_ms=_latency(t0),
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:

@@ -64,7 +64,9 @@ def levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-def match_phrase(transcript: str, phrases: list[dict], fuzzy_min: float) -> tuple[dict, float, bool]:
+def match_phrase(
+    transcript: str, phrases: list[dict], fuzzy_min: float
+) -> tuple[dict, float, bool]:
     """Najlepsze dopasowanie transkrypcji do fraz.
 
     Zwraca (entry, score, accepted): accepted=True, gdy dokładne trafienie,
@@ -80,7 +82,9 @@ def match_phrase(transcript: str, phrases: list[dict], fuzzy_min: float) -> tupl
             best, best_score = entry, score
     if best is None:
         return None, 0.0, False
-    accepted = best_score >= fuzzy_min or levenshtein(norm, normalize(best["phrase"])) <= PARSER_LEV_MAX
+    accepted = (
+        best_score >= fuzzy_min or levenshtein(norm, normalize(best["phrase"])) <= PARSER_LEV_MAX
+    )
     return best, best_score, accepted
 
 

@@ -83,9 +83,7 @@ def post_close_to_processes(exe_names: list[str]) -> int:
     if not is_windows():
         return 0
     user32 = ctypes.windll.user32
-    return _enum_windows(
-        exe_names, lambda hwnd: user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
-    )
+    return _enum_windows(exe_names, lambda hwnd: user32.PostMessageW(hwnd, WM_CLOSE, 0, 0))
 
 
 def focus_process_window(exe_names: list[str]) -> int:

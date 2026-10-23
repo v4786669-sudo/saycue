@@ -97,7 +97,9 @@ class AppCloseAction(Action):
         except FileNotFoundError:
             return ActionResult(False, error="missing_dependency:xdotool", message="brak xdotool")
         except subprocess.TimeoutExpired:
-            return ActionResult(False, error="xdotool_timeout", message="xdotool search zawiesił się")
+            return ActionResult(
+                False, error="xdotool_timeout", message="xdotool search zawiesił się"
+            )
         window_ids = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
         if proc.returncode != 0 or not window_ids:
             return ActionResult(

@@ -20,13 +20,22 @@ def test_linux_mute_plan():
     ctx = ActionContext(platform="linux", dry_run=True)
     action = SystemVolumeAction()
     assert action.execute({"direction": "mute"}, ctx).details["cmd"] == [
-        "pactl", "set-sink-mute", "@DEFAULT_SINK@", "1",
+        "pactl",
+        "set-sink-mute",
+        "@DEFAULT_SINK@",
+        "1",
     ]
     assert action.execute({"direction": "unmute"}, ctx).details["cmd"] == [
-        "pactl", "set-sink-mute", "@DEFAULT_SINK@", "0",
+        "pactl",
+        "set-sink-mute",
+        "@DEFAULT_SINK@",
+        "0",
     ]
     assert action.execute({"direction": "toggle"}, ctx).details["cmd"] == [
-        "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle",
+        "pactl",
+        "set-sink-mute",
+        "@DEFAULT_SINK@",
+        "toggle",
     ]
 
 

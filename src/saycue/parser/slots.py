@@ -43,7 +43,9 @@ class SlotResolver:
         return None
 
 
-def build_slot_vocabs(commands: list[Mapping[str, Any]], apps: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+def build_slot_vocabs(
+    commands: list[Mapping[str, Any]], apps: Mapping[str, Any]
+) -> dict[str, dict[str, Any]]:
     """Buduje słowniki slotów z komend i mapy aplikacji.
 
     * slot ``app``/``target`` → klucze i aliasy aplikacji (apps.yaml + presety);

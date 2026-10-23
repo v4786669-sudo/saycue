@@ -92,7 +92,9 @@ class SystemVolumeAction(Action):
         try:
             proc = subprocess.run(cmd, capture_output=True, timeout=5)
         except FileNotFoundError:
-            return ActionResult(False, error="missing_dependency:pactl", message="brak pactl (pulseaudio/pipewire)")
+            return ActionResult(
+                False, error="missing_dependency:pactl", message="brak pactl (pulseaudio/pipewire)"
+            )
         except subprocess.TimeoutExpired:
             return ActionResult(False, error="pactl_timeout", message="pactl zawiesił się")
         if proc.returncode != 0:

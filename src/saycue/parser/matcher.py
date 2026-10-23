@@ -60,7 +60,7 @@ def _parse_template(original: str) -> tuple[str, str, str] | None:
         raise ValueError(f"fraza szablonowa może mieć tylko jeden slot: {original!r}")
     m = found[0]
     prefix = normalize_text(original[: m.start()])
-    suffix = normalize_text(original[m.end():])
+    suffix = normalize_text(original[m.end() :])
     return prefix, suffix, m.group(1)
 
 
@@ -162,7 +162,9 @@ class Matcher:
         entry, score = fuzzy
         return self._result(entry.command, entry.phrase, round(score, 3), "fuzzy")
 
-    def _result(self, command: Mapping[str, Any], matched: str, score: float, source: str) -> ParseResult:
+    def _result(
+        self, command: Mapping[str, Any], matched: str, score: float, source: str
+    ) -> ParseResult:
         return ParseResult(
             intent=command["intent"],
             slots=dict(command.get("slots") or {}),
@@ -188,7 +190,7 @@ class Matcher:
         for entry in self._templates:
             if not norm.startswith(entry.prefix):
                 continue
-            rest = norm[len(entry.prefix):]
+            rest = norm[len(entry.prefix) :]
             if rest and not rest[0].isspace():
                 continue  # wymagamy granicy słowa za prefiksem
             raw = rest.strip()
@@ -278,9 +280,7 @@ class Matcher:
                         order=entry.order,
                     )
                 )
-        out.sort(
-            key=lambda c: (round(c.score, 4), len(c.phrase), -c.order), reverse=True
-        )
+        out.sort(key=lambda c: (round(c.score, 4), len(c.phrase), -c.order), reverse=True)
         deduped: list[Candidate] = []
         seen = set()
         for cand in out:

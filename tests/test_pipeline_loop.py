@@ -19,7 +19,7 @@ from faster_whisper.audio import decode_audio  # noqa: E402
 
 from saycue.asr.manifest import load_manifest, verify_spec  # noqa: E402
 from saycue.asr.whisper import ASREngine  # noqa: E402
-from saycue.audio.capture import AudioCapture, RingBuffer  # noqa: E402
+from saycue.audio.capture import AudioCapture  # noqa: E402
 from saycue.pipeline import Pipeline, PipelineResult  # noqa: E402
 from saycue.vad.silero import SileroVAD  # noqa: E402
 
@@ -54,8 +54,14 @@ def test_loop_transcribes_wav(wav_path):
         done.set()
 
     pipeline = Pipeline(
-        asr=asr, capture=capture, vad=SileroVAD(), wake=None, ptt=None,
-        on_result=on_result, end_silence_s=0.6, max_utterance_s=8.0,
+        asr=asr,
+        capture=capture,
+        vad=SileroVAD(),
+        wake=None,
+        ptt=None,
+        on_result=on_result,
+        end_silence_s=0.6,
+        max_utterance_s=8.0,
     )
     thread = threading.Thread(target=pipeline.run_forever, daemon=True)
     thread.start()
@@ -90,7 +96,7 @@ class _FakeCapture(AudioCapture):
     def _play(self) -> None:
         chunk = 512
         while self._running.is_set() and self._pos < len(self._audio):
-            frame = self._audio[self._pos: self._pos + chunk]
+            frame = self._audio[self._pos : self._pos + chunk]
             self._pos += chunk
             if frame.size < chunk:
                 frame = np.pad(frame, (0, chunk - frame.size))
