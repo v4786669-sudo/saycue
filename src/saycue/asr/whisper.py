@@ -58,9 +58,37 @@ def load_phrases(commands_yaml: Path | None = None) -> list[str]:
     return phrases
 
 
-def load_initial_prompt(commands_yaml: Path | None = None) -> str:
-    """Lista fraz z commands.yaml → `initial_prompt` dla Whisper (§3.2 prompt bias)."""
-    return ", ".join(load_phrases(commands_yaml))
+def filter_short_phrases(phrases, max_tokens: int = 2) -> list[str]:
+    """Filtruje frazy do promptu: bez szablonów slotów, ≤ max_tokens tokenów.
+
+    Pułapka zmierzona (G2, handoff-t15 §5): prompt ze WSZYSTKICH fraz aktywnych
+    presetów (~220) DEGENERUJE greedy decoding (14/20) — bias tylko krótkich
+    fraz jest bezpieczny (rdzeń + arcade-dash ≈ dawny zestaw: 16–17/20)."""
+    out: list[str] = []
+    for phrase in phrases:
+        phrase = str(phrase).strip()
+        if not phrase or "{" in phrase:
+            continue
+        if len(phrase.split()) <= max_tokens and phrase not in out:
+            out.append(phrase)
+    return out
+
+
+def load_initial_prompt(
+    commands_yaml: Path | None = None,
+    extra_phrases: list[str] | None = None,
+    max_phrases: int = 60,
+) -> str:
+    """Rdzeń (commands.yaml) + KRÓTKIE frazy aktywnych presetów → initial_prompt.
+
+    Cap `max_phrases` to twarde zabezpieczenie przed degeneracją greedy
+    (zmierzone: ~220 fraz → 14/20 G2; ~35 fraz → 17–19/20)."""
+    phrases = list(load_phrases(commands_yaml))
+    extras = filter_short_phrases(extra_phrases or [])
+    for phrase in extras:
+        if phrase not in phrases:
+            phrases.append(phrase)
+    return ", ".join(phrases[:max_phrases])
 
 
 def load_hotwords(commands_yaml: Path | None = None) -> str:

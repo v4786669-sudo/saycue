@@ -78,9 +78,7 @@ def env(recordings_dir):
         for p in (cmd.get("phrases") or [])
         if "{" not in str(p)
     ]
-    engine = ASREngine(
-        model_size="small", language="pl", initial_prompt=", ".join(prompt_phrases)
-    )
+    engine = ASREngine(model_size="small", language="pl", initial_prompt=", ".join(prompt_phrases))
     yield {"parser": parser, "registry": registry, "ctx": ctx, "engine": engine, "server": server}
     obs.close()
     server.stop()

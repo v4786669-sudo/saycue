@@ -138,10 +138,34 @@ def _build_components(args):
     return parser, registry, ctx
 
 
-def _cmd_file(args) -> int:
-    from .asr.whisper import ASREngine, transcribe_file
+def _active_phrases(parser) -> list[str]:
+    """Frazy scalonej gramatyki (rdzeń + aktywne presety) — dla promptu ASR."""
+    cfg = getattr(parser, "config", None)
+    phrases: list[str] = []
+    if cfg is not None:
+        for cmd in cfg.commands:
+            phrases.extend(str(ph) for ph in cmd.get("phrases", []))
+    return phrases
 
-    engine = ASREngine(model_size=args.model, language=args.language)
+
+def _cmd_file(args) -> int:
+    from .asr.whisper import ASREngine, load_initial_prompt, transcribe_file
+
+    parser_prompt = None
+    if args.file is not None:
+        # parser może nie działać bez modeli — prompt tylko, gdy konfig jest
+        try:
+            _parser, _reg, _ctx = _build_components(args)
+            parser_prompt = load_initial_prompt(
+                extra_phrases=_active_phrases(_parser),
+            )
+        except Exception:
+            parser_prompt = None
+    engine = ASREngine(
+        model_size=args.model,
+        language=args.language,
+        initial_prompt=parser_prompt,
+    )
     result = transcribe_file(args.file, engine=engine, language=args.language)
     print(f"plik : {args.file}")
     print(f'tekst: "{result.text}"')
@@ -164,7 +188,7 @@ def _cmd_file(args) -> int:
 
 
 def _cmd_live(args) -> int:
-    from .asr.whisper import ASREngine
+    from .asr.whisper import ASREngine, load_initial_prompt
     from .audio.capture import AudioCapture
     from .orchestrator import Orchestrator
     from .vad.silero import SileroVAD
@@ -177,8 +201,13 @@ def _cmd_live(args) -> int:
 
     capture = AudioCapture(device=args.device, alsa_device=args.alsa_device)
     vad = SileroVAD()
-    asr = ASREngine(model_size=args.model, language=args.language)
     parser, registry, ctx = _build_components(args)
+    # N-01 (t15): frazy gier poza rdzeniem — bias promptu = rdzeń + KRÓTKIE
+    # frazy aktywnych presetów (cap 60; degeneracja greedy przy ~220)
+    prompt = load_initial_prompt(
+        extra_phrases=[str(c.get("phrase")) for c in _active_phrases(parser)],
+    )
+    asr = ASREngine(model_size=args.model, language=args.language, initial_prompt=prompt)
     wake = WakeWordDetector() if use_wake else None
     ptt = PushToTalk() if use_ptt else None
     if use_vad_gate:

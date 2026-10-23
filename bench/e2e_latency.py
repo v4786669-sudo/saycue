@@ -39,7 +39,7 @@ from saycue.parser import IntentParser  # noqa: E402
 from saycue.vad.silero import SileroVAD  # noqa: E402
 
 G2_YAML = ROOT / "eval" / "g2_commands.yaml"
-ACTIVE_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
+ACTIVE_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous", "arcade-dash"]
 TIMEOUT_S = 120
 
 
@@ -101,7 +101,12 @@ def main() -> int:
     parser = IntentParser(active_presets=ACTIVE_PRESETS)
     registry = build_default_registry()
     ctx = ActionContext(apps=parser.config.apps, obs=obs, dry_run=True)
-    asr = ASREngine(model_size="small", language="pl")
+    from saycue.asr.whisper import load_initial_prompt
+
+    extra = [str(ph) for cmd in parser.config.commands for ph in cmd.get("phrases", [])]
+    asr = ASREngine(
+        model_size="small", language="pl", initial_prompt=load_initial_prompt(extra_phrases=extra)
+    )
 
     rows = []
     for rep in range(args.n):

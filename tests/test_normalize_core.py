@@ -30,3 +30,27 @@ def test_fuzzy_similarity():
 def test_mute_variants_normalize_to_same_intent_phrases():
     assert normalize("Wycisz!") == normalize("wycisz")
     assert normalize("MUte") == "mute"
+
+
+# --- prompt ASR (N-01, t15): rdzeń + krótkie frazy presetów, cap 60 ---
+from saycue.asr.whisper import filter_short_phrases, load_initial_prompt  # noqa: E402
+
+
+def test_filter_short_phrases_drops_templates_and_long():
+    phrases = ["mute", "cisza", "scena pvp", "otwórz {target}", "przełącz na startową"]
+    assert filter_short_phrases(phrases) == ["mute", "cisza", "scena pvp"]
+
+
+def test_initial_prompt_caps_and_dedups():
+    extras = [f"fraza {i}" for i in range(200)] + ["cisza"]
+    prompt = load_initial_prompt(extra_phrases=extras, max_phrases=60)
+    words = prompt.split(", ")
+    assert len(words) <= 60
+    assert words.count("cisza") <= 1  # dedup z rdzeniem
+
+
+def test_initial_prompt_starts_with_core():
+    core = load_initial_prompt()
+    prompt = load_initial_prompt(extra_phrases=["arcade mute", "dasz"], max_phrases=60)
+    assert prompt.startswith(core.split(", ")[0]) or core.split(", ")[0] in prompt
+    assert "dasz" in prompt.split(", ")  # krótka fraza presetu dodana
