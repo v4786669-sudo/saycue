@@ -15,7 +15,18 @@
 
 Makr omijających antycheat · dyktowania do czatu gry w MVP · modeli AI/LLM w ścieżce sterowania · macOS w MVP.
 
-## Szybki start (Linux / Windows, Python 3.11+)
+## Instalacja
+
+**Windows (produkcja):** `saycue-setup-<wersja>.exe` — budowany w CI
+(`.github/workflows/build-windows.yml`: PyInstaller onedir + Inno Setup, instalacja
+<5 min na czystym VM). Modele NIE są w instalatorze (R10) — pierwsze uruchomienie
+pobiera je z manifestu; `saycue doctor` poprowadzi. Autostart: opcja w instalatorze (HKCU Run).
+
+**Linux (produkcja):** `pipx install saycue` → `saycue doctor` pobierze modele i
+przeprowadzi diagnostykę. Autostart: GUI → Integracje → (plik `~/.config/autostart/saycue.desktop`
+generowany przez `saycue gui`).
+
+## Szybki start (dev, Linux / Windows, Python 3.11+)
 
 ```bash
 # 1. Środowisko i zależności
@@ -39,6 +50,9 @@ pytest -m "not models"
 python bench/asr_latency.py      # ASR | bench/e2e_latency.py — end-to-end | run_when_idle.py — gdy CPU wolny
 python eval/run_eval.py
 python bench/stress_session.py --minutes 30   # sesja stabilności G2
+python -m saycue doctor         # self-diagnostyka (mikrofon/OBS/modele/FP): kody 0/1/2
+python -m saycue gui            # GUI + tray (W3)
+python -m saycue presets validate  # walidacja presetów YAML (§2.5)
 ```
 
 **Interakcja (pętla na żywo):** powiedz **„hej asystent"** (openWakeWord, model EN — własny model PL w planie, ryzyko R6) **albo** przytrzymaj **Ctrl+Alt+Space** (push-to-talk, fallback), powiedz komendę (maks. 8 s, koniec po 600 ms ciszy), zobacz transkrypcję na ekranie. Ctrl+C kończy.
@@ -78,6 +92,6 @@ Rdzeń: **MIT** (patrz [LICENSE](LICENSE)). Modele: faster-whisper (MIT), Silero
 | Tydzień | Cel | Bramka |
 |---|---|---|
 | W1 | audio → wake-word/VAD → transkrypcja | **G1:** ≥85% komend, ASR p95 ≤500 ms — **GO** (93,3%) |
-| **W2 (tu jesteśmy)** | orchestrator: parser + akcje OS + OBS | **G2:** ≥90% komend, p95 ≤1,2 s — **GO** (90,0%, 18/20) |
-| W3 | GUI/tray, instalator, `doctor`, presety YAML | G3: ≥60% testerów „first command" ≤10 min |
+| W2 | orchestrator: parser + akcje OS + OBS | **G2:** ≥90% komend, p95 ≤1,2 s — **GO** (95,0%, 19/20) |
+| **W3 (tu jesteśmy)** | GUI/tray, instalator, `doctor`, telemetria, presety | **G3:** ≥60% testerów „first command" ≤10 min (tura testerów z researcherem — patrz notes/g3-report.md) |
 | W4 | hardening, akcenty, **v0.1.0 publiczne** | G4 wstępne (T0+14 dni) |
