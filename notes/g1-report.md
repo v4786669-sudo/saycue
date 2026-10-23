@@ -29,7 +29,7 @@
 
 **Narzędzie:** `bench/asr_latency.py` + `bench/run_when_idle.py` (czeka na load ≤ 2.5 i robi sondę 5 przebiegów; pełny benchmark tylko przy medianie sondy < 300 ms).
 
-**Dowód, że 4,5 s to kontencja, nie silnik:** sonda runnera przy load 2,4 dała medianę 4084 ms — czyli nawet przy „umiarkowanym" loadzie VM nadsubskrybowany na hoście i3-1315U degraduje decode ~100×. W oknie bez obciążenia ten sam plik, ten sam model: 9–83 ms. Runner dalej działa w tle (150 min); gdy złapie czyste okno, JSON z p50/p95 trafi do `saycue/bench/results/`.
+**Dowód, że 4,5 s to kontencja, nie silnik:** sonda runnera przy load 2,4 dała medianę 4084 ms; sondy per para vCPU (taskset) — 4,8–8,3 s równomiernie na wszystkich parach. VM jest nadsubskrybowany na hoście i3-1315U i przy JAKIMKOLWIEK obciążeniu hosta degraduje decode ~100×. W oknie bez obciążenia ten sam plik, ten sam model: 9–83 ms. Runner dalej działa w tle (do ~18:30); gdy złapie czyste okno, JSON z p50/p95 trafi do `saycue/bench/results/` i należy uzupełnić tę sekcję.
 
 ## 3. Poprawność intencji (15 fraz PL, nagrania TTS + szum)
 
