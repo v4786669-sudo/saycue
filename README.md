@@ -119,5 +119,5 @@ Rdzeń: [MIT](LICENSE). Modele pobierane osobno: faster-whisper (MIT), Silero VA
 ## Kontakt
 
 - Błędy i propozycje: [Issues](../../issues)
-- Społeczność i wczesne wersje: [Discord](https://discord.gg/saycue)
+- Społeczność i wczesne wersje: [Discord](https://discord.gg/7xYByRMV98)
 - Wydania: [Releases](../../releases)
