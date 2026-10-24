@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="SayCue">
+  <rect width="512" height="512" rx="120" fill="#0f1117"/>
+  <circle cx="256" cy="196" r="150" fill="#161a26"/>
+  <!-- mikrofon -->
+  <rect x="216" y="108" width="80" height="150" rx="40" fill="#8b5cf6"/>
+  <path d="M148 216 Q256 330 364 216" stroke="#8b5cf6" stroke-width="26" fill="none" stroke-linecap="round"/>
+  <rect x="232" y="292" width="48" height="56" rx="14" fill="#8b5cf6"/>
+  <rect x="188" y="344" width="136" height="26" rx="13" fill="#8b5cf6"/>
+  <!-- cue (kropka sygnału) -->
+  <circle cx="392" cy="112" r="30" fill="#22d3ee"/>
+  <circle cx="392" cy="112" r="14" fill="#0f1117"/>
+  <text x="256" y="470" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="60" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="2">SayCue</text>
+</svg>
