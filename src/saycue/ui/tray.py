@@ -1,7 +1,7 @@
 """Tray (pystray): ikona ze stanem, menu Start/Stop / Tryb cichy / Otwórz / Zamknij.
 
 Na Wayland tray zależy od DE (GNOME wymaga rozszerzenia) — łapiemy błąd
-i działamy bez traya (architektura §3.5)."""
+i działamy bez traya."""
 
 from __future__ import annotations
 
@@ -35,10 +35,10 @@ def create_tray(main_window, settings):
             pass
 
     menu = pystray.Menu(
-        pystray.MenuItem("Otwórz okno", _open, default=True),
+        pystray.MenuItem("Otworz okno", _open, default=True),
         pystray.MenuItem("Tryb cichy (tylko tray)", lambda i, m: main_window.window.hide()),
         pystray.MenuItem("Zamknij", _quit),
     )
-    icon = pystray.Icon("saycue", img, "SayCue — asystent głosowy", menu)
+    icon = pystray.Icon("saycue", img, "SayCue", menu)
     threading.Thread(target=icon.run, daemon=True).start()
     return icon
