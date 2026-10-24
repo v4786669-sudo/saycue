@@ -1,6 +1,6 @@
 # Contributing — presety SayCue
 
-Presety to **dane, nie kod** (architektura §2.5). Nowy preset to katalog z `preset.yaml`. Bez commitów w `src/`, bez zależności Pythona, bez zmian w rdzeniu.
+Presety to **dane, nie kod**. Nowy preset to katalog z `preset.yaml`. Bez commitów w `src/`, bez zależności Pythona, bez zmian w rdzeniu.
 
 Gdzie szukać: `presets/README.md` (format) i `presets/schema.json` (kontrakt). Ten plik mówi: jak zrobić PR, co odrzucimy i jak działa walidacja.
 
@@ -59,7 +59,7 @@ Pełny kontrakt pól: `presets/schema.json` (JSON Schema draft 2020-12, `additio
 | Odrzucenie | Powód |
 |---|---|
 | dowolny plik `.py/.sh/.bat/.ps1/.exe/.js` w katalogu presetu | preset nie może być kodem (§2.5, walidacja S3) |
-| sekwencje/makra w grze (np. „fire combo", „auto-docking") | ryzyko banów anti-cheat — PLAN.md §3 |
+| sekwencje/makra w grze (np. „fire combo", „auto-docking") | ryzyko banów anti-cheat |
 | komendy `risk: high` bez uzasadnienia | rdzeń wymaga potwierdzenia głosem (§9) |
 | fraza zduplikowana w tej samej aktywacji (bez prefiksu gry) | walidacja S4 |
 | brak wariantów EN / brak jakiejkolwiek frazy PL | walidacja/reguła W1 |

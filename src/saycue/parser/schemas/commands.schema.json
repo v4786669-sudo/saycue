@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://saycue.dev/schemas/commands.schema.json",
   "title": "SayCue commands (rdzeń, data/commands.yaml)",
-  "description": "Deklaratywna gramatyka rdzenia (architektura §2.2). Presety mają osobny schemat: presets/schema.json (t8).",
+  "description": "Deklaratywna gramatyka rdzenia. Presety mają osobny schemat: presets/schema.json.",
   "type": "object",
   "additionalProperties": false,
   "required": ["version", "commands"],

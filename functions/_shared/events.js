@@ -3,7 +3,7 @@
  *   - functions/api/events.js   (Cloudflare Pages Functions — PRODUKCJA)
  *   - landing/collector/worker.js (standalone Worker / Node — lokalnie i na VPS)
  *
- * Kontrakt (PLAN.md §4, t7): przyjmujemy WYŁĄCZNIE
+ * Kontrakt: przyjmujemy WYŁĄCZNIE
  *   { ts, event, utm_source, referrer_domain }  (+ identyfikatory: surface, wants_paid)
  * i nic więcej. Odrzucamy: nieznane zdarzenia, nieznane pola, cokolwiek podobnego do PII.
  *

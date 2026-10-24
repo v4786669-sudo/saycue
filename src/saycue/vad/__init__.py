@@ -1,1 +1,1 @@
-"""VAD: Silero ONNX — segmentacja wypowiedzi (W1)."""
+"""VAD: Silero ONNX — segmentacja wypowiedzi ."""

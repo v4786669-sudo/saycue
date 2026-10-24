@@ -7,10 +7,10 @@
     PARSING ──intent──▶ ACTING ──▶ FEEDBACK ──▶ IDLE
     PARSING ──brak intencji (score < próg)──▶ ASK (kandydaci) ──▶ IDLE
 
-Barge-in: świadomie OUT (architektura §5.2). Wątki: callback audio →
+Barge-in: świadomie OUT. Wątki: callback audio →
 kolejka; pętla główna konsumuje; akcje i ASR w pętli (blokujące, krótkie).
 
-Punkt spięcia t6 (audio) + t13 (parser/akcje): `IntentParser` (parse /
+Punkt spięcia warstwy audio i parsera/akcji: `IntentParser` (parse /
 candidates / set_active_presets) i `Registry` + `ActionContext` z §3.3.
 """
 
@@ -84,7 +84,7 @@ class Orchestrator:
         vad: SileroVAD,
         wake: WakeWordDetector | None = None,
         ptt: PushToTalk | None = None,
-        parser: Any = None,  # IntentParser (lazy import — parser to zależność t13)
+        parser: Any = None,  # IntentParser (lazy import — ciężka zależność)
         registry: Any = None,  # Registry akcji
         ctx: Any = None,  # ActionContext
         pre_roll_s: float = 0.4,
@@ -94,7 +94,7 @@ class Orchestrator:
         on_outcome: Callable[[Outcome], None] | None = None,
         on_text: Callable[[str, State], None] | None = None,
         debug_audio_dir: Path | None = None,
-        telemetry: Any = None,  # Telemetry (W3): events.jsonl + metrics.jsonl
+        telemetry: Any = None,  # Telemetry : events.jsonl + metrics.jsonl
     ):
         self.asr = asr
         self.capture = capture
@@ -222,7 +222,7 @@ class Orchestrator:
             return "ptt"
         if self.wake is not None and self.wake.feed(chunk):
             return "wakeword"
-        # VAD-gate: dowolna mowa uruchamia sesję (awaryjne wejście, architektura §3.1)
+        # VAD-gate: dowolna mowa uruchamia sesję (awaryjne wejście)
         if self.wake is None and self.ptt is None:
             prob = self.vad.process(chunk)
             if prob is not None and prob >= self.vad.threshold:

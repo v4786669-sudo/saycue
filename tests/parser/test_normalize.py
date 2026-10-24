@@ -1,4 +1,4 @@
-"""Testy normalizacji PL (architektura §2.3 kroki 1–3)."""
+"""Testy normalizacji PL kroki 1–3)."""
 
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ def test_normalize_text(text, expected):
 def test_filler_tokens_only_as_whole_words():
     assert normalize_text("ok") == ""
     assert normalize_text("ok ok") == ""
-    # R-01 (t10): fillery usuwane TYLKO na początku wypowiedzi —
+    # R-01: fillery usuwane TYLKO na początku wypowiedzi —
     # „spotify ok" zostaje nienaruszone („ok" na końcu to nie wypełniacz).
     assert normalize_text("spotify ok") == "spotify ok"
 

@@ -1,7 +1,7 @@
-# commands.yaml — rdzeń SayCue (PL, architektura §2.2 + PLAN §5)
-# W1: frazy zasilają initial_prompt Whisper. W2 (t13): parser + rejestr akcji.
+# commands.yaml — gramatyka rdzenia SayCue (PL)
+# Frazy zasilają initial_prompt Whisper oraz gramatykę parsera.
 #
-# DEDUPLIKACJA (t10, kapitan): frazy obecne w PRESETACH (obs-core/apps-open/
+# DEDUPLIKACJA: frazy obecne w presetach (obs-core/apps-open/
 # apps-streaming) usunięte z rdzenia — wygrywa preset (parser/rules.py), a logi
 # „fraza zduplikowana" znikają. Niżej zostają wyłącznie frazy rdzeniowe.
 # Szablony z dynamicznym slotem ({target}/{scene}) rozwiązują W2.
@@ -39,7 +39,7 @@ commands:
     slots: { scene: "Starting Soon" }
 
   - id: mute_mic
-    phrases: ["cisza", "wycisz"]  # gołe „wycisz" = mikrofon (decyzja t13)
+    phrases: ["cisza", "wycisz"]  # gołe „wycisz" = mikrofon, nie głośniki
     intent: obs.mute
     slots: { source: mic, state: toggle }
 
@@ -54,7 +54,7 @@ commands:
     slots: { state: stop }
 
   - id: obs_replay
-    # „replej/replejk" = warianty fonetyczne (t9, G2): Whisper słyszy zapożyczenie
+    # „replej/replejk" = warianty fonetyczne: Whisper słyszy zapożyczenie
     # EN wymawiane po polsku jako „teplejt/teplejk" — mechanizm §2.3 („spoty fi")
     phrases: ["replej", "replejk"]
     intent: obs.replay
@@ -75,10 +75,10 @@ commands:
     intent: app.open
     slots: { target: kalkulator }
 
-  # Szablony z dynamicznym slotem (architektura §2.3 krok 6):
+  # Szablony z dynamicznym slotem:
   # "otwórz {target}" — wartość slotu wycinana z tekstu i rozwiązywana po
   # apps.yaml + apps[] presetów; "scena {scene}" — po scenach aktywnych komend.
-  # R-02 (t10): nierozpoznana wartość slotu → ASK (nigdy akcja z surową wartością).
+  # Nierozpoznana wartość slotu → ASK (nigdy akcja z surową wartością).
   - id: open_app_template
     phrases: ["otwórz {target}", "uruchom {target}", "odpal {target}", "włącz {target}"]
     intent: app.open

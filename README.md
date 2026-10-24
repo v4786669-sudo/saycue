@@ -1,97 +1,123 @@
-# SayCue — mówisz, stream się nie psuje
+<p align="center">
+  <img src="https://raw.githubusercontent.com/v4786669-sudo/saycue/main/assets/banner.svg" alt="SayCue — mówisz, stream się nie psuje" width="820">
+</p>
 
-**Offline'owy asystent głosowy dla streamerów i graczy.** Wypowiadasz krótką komendę bez klikania → asystent w ≤1,2 s (p95) wykonuje akcję (scena OBS, mute, nagrywanie, replay, klawisze, aplikacje) → w trayu widzisz, co się stało. Zero chmury w ścieżce sterowania, zero treści wypowiedzi w telemetrii.
+<p align="center">
+  <a href="#instalacja"><b>Instalacja</b></a> ·
+  <a href="#funkcje"><b>Funkcje</b></a> ·
+  <a href="#jak-to-działa"><b>Jak to działa</b></a> ·
+  <a href="SECURITY.md"><b>Bezpieczeństwo</b></a> ·
+  <a href="presets/README.md"><b>Presety</b></a> ·
+  <a href="../../releases"><b>Releases</b></a>
+</p>
 
-> **Status: tydzień 2 / 4 MVP** — „rozpoznaj i zrób": mikrofon → wake-word/PTT → VAD → ASR → parser → akcje OS/OBS (dry-run domyślnie).
-> Wyniki bramek: [G1](notes/g1-report.md) (dokładność ASR) · [G2](notes/g2-report.md) (pętla end-to-end).
+# SayCue
 
-## Trzy filary
+**Offline'owy asystent głosowy dla streamerów i graczy.** Mówisz krótką komendę — scena w OBS się zmienia, mikrofon się wycisza, nagranie startuje. Bez klikania, bez chmury, bez opóźnień na wizji.
 
-1. **Działa od razu** — 20 presetów w darmowym rdzeniu (OBS, popularne gry), 200+ w płatnych paczkach. Bez „hours of setup".
-2. **Nie zepsuje streamu** — ochrona przed fałszywymi wybudzeniami, monitor FP/h, bramka energii przed VAD.
-3. **Offline i audytowalne** — 100% lokalnie, MIT = możesz sprawdzić, a nie „zaufać". Modele pobierane jawnie z manifestu + SHA-256.
+Całe rozpoznawanie mowy odbywa się na Twoim komputerze. Po pierwszym pobraniu modeli aplikacja nie potrzebuje internetu — Twoje nagrania nie opuszczają urządzenia, a telemetria nie zawiera treści wypowiedzi.
 
-## Czego NIGDY nie obiecujemy
+> **Status:** wersja przedpremierowa. Aplikacja jest w pełni użyteczna lokalnie, ale w tym wydaniu akcje działają w trybie **podglądu** — pokazują, co zostałyby wykonane, zamiast wykonywać je od razu.
 
-Makr omijających antycheat · dyktowania do czatu gry w MVP · modeli AI/LLM w ścieżce sterowania · macOS w MVP.
+## Funkcje
+
+- **Komendy głosowe dla OBS** — zmiana sceny, mute źródła, start/stop nagrywania, zapis replay buffer, przełączanie źródeł.
+- **Sterowanie komputerem** — otwieranie i zamykanie aplikacji, pojedyncze kombinacje klawiszy, głośność systemu.
+- **Słowo budzenia i push-to-talk** — „hej asystent" albo przytrzymanie `Ctrl+Alt+Space`, gdy mikrofon nie jest wspólny.
+- **Tryb podglądu** — każda akcja najpierw widoczna w Statusie; realne wykonanie po włączeniu trybu live.
+- **Gotowe presety** — OBS, pięć gier (Elite Dangerous, Star Citizen, Microsoft Flight Simulator, DCS World, Minecraft) i zestaw aplikacji streamera; wszystkie w YAML, wszystkie edytowalne.
+- **Diagnostyka** — `saycue doctor` sprawdza mikrofon, połączenie z OBS, modele i stabilność wykrywania mowy.
+- **Prywatność** — brak chmury w ścieżce sterowania, lokalne logi, przejrzysta telemetria (szczegóły: [SECURITY.md](SECURITY.md)).
+
+## Wymagania
+
+| | |
+|---|---|
+| System | Windows 10/11 · Linux X11 (Wayland: OBS i otwieranie aplikacji, bez wstrzykiwania klawiszy) |
+| Sprzęt | procesor z 4 rdzeniami, 4 GB RAM (8 GB komfortowo), ~600 MB miejsca na modele |
+| Oprogramowanie | OBS Studio 28+ z obs-websocket v5 (dla komend OBS) |
+| Do uruchomienia ze źródeł | Python 3.11+ |
 
 ## Instalacja
 
-**Windows (produkcja):** `saycue-setup-<wersja>.exe` — budowany w CI
-(`.github/workflows/build-windows.yml`: PyInstaller onedir + Inno Setup, instalacja
-<5 min na czystym VM). Modele NIE są w instalatorze (R10) — pierwsze uruchomienie
-pobiera je z manifestu; `saycue doctor` poprowadzi. Autostart: opcja w instalatorze (HKCU Run).
+### Windows
 
-**Linux (produkcja):** `pipx install saycue` → `saycue doctor` pobierze modele i
-przeprowadzi diagnostykę. Autostart: GUI → Integracje → (plik `~/.config/autostart/saycue.desktop`
-generowany przez `saycue gui`).
+Pobierz `saycue-setup-<wersja>.exe` z zakładki [Releases](../../releases) i uruchom. Instalator dodaje skrót w menu Start, a `doctor` można włączyć z tego samego skrótu. Pierwsze uruchomienie pobiera modele (~530 MB) i weryfikuje je sumą SHA-256.
 
-## Szybki start (dev, Linux / Windows, Python 3.11+)
+### Linux
 
 ```bash
-# 1. Środowisko i zależności
-uv venv --python 3.11 .venv && source .venv/bin/activate
-uv pip install -e ".[dev]"
+pipx install saycue
+saycue doctor      # mikrofon, OBS, modele — z jednozdaniowymi podpowiedziami naprawy
+saycue             # uruchamia asystenta
+```
 
-# 2. Modele (pobierane z manifestu models/manifest.json, weryfikacja SHA-256)
-python scripts/download_models.py            # ~530 MB → ~/.cache/saycue/models/
+### Ze źródeł
 
-# 3. Transkrypcja pliku WAV (sam ASR — poprzedni krok obejmuje już pełną pętlę)
+```bash
+git clone https://github.com/v4786669-sudo/saycue.git && cd saycue
+make dev                      # uv venv + zależności (również dev/testy)
+python scripts/download_models.py
+python -m saycue              # tryb podglądu; --live = realne wykonanie
+python -m saycue gui          # GUI + tray
+python -m saycue doctor       # diagnostyka środowiska
+```
 
-# 4. Demo: pełna pętla audio → ASR → parser → akcja (wake-word + hotkey PTT Ctrl+Alt+Space)
-python -m saycue            # akcje dry-run (bezpieczne); --live = realne wykonanie
+Z pliku nagrania, bez mikrofonu:
 
-# Demo end-to-end z pliku (bez mikrofonu): transkrypcja → intencja → akcja
+```bash
 python -m saycue --file eval/recordings/g1_01.wav
-
-# Lista urządzeń audio / testy / benchmark / ewaluacja
-python -m saycue --list-devices
-pytest -m "not models"
-python bench/asr_latency.py      # ASR | bench/e2e_latency.py — end-to-end | run_when_idle.py — gdy CPU wolny
-python eval/run_eval.py
-python bench/stress_session.py --minutes 30   # sesja stabilności G2
-python -m saycue doctor         # self-diagnostyka (mikrofon/OBS/modele/FP): kody 0/1/2
-python -m saycue gui            # GUI + tray (W3)
-python -m saycue presets validate  # walidacja presetów YAML (§2.5)
 ```
 
-**Interakcja (pętla na żywo):** powiedz **„hej asystent"** (openWakeWord, model EN — własny model PL w planie, ryzyko R6) **albo** przytrzymaj **Ctrl+Alt+Space** (push-to-talk, fallback), powiedz komendę (maks. 8 s, koniec po 600 ms ciszy), zobacz transkrypcję na ekranie. Ctrl+C kończy.
-
-## Architektura (tydzień 1)
+## Jak to działa
 
 ```
-mikrofon (sounddevice 16 kHz mono, fallback: ALSA/ctypes)
-  → bufor kołowy (pre-roll 400 ms)
-  → wake-word (openWakeWord, cooldown 500 ms) | push-to-talk (pynput)
-  → VAD (Silero ONNX, koniec mowy = 600 ms ciszy, maks. wypowiedź 8 s)
-  → ASR (faster-whisper small int8, language=pl, beam=1, initial_prompt z komend)
-  → transkrypcja na ekran (parser i akcje = tydzień 2)
+mikrofon (16 kHz mono, pre-roll 400 ms)
+  → słowo budzenia (openWakeWord) lub push-to-talk
+  → detekcja mowy (Silero VAD; koniec wypowiedzi po 600 ms ciszy, maks. 8 s)
+  → rozpoznawanie mowy (faster-whisper small, int8, język PL, prompt z listy komend)
+  → parser gramatyki (normalizacja PL, dopasowanie fraz, szablony ze slotami)
+  → akcja (OBS WebSocket v5, aplikacje, klawisze, głośność)
+  → potwierdzenie w trayu
 ```
 
-Wymagania sprzętowe: CPU z ≥4 rdzeniami (np. Ryzen 5 3600 / i5-10400), ~1 GB RAM na modele, ~530 MB dysku.
+Parser jest deterministyczny: ta sama wypowiedź daje tę samą komendę. W ścieżce decyzyjnej nie ma modeli językowych — to celowe, bo odpowiedź musi być przewidywalna i natychmiastowa.
 
-## Repozytorium
+## Struktura repozytorium
 
 ```
 src/saycue/        # pakiet: audio, vad, wakeword, asr, parser, actions, ui, config, telemetry
-data/              # commands.yaml (frazy PL → initial_prompt dla Whisper)
-models/            # TYLKO manifest.json — wagi pobierane + SHA-256 (R10)
-scripts/           # download_models.py, generate_eval_recordings.py, check_manifest.py
-bench/             # asr_latency.py (p50/p95 na 20 komendach)
-eval/              # commands.yaml (15 fraz G1), run_eval.py, recordings/ (generowane)
-tests/             # pytest (+ruff)
-landing/           # strona walidacyjna (researcher, t7)
+data/              # commands.yaml — gramatyka rdzenia
+presets/           # presety YAML (OBS, gry, aplikacje) + schema + walidator
+models/            # manifest modeli (wagi pobierane osobno, weryfikacja SHA-256)
+bench/             # pomiary latencji: ASR, end-to-end, stabilność sesji
+eval/              # zbiór nagrań ewaluacyjnych i skrypt pomiaru
+tests/             # testy jednostkowe i integracyjne (pytest, ruff)
+landing/           # strona walidacyjna (statyczna, bez zewnętrznych trackerów)
+installer/         # PyInstaller (spec) i Inno Setup
 ```
+
+## Rozwój
+
+```bash
+make test        # pytest (bez modeli i urządzeń audio)
+make lint        # ruff check + format
+make eval        # pomiar dokładności na zbiorze nagrań
+make bench       # latencja ASR (p50/p95)
+```
+
+Presety dodaje się jako dane: nowa gra to jeden katalog z `preset.yaml`. Format, reguły fraz i walidacja: [presets/README.md](presets/README.md) oraz [docs/presets/CONTRIBUTING.md](docs/presets/CONTRIBUTING.md).
+
+## Bezpieczeństwo
+
+SayCue potrzebuje mikrofonu, dostępu do OBS WebSocket i — dla komend klawiszowych — wstrzykiwania klawiszy. Co dokładnie robi, jakich uprawnień wymaga i czego nie robi opisuje [SECURITY.md](SECURITY.md). Znaleziony problem bezpieczeństwa zgłoś prywatnie na adres podany w tym dokumencie.
 
 ## Licencja
 
-Rdzeń: **MIT** (patrz [LICENSE](LICENSE)). Modele: faster-whisper (MIT), Silero VAD (MIT), openWakeWord (Apache-2.0) — pobierane osobno, nie w repo.
+Rdzeń: [MIT](LICENSE). Modele pobierane osobno: faster-whisper (MIT), Silero VAD (MIT), openWakeWord (Apache-2.0).
 
-## Roadmapa
+## Kontakt
 
-| Tydzień | Cel | Bramka |
-|---|---|---|
-| W1 | audio → wake-word/VAD → transkrypcja | **G1:** ≥85% komend, ASR p95 ≤500 ms — **GO** (93,3%) |
-| W2 | orchestrator: parser + akcje OS + OBS | **G2:** ≥90% komend, p95 ≤1,2 s — **GO** (95,0%, 19/20) |
-| **W3 (tu jesteśmy)** | GUI/tray, instalator, `doctor`, telemetria, presety | **G3:** ≥60% testerów „first command" ≤10 min (tura testerów z researcherem — patrz notes/g3-report.md) |
-| W4 | hardening, akcenty, **v0.1.0 publiczne** | G4 wstępne (T0+14 dni) |
+- Błędy i propozycje: [Issues](../../issues)
+- Społeczność i wczesne wersje: [Discord](https://discord.gg/saycue)
+- Wydania: [Releases](../../releases)

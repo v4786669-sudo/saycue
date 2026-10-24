@@ -1,6 +1,6 @@
 """Push-to-talk (PTT): hotkey jako fallback dla wake-worda (ryzyko R6).
 
-Domyślny hotkey: Ctrl+Alt+Space (architektura §3.5). Przytrzymanie hotkeya =
+Domyślny hotkey: Ctrl+Alt+Space. Przytrzymanie hotkeya =
 nagrywanie; puszczenie = koniec wypowiedzi. Działa przez `pynput`
 (Windows/Linux X11; na Wayland wymaga uprawnień — łapiemy błąd i logujemy).
 """

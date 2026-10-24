@@ -1,8 +1,8 @@
-"""Kompatybilność W1: Pipeline = Orchestrator bez parsera/akcji (t6).
+"""Kompatybilność Pipeline = Orchestrator bez parsera/akcji.
 
-Od t9 kanoniczna jest maszyna stanów w `orchestrator.py` (§2.1).
+Kanoniczna maszyna stanów żyje w `orchestrator.py`.
 Ten moduł zostaje jako cienka warstwa zgodności dla kodu z W1
-(cli, tests/test_pipeline_loop.py) i zniknie po przejściu GUI (W3).
+(cli, tests/test_pipeline_loop.py) i zniknie po przejściu GUI .
 """
 
 from __future__ import annotations

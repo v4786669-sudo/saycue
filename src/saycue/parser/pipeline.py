@@ -1,6 +1,6 @@
 """Gotowy do podpięcia parser intencji: rdzeń + aktywne presety + hot-reload.
 
-Punkt integracji dla orchestratora (t9):
+Punkt integracji dla orchestratora:
 
     from saycue.parser import IntentParser
     parser = IntentParser(active_presets=["obs-core", "apps-open", "apps-streaming"])
@@ -8,8 +8,7 @@ Punkt integracji dla orchestratora (t9):
     parser.set_active_presets(["obs-core", "apps-open", "elite-dangerous"])
 
 Aktywacja: rdzeń (data/commands.yaml) + wskazane presety — jedna gra +
-obs-core + apps-* naraz; kolizje fraz rozstrzyga kolejność aktywacji
-(architektura §2.5 + decyzja t13).
+obs-core + apps-* naraz; kolizje fraz rozstrzyga kolejność aktywacji.
 """
 
 from __future__ import annotations
@@ -46,7 +45,7 @@ class IntentParser:
         self.preset_loader = PresetLoader(presets_dir)
         self.active_presets: list[str] = list(active_presets or [])
         self.fuzzy_threshold = float(fuzzy_threshold)
-        # R-02/R-01 (v0.3 §2.3): progi utwardzenia przekazywane do Matchera
+        # R-02/R-01 ( §2.3): progi utwardzenia przekazywane do Matchera
         self.min_action_score = float(min_action_score)
         self.min_phrase_coverage = float(min_phrase_coverage)
         self.allow_free_text = bool(allow_free_text)

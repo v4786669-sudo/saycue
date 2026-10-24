@@ -8,7 +8,7 @@ dry-run OS). Mierzy e2e_ms (detekcja końca mowy → akcja) oraz e2e_total_ms
     python bench/e2e_latency.py --n 2        # 2 × 20 komend = 40 próbek
     python bench/e2e_latency.py --n 1 --json-only
 
-UWAGA: na współdzielonej maszynie (zespół agentów) wyniki są zaszumione
+UWAGA: na współdzielonej maszynie wyniki są zaszumione
 kontencją CPU — mierz przez bench/run_when_idle.py lub na wolnym sprzęcie.
 """
 

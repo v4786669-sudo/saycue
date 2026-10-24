@@ -81,7 +81,7 @@ def test_config_store_reload(tmp_data):
     doc["commands"].append(
         {
             "id": "test_extra",
-            "phrases": ["testowa fraza t13"],
+            "phrases": ["testowa fraza"],
             "intent": "app.open",
             "slots": {"target": "spotify"},
         }

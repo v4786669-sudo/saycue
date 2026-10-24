@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Czeka na wolny CPU (load < próg) i dopiero wtedy mierzy latencję ASR.
 
-Pomiar na współdzielonej maszynie (zespół agentów + aplikacje użytkownika)
+Pomiar na maszynie obciążonej innymi aplikacjami
 jest zaszumiony — p95 > 4 s przy load ~7/8 vCPU nie mówi nic o silniku.
 Runner czeka na okno z niskim obciążeniem, robi szybką sondę (5 przebiegów)
 i dopiero przy medianie sondy < 300 ms uruchamia pełny benchmark.

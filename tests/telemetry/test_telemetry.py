@@ -1,4 +1,4 @@
-"""Testy telemetrii: dwa strumienie, przełączniki, rotacja (architektura §2.4)."""
+"""Testy telemetrii: dwa strumienie, przełączniki, rotacja."""
 
 import json
 from pathlib import Path

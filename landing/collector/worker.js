@@ -1,5 +1,5 @@
 /**
- * SayCue — collector zdarzeń strony walidacyjnej (PLAN.md §4, §8 G4c/G4d).
+ * SayCue — collector zdarzeń strony walidacyjnej.
  *
  * Cel: przyjmować WYŁĄCZNIE cztery pola — {ts, event, utm_source, referrer_domain}.
  * Kontrakt twardy (testowany w collector/test.js):

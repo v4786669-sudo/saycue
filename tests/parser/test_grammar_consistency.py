@@ -1,4 +1,4 @@
-"""Spójność gramatyki (t15): deduplikacja fraz core↔presety + pokrycie G1/G2.
+"""Spójność gramatyki: deduplikacja fraz core↔presety + pokrycie G1/G2.
 
 (c) rdzeń (data/commands.yaml) NIE może duplikować fraz z presetów — przy
 identycznej frazie wygrywa preset (parser/rules.py), a duplikat w rdzeniu
@@ -20,7 +20,7 @@ CORE_PATH = ROOT / "data" / "commands.yaml"
 PRESETS_DIR = ROOT / "presets"
 G1_YAML = ROOT / "eval" / "commands.yaml"
 G2_YAML = ROOT / "eval" / "g2_commands.yaml"
-# arcade-dash: frazy dash przeniesione z rdzenia (N-01/t15)
+# arcade-dash: frazy dash przeniesione z rdzenia
 G2_ACTIVATION = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous", "arcade-dash"]
 
 TARGET_PRESETS = None  # None = WSZYSTKIE presety z katalogu (silniejszy test)
@@ -56,7 +56,7 @@ def _preset_phrases(presets_dir=PRESETS_DIR) -> dict[str, str]:
 
 def test_no_phrase_duplicates_between_core_and_presets():
     """(c) brak duplikatów fraz w gramatyce: rdzeń vs obs-core/apps-open/
-    apps-streaming (dedup t10/t15)."""
+    apps-streaming (dedup)."""
     core = _core_phrases()
     presets = _preset_phrases()
     dups = sorted(set(core) & set(presets))

@@ -1,4 +1,4 @@
-"""Bramka G2 (t9): 20 komend end-to-end — audio → ASR → parser → akcja.
+"""Bramka G2: 20 komend end-to-end — audio → ASR → parser → akcja.
 
 Komponenty: prawdziwy ASR (whisper-small, marker `models`), prawdziwy parser
 z presetami, prawdziwy Registry; akcje OBS wykonują się na MockObsServer
@@ -8,7 +8,7 @@ pokoju (proxy — prawdziwe głosy w W4).
 Kryteria G2 (PLAN §5): ≥90% komend wykonanych poprawnie; end-to-end
 p95 ≤1,2 s; 0 crashy w 30-min sesji (osobno: bench/stress_session.py).
 Ten test asertuje poprawność ≥90% i zapisuje czasy do eval/results/g2_*.json;
-werdykt latencji (zależny od obciążenia maszyny) ocenia notes/g2-report.md.
+werdykt latencji (zależny od obciążenia maszyny) oceniamy po pełnym pomiarze.
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ from saycue.vad.silero import SileroVAD  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 G2_YAML = ROOT / "eval" / "g2_commands.yaml"
 GATE_MIN_CORRECT = 0.90  # ≥90% (18/20)
-# arcade-dash: g2_15 (dasz) i g2_20 (uniki) żyją w presecie od N-01/t15
+# arcade-dash: g2_15 (dasz) i g2_20 (uniki) żyją w presecie (N-01)
 ACTIVE_PRESETS = ["obs-core", "apps-open", "apps-streaming", "elite-dangerous", "arcade-dash"]
 TIMEOUT_S = 120
 
@@ -67,7 +67,7 @@ def env(recordings_dir):
     parser = IntentParser(active_presets=ACTIVE_PRESETS)
     registry = build_default_registry()
     ctx = ActionContext(apps=parser.config.apps, obs=obs, dry_run=True)
-    # N-01/t15: prompt = rdzeń + frazy przeniesione do arcade-dash — IDENTYCZNY
+    # N-01: prompt = rdzeń + frazy przeniesione do arcade-dash — IDENTYCZNY
     # zestaw co przed przeniesieniem (rdzeń miał wtedy dasz/uniki/shift dash/
     # dash/wiki). Biasowanie WSZYSTKICH fraz presetów degeneruje greedy
     # decoding (zmierzone, G1) — dlatego NIE bierzemy tu elite/apps/obs-core.

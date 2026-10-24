@@ -1,6 +1,6 @@
-# demo.gif — scenariusz i specyfikacja (kontrakt z t12)
+# demo.gif — scenariusz i specyfikacja
 
-> Właściciel nagrania: **engineer (t12)**. Ten dokument to uzgodniona specyfikacja i potwierdzenie scenariusza z komentarza w `landing/index.html`.
+> Specyfikacja nagrania, które trafia na stronę główną. Scenariusz jest zgodny z komentarzem w `landing/index.html`.
 > Plik docelowy: **`saycue/landing/assets/demo.gif`** (kopiowany do `public/assets/` przez `node scripts/build-site.mjs`).
 
 ## 1. Parametry techniczne (twarde)
@@ -25,20 +25,20 @@
 | 4,8–6,4 s | dymek „**wycisz mikrofon**", ikona mikrofonu w OBS się zmienia | `„wycisz mikrofon"` | operator OBS pokazuje mute na źródle `Mic/Aux` |
 | 6,4–8,0 s | dymek „**zapisz replay**", toast tray: `Replay saved` | `replay zapisany` · stopka: **„100% offline · MIT"** | replay buffer musi być włączony |
 
-> **Ważne (spójność z presetem, t8):** mów **„wycisz mikrofon"**, nie samo „wycisz" — gołe „wycisz" celowo nie istnieje w presecie OBS (kolizja z głośnością systemu). Wideo ma uczyć poprawnego słowa.
+> **Ważne (spójność z presetem):** mów **„wycisz mikrofon"**, nie samo „wycisz" — gołe „wycisz" celowo nie istnieje w presecie OBS (kolizja z głośnością systemu). Wideo ma uczyć poprawnego słowa.
 
 ## 3. Czystość obrazu (żeby nikt nie zgłosił nam „fake demo")
 
 - Tylko **jedna gra/aplikacja** w tle — żadnych prywatnych okien, czatów, nicków, e-maili, tokenów.
 - **Bez sklejonych przejść:** dymek jest dodawany w edycji, ale **reakcja OBS musi być na żywo** (inaczej test G4a nas skłamie).
 - Kursor nie lata chaotycznie; brak powiadomień Windows/Discord.
-- Tray pokazuje ikonę SayCue — jeśli jeszcze nie ma ikony, użyj tymczasowej (dostarczy engineer), **nie** logo cudzej aplikacji.
+- Tray pokazuje ikonę SayCue — jeśli jeszcze nie ma ikony, użyj tymczasowej **nie** logo cudzej aplikacji.
 - Było: klatka 8,0 s nie może być czarna (Reddit generuje z niej miniaturę).
 
 ## 4. Dostarczenie i podmiana placeholdera
 
 ```bash
-# 1) engineer wrzuca nagranie
+# 1) umieść nagranie w repo
 cp <nagranie> saycue/landing/assets/demo.gif
 
 # 2) podmień placeholder w HTML (jedna zmiana):

@@ -1,8 +1,8 @@
 """Loader gramatyki: commands.yaml + apps.yaml + presety + JSON Schema + hot-reload.
 
-* ``RulesLoader`` — ładuje ``data/commands.yaml`` (rdzeń, architektura §2.2)
+* ``RulesLoader`` — ładuje ``data/commands.yaml`` (rdzeń gramatyki)
   i ``data/apps.yaml`` (mapowanie aplikacji) z walidacją JSON Schema.
-* Aktywacja presetów (architektura §2.5 + decyzja t13): ``load(active_presets=[...])``
+* Aktywacja presetów: ``load(active_presets=[...])``
   skleja rdzeń z komendami aktywnych presetów (kolejność aktywacji = priorytet;
   przy identycznej frazie wygrywa później aktywowany preset — jedna gra +
   obs-core + apps-* naraz, kolizje rozstrzygane w obrębie aktywacji).

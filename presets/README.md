@@ -1,25 +1,25 @@
-# Presety SayCue (deklaratywne YAML)
+# Presety SayCue — deklaratywne YAML
 
-Każdy preset to **jeden katalog** z jednym plikiem `preset.yaml` — dane, nie kod (architektura §2.5). Loader czyta katalog, waliduje go względem `schema.json` i kopiuje do katalogu użytkownika bez restartu aplikacji.
+Preset to **jeden katalog z jednym plikiem `preset.yaml`**: dane, nie kod. Loader waliduje katalog względem `schema.json` i wczytuje go bez restartu aplikacji.
 
 ```
 presets/
-├── schema.json                 # JSON Schema (draft 2020-12) — twardy kontrakt pliku
+├── schema.json                 # JSON Schema (draft 2020-12) — kontrakt pliku presetu
 ├── validate.py                 # walidator: schemat + reguły jakości + kolizje fraz
-├── test_validate.py            # testy walidatora (negatywne przypadki; bez zależności)
+├── test_validate.py            # testy walidatora (przypadki negatywne)
 ├── README.md                   # format i zasady fraz (ten plik)
 ├── index.json                  # generowany: python3 presets/validate.py --index
-├── obs-core/preset.yaml        # 1  OBS: sceny, mute, nagranie, replay (17 komend)
-├── elite-dangerous/preset.yaml # 2  ED (15 komend)
-├── star-citizen/preset.yaml    # 3  SC Flight (11 komend, prefiks "star")
-├── msfs/preset.yaml            # 4  MSFS (10 komend, prefiks "lot")
-├── dcs/preset.yaml             # 5  DCS (11 komend, prefiks "dcs")
-├── minecraft/preset.yaml       # 6  Minecraft (7 komend, prefiks "mine")
-├── apps-open/preset.yaml       # 7–14  osiem aplikacji: otwórz/zamknij (12 komend)
-└── apps-streaming/preset.yaml  # 15–16  głośność + narzędzia streamera (10 komend)
+├── obs-core/preset.yaml        # OBS: sceny, mute, nagrywanie, replay
+├── elite-dangerous/preset.yaml # Elite Dangerous
+├── star-citizen/preset.yaml    # Star Citizen (Flight)
+├── msfs/preset.yaml            # Microsoft Flight Simulator
+├── dcs/preset.yaml             # DCS World
+├── minecraft/preset.yaml       # Minecraft
+├── apps-open/preset.yaml       # aplikacje: otwórz / zamknij
+└── apps-streaming/preset.yaml  # głośność systemu + narzędzia streamera
 ```
 
-> Uwaga: drzewo docelowe to **`presets/`** w katalogu pakietu (architektura §8). Ten katalog (w `saycue/`) jest źródłem treści do wpięcia w W3 przez engineera; loader w `src/saycue/presets/` dostarcza engineer2 (t13). Do tego czasu waliduj lokalnie: `python3 presets/validate.py`.
+Walidacja lokalna: `python3 presets/validate.py` (wszystkie) albo `python3 presets/validate.py presets/<id>` (jeden). W instalacji ta sama walidacja jest dostępna jako `saycue presets validate`.
 
 ## Format pliku
 
@@ -29,7 +29,7 @@ version: 1.0.0
 name: Elite Dangerous
 kind: game                     # game | obs | apps
 platforms: [win, linux-x11]
-game: elite_dangerous          # id do events.jsonl (preset_missing)
+game: elite_dangerous          # id trafiające do events.jsonl (preset_missing)
 author: SayCue contributors
 license: MIT
 requires: { obs: false }       # preset nie wymaga OBS
@@ -44,17 +44,17 @@ commands:
     slots: { keybind: ed_lights }
 ```
 
-- **Frazy PL na początku**, warianty EN po nich; **3–6 wariantów na komendę**; małe litery, bez interpunkcji (parser i tak normalizuje: fold diakrytyków, wg §2.3).
-- **Intencje** (MVP): `app.open`, `app.close`, `input.keys`, `system.volume`, `obs.scene`, `obs.mute`, `obs.record`, `obs.replay`, `obs.source_toggle`, `window.focus`.
-- **Sloty** — walidator sprawdza dopasowanie do intencji (§ `SLOT_RULES` w `validate.py`): `app.open`→`target`, `app.close`→`target`, `input.keys`→`keys`|`keybind`, `system.volume`→`direction`(+`step`), `obs.scene`→`scene`, `obs.mute`/`obs.source_toggle`→`source`(+`state`), `obs.record`/`obs.replay`→`action`|`buffer`, `window.focus`→`target`.
-- **Bez makr do gier** z anty-cheat: żadnych komend wykonujących wieloetapowe sekwencje w grze (PLAN.md §3). Dozwolone są pojedyncze klawisze/bindy, które gra sama udostępnia.
+- **Frazy: polski najpierw**, potem warianty angielskie — od 3 do 6 na komendę, małe litery, bez interpunkcji. Parser normalizuje tekst (fold diakrytyków, usunięcie interpunkcji), więc nie trzeba tego robić ręcznie.
+- **Intencje:** `app.open`, `app.close`, `input.keys`, `system.volume`, `obs.scene`, `obs.mute`, `obs.record`, `obs.replay`, `obs.source_toggle`, `window.focus`.
+- **Sloty** sprawdzane są pod kątem intencji (`SLOT_RULES` w `validate.py`): `app.open`→`target`, `app.close`→`target`, `input.keys`→`keys`|`keybind`, `system.volume`→`direction` (+`step`), `obs.scene`→`scene`, `obs.mute`/`obs.source_toggle`→`source` (+`state`), `obs.record`/`obs.replay`→`action`|`buffer`, `window.focus`→`target`.
+- **Bez makr do gier.** Preset nie wykonuje wieloetapowych sekwencji w grze. Dozwolone są pojedyncze klawisze i bindy, które gra udostępnia w swoich ustawieniach.
 
-## Zasady fraz (anty-kolizje)
+## Zasady fraz
 
-1. **Dłuższa fraza wygrywa** (architektura §2.3). Dlatego do „wyciszenia mikrofonu" używamy **„wycisz mikrofon"**, a nie gołego „wycisz" — gołe „wycisz" jest zarezerwowane dla `system.volume` (głośniki).
-2. **Nie duplikuj fraz między presetami gry a OBS** — preset OBS ma wyłączność na: „scena …", „następna scena", „nagrywaj", „stop nagrywania", „replay".
-3. **Nie używaj gołych słów jednosylabowych** („on", „up", „stop") bez kontekstu — kolizja z mową w tle.
-4. **Każda fraza w presecie musi być unikalna w obrębie całego katalogu `presets/`** — walidator to sprawdza (duplikat = błąd, nie ostrzeżenie).
+1. **Dłuższa fraza wygrywa.** Dlatego mikrofon wycisza się frazą **„wycisz mikrofon"**, a gołe „wycisz" jest zarezerwowane dla głośności systemu.
+2. **Preset OBS ma wyłączność** na: „scena …", „następna scena", „nagrywaj", „stop nagrywania", „replay".
+3. **Bez gołych jednosylabówek** („on", „up", „stop") — kolidują z mową w tle.
+4. **Unikalność fraz w obrębie aktywnych presetów.** Presety gier są wzajemnie wyłączne (aktywna jest jedna gra), a OBS i aplikacje są uniwersalne. Gry rozdziela prefiks słowny w frazie („elite podwozie", „lot podwozie", „dcs podwozie", „star podwozie", „mine kucnij").
 
 ## Reguły jakości egzekwowane przez `validate.py`
 
@@ -62,27 +62,27 @@ commands:
 |---|---|
 | zgodność ze `schema.json` | błąd |
 | `id` = nazwa katalogu | błąd |
-| brak plików `.py`/`.sh`/`.exe`/`.dll` w katalogu presetu | błąd („preset nie może być kodem", §2.5) |
-| 3–6 fraz, każda unikalna w **całym** katalogu | błąd |
-| fraza PL przed EN (heurystyka: obecność diakrytyków lub słów PL) | ostrzeżenie |
+| brak plików wykonywalnych (`.py`/`.sh`/`.exe`/`.dll`) w katalogu presetu | błąd |
+| 3–6 fraz, każda unikalna w obrębie aktywnych presetów | błąd |
 | ≥ 5 fraz w `phrases` (initial_prompt) | błąd |
-| kolizje **podciągów** między różnymi intencjami (np. „wycisz" ⊂ „wycisz mikrofon") | ostrzeżenie z podpowiedzią (dopuszczalne, jeśli wygrywa dłuższa) |
+| fraza PL obecna w każdej komendzie | ostrzeżenie |
+| kolizje podciągów między intencjami (np. „wycisz" ⊂ „wycisz mikrofon") | ostrzeżenie |
 
-## Dodawanie presetu (PR) — 6 kroków
+## Dodawanie presetu — 6 kroków
 
 1. `cp -r presets/obs-core presets/<twoja-gra>` i zmień `id`, `name`, `game`.
-2. Wpisz 8–20 komend; każda 3–6 wariantów PL + EN. **Nie** kopiuj fraz z innych presetów.
-3. `python3 presets/validate.py presets/<twoja-gra>` — musi być `OK` (0 errors, 0 warnings).
-4. Uruchom `saycue presets validate presets/<twoja-gra>` (po W3) — ta sama walidacja w aplikacji.
-5. Otwórz PR: tytuł `preset(<id>): <gra>`, opis: dla kogo, jakie bindy zakładasz, na czym testowałeś.
-6. Po merge walidator CI dopisze preset do `presets/index.json` (generowany, nie edytuj ręcznie).
+2. Wpisz 8–20 komend po 3–6 wariantów (PL + EN). Nie kopiuj fraz z innych presetów.
+3. `python3 presets/validate.py presets/<twoja-gra>` — wynik musi być `OK` (0 błędów, 0 ostrzeżeń).
+4. Sprawdź to samo w aplikacji: `saycue presets validate presets/<twoja-gra>`.
+5. Otwórz PR z tytułem `preset(<id>): <gra>`; w opisie: dla kogo jest preset, jakich bindów wymaga, na czym testowałeś.
+6. Po merge `presets/index.json` regeneruje CI (plik generowany — nie edytuj ręcznie).
 
-**Za co odrzucimy PR:** kod w presecie, frazy zduplikowane z innym presetem, obietnica „makra na anticheat", brak wariantu EN, brak informacji o źródle bindów.
+**PR odrzucimy, gdy:** zawiera kod, powiela frazy innego presetu, obiecuje makra omijające anty-cheat, nie ma wariantu angielskiego lub nie podaje źródła bindów.
 
 ## Wersjonowanie
 
-`MAJOR` = zmiana formatu/niekompatybilność; `MINOR` = nowe komendy/frazy; `PATCH` = poprawki literówek i fraz. Użytkownik z subskrypcją Streamer dostaje aktualizacje presetów; wersja jest widoczna w GUI.
+`MAJOR` — zmiana formatu lub niekompatybilność; `MINOR` — nowe komendy lub frazy; `PATCH` — poprawki fraz i literówek. Subskrybenci pakietu Streamer otrzymują aktualizacje presetów automatycznie; wersja jest widoczna w GUI.
 
 ## Licencja
 
-Presety są na **MIT** — tak jak rdzeń. Wysyłając PR, zgadzasz się na licencję MIT i podajesz się w polu `author`. Nie przyjmujemy presetów z zamkniętymi wallhackami, cheatami ani tekstami chronionymi prawem autorskim (imiona postaci, cytaty z filmów).
+Presety są na **MIT**, tak jak rdzeń. Wysyłając PR, akceptujesz licencję MIT i podajesz się w polu `author`. Nie przyjmujemy presetów z cheatami, wallhackami ani treściami chronionymi prawem autorskim.

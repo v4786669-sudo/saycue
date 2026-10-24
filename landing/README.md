@@ -1,7 +1,4 @@
-> **Uwaga (t6/engineer):** ten dokument byl wczesniej root README.md; przeniesiony 1:1 do landing/README.md, bo root README jest README produktu SayCue (deliverable t6: obietnica z PLAN.md par.3). Tresc ponizej bez zmian.
-
-
-Strona z **PLAN.md §4** i punktu 1–2 zadania t7. Cel: w 10 s przekonać do pobrania, w 60 s zebrać sygnał płatnościowy — nie sprzedawać.
+Strona walidacyjna SayCue. Cel: w 10 sekund przekonać do pobrania, w 60 sekund zebrać sygnał płatnościowy — nie sprzedawać.
 
 ## Co jest w środku
 
@@ -9,7 +6,7 @@ Strona z **PLAN.md §4** i punktu 1–2 zadania t7. Cel: w 10 s przekonać do po
 saycue/
 ├── server.js                      # lokalny serwer statyczny + collector (Node 18+, bez zależności)
 └── landing/
-    ├── index.html                 # strona (7 sekcji z PLAN.md §4)
+    ├── index.html                 # strona główna (7 sekcji)
     ├── assets/
     │   ├── style.css              # styl, bez zewnętrznych fontów
     │   ├── collector.js           # licznik zdarzeń (4 pola, bez cookies)
@@ -43,7 +40,7 @@ W konsoli przeglądarki: `SayCue.preview()` pokazuje ostatnie zdarzenia; `SayCue
 
 ## Co mierzymy (mapowanie na bramkę G4c/G4d)
 
-| Zdarzenie | Kiedy | Cel PLAN.md §4 |
+| Zdarzenie | Kiedy | Cel |
 |---|---|---|
 | `page_view` | wejście | baza wizyt |
 | `download_click` (surface: hero/footer) | klik przycisku pobierania | **≥20% wizyt → klik** |
@@ -64,7 +61,7 @@ W konsoli przeglądarki: `SayCue.preview()` pokazuje ostatnie zdarzenia; `SayCue
 
 - [ ] `assets/demo.gif` — 8 s, 960×540, ≤2 MB, 10 fps, bez audio; scenariusz w komentarzach `index.html`
 - [ ] Prawdziwe linki GitHub/Discord/privacy@ (obecnie `#` / `example`)
-- [x] Endpoint zapisu formularza — **Cloudflare Pages Function `/api/subscribe` + D1** (decyzja t14)
-- [ ] Domena .pl/.com i potwierdzenie nazwy (PLAN.md §1 — `SayCue` / `VoiceRelay`)
+- [x] Endpoint zapisu formularza — **Cloudflare Pages Function `/api/subscribe` + D1**
+- [ ] Domena .pl/.com i potwierdzenie nazwy marki
 - [ ] Podpięcie collectora na produkcji i test end-to-end w realnej sieci
 - [ ] Weryfikacja Lighthouse (cel: ≥95 Performance/Accessibility) i brak żądań do obcych domen (DevTools → Network)

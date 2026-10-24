@@ -1,4 +1,4 @@
-"""SayCue — walidator presetów YAML (architektura §2.5, PLAN.md §5).
+"""SayCue — walidator presetów YAML.
 
 Bez zależności poza PyYAML + jsonschema (są w pyproject jako zależności konfiguracji).
 

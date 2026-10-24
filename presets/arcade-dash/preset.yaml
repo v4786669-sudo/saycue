@@ -1,10 +1,9 @@
 # SayCue preset — generyczny unik/krok (arcade/platformówki)
-# PRZENIESIONE z rdzenia data/commands.yaml (N-01, researcher → decyzja engineer2
-# 2026-10-23): akcje klawiszy gry NIE mieszkają w rdzeniu — rdzeń to OBS/apps/
+# Frazy gier z rdzenia: arcade-dash (warianty fonetyczne i skróty).
 # system; klawisze gry = presety (architektura: jedna gra aktywna naraz).
 # Gołe „dash" w rdzeniu cieniowało bindy gier dla T2/HOTAS (spurious shift+space
 # w symulatorach lotu). Tu frazy działają tylko przy aktywnej „grze arcade".
-# Warianty fonetyczne „wiki" (uniki) i EN „dash" (dasz) — mechanizm z t9 (G2).
+# Warianty fonetyczne „wiki" (uniki) i EN „dash" (dasz).
 id: arcade-dash
 version: 1.0.0
 name: Unik i skok (arcade)

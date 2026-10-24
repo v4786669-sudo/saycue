@@ -4,7 +4,7 @@ Domyślne słowo: „hej asystent" (PL) — model EN `alexa_v0.1` jako proxy
 fonetyczny do czasu wytrenowania własnego modelu PL (ryzyko R6, architektura
 §3.1). Fallback niezawodny: push-to-talk (hotkey) — patrz `ptt.py`.
 
-Cooldown 500 ms (architektura §2.1): jedno wybudzenie nie uruchamia dwóch sesji.
+Cooldown 500 ms: jedno wybudzenie nie uruchamia dwóch sesji.
 """
 
 from __future__ import annotations

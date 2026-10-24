@@ -1,5 +1,5 @@
 # apps.yaml — rdzeń: mapowanie nazw PL/EN → identyfikator systemowy
-# (architektura §3.3). Presety (apps-open, apps-streaming) dodają własne
+# Presety (apps-open, apps-streaming) dodają własne
 # wpisy apps[] — przy kolizji id wygrywa preset, aliasy się sumują.
 version: 1
 apps:

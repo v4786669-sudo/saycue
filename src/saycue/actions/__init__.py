@@ -1,4 +1,4 @@
-"""Akcje OS/OBS — kontrakt §3.3 i implementacje MVP (tydzień 2, t13).
+"""Akcje OS/OBS — wspólny kontrakt `Action` i implementacje MVP.
 
     class Action(Protocol):
         id: str

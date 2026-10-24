@@ -1,4 +1,4 @@
-"""Regresja B-02/B-03 (notes/build-defects-g3.md): ścieżki danych w bundle PyInstaller.
+"""Regresja: ścieżki danych w pakiecie PyInstaller (aplikacja spakowana).
 
 W spakowanej aplikacji `__file__` wskazuje `_internal/saycue/config/paths.py`,
 więc `parents[3]` ≠ katalog instalacji — `data_dir()` musi iść po

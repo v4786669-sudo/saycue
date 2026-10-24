@@ -1,4 +1,4 @@
-# eval/commands.yaml — 15 fraz PL na bramkę G1 (architektura §2.2 + §7.1)
+# eval/commands.yaml — 15 fraz PL do pomiaru dokładności (metryka G1)
 # Metryka G1: ≥85% poprawnie rozpoznanych INTENCJI (odsetek, nie klasyczny WER).
 # Kilka fraz może dzielić jedną intencję (np. obs.mute ×3) — patrz run_eval.py.
 version: 1

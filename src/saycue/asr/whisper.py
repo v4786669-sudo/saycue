@@ -1,6 +1,6 @@
 """ASR: faster-whisper `small` int8, PL domyślnie, beam=1, initial_prompt.
 
-Decyzje (architektura §3.2):
+Decyzje:
 - `small` multilingual — domyślny model MVP (PL+EN w jednym modelu),
 - `compute_type="int8"` na CPU (GPU: auto `float16`, patrz `auto_compute_type`),
 - `beam_size=1` (greedy) dla latencji, `beam_size=5` tylko w trybie dokładnym (GUI, W3),
@@ -61,7 +61,7 @@ def load_phrases(commands_yaml: Path | None = None) -> list[str]:
 def filter_short_phrases(phrases, max_tokens: int = 2) -> list[str]:
     """Filtruje frazy do promptu: bez szablonów slotów, ≤ max_tokens tokenów.
 
-    Pułapka zmierzona (G2, handoff-t15 §5): prompt ze WSZYSTKICH fraz aktywnych
+    Pułapka zmierzona (G2): prompt ze WSZYSTKICH fraz aktywnych
     presetów (~220) DEGENERUJE greedy decoding (14/20) — bias tylko krótkich
     fraz jest bezpieczny (rdzeń + arcade-dash ≈ dawny zestaw: 16–17/20)."""
     out: list[str] = []

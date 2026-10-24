@@ -1,4 +1,4 @@
-"""Testy normalizacji PL (parser/normalize.py — architektura §2.3)."""
+"""Testy normalizacji PL (parser/normalize.py)."""
 
 from saycue.parser.normalize import fold_diacritics, fuzzy_similarity, normalize
 
@@ -32,7 +32,7 @@ def test_mute_variants_normalize_to_same_intent_phrases():
     assert normalize("MUte") == "mute"
 
 
-# --- prompt ASR (N-01, t15): rdzeń + krótkie frazy presetów, cap 60 ---
+# --- prompt ASR: rdzeń + krótkie frazy presetów, cap 60 ---
 from saycue.asr.whisper import filter_short_phrases, load_initial_prompt  # noqa: E402
 
 

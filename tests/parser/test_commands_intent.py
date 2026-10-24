@@ -3,7 +3,7 @@ rdzeń (data/commands.yaml) + presety obs-core + apps-open + apps-streaming.
 
 Reguły weryfikowane na żywych danych:
 * dłuższa fraza wygrywa („wycisz mikrofon" > „wycisz", „cisza w kompie" → głośniki);
-* gołe „wycisz" → mikrofon (obs.mute), NIE głośniki (decyzja t13/kapitan);
+* gołe „wycisz" → mikrofon (obs.mute), NIE głośniki;
 * przy identycznej frazie wygrywa później aktywowany preset (slot → preset);
 * szablony {target}/{scene} rozwiązują slot po apps.yaml + presetach;
 * fuzzy ≥ 0.78 (typy, przekręcenia), poniżej → brak intencji.

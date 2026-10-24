@@ -133,5 +133,5 @@ class InputKeysAction(Action):
         if ctx and ctx.platform == "win32":
             return "brak pydirectinput (pip install pydirectinput)"
         if ctx and ctx.platform.startswith("linux"):
-            return "brak xdotool (Wayland bez XTest — architektura §3.3)"
+            return "brak xdotool (Wayland bez XTest)"
         return "input.keys wspierany na Windows i Linux X11"

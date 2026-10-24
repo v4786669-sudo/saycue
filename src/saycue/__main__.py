@@ -1,4 +1,4 @@
-"""`python -m saycue` — wejście CLI (W1: audio → ASR, bez GUI)."""
+"""`python -m saycue` — wejście CLI (audio → ASR, bez GUI)."""
 
 import sys
 

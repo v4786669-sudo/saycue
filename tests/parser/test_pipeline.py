@@ -1,4 +1,4 @@
-"""Testy IntentParser — punkt integracji dla orchestratora (t9)."""
+"""Testy IntentParser — punkt integracji dla orchestratora."""
 
 from __future__ import annotations
 

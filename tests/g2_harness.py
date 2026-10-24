@@ -1,8 +1,8 @@
-"""Harness bramki G2 (t9): FakeCapture (WAV jako mikrofon) + MockObsServer.
+"""Harness bramki G2: FakeCapture (WAV jako mikrofon) + MockObsServer.
 
 MockObsServer — podzbiór atrapy obs-websocket v5 z tests/actions/test_obs.py
-(t13, engineer2): handshake Hello/Identify (opcjonalne hasło), canned odpowiedzi
-dla akcji obs-core. Wersja lokalna harnessu — kanoniczna w t13 pozostaje
+Handshake Hello/Identify (opcjonalne hasło), canned odpowiedzi
+dla akcji obs-core. Wersja lokalna harnessu — kanoniczna pozostaje
 w tests/actions/test_obs.py.
 """
 

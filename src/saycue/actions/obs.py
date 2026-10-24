@@ -7,13 +7,13 @@ OBS ≥ 28 ma wbudowany obs-websocket (Narzędzia → WebSocket Server).
 Akcje:
 * ``obs.scene`` — SetCurrentProgramScene; slot ``scene`` może być
   ``__next__``/``__prev__`` (cykliczne przełączanie po liście scen z OBS —
-  decyzja t13/kapitan, presety obs-core);
+  mapowania w presecie obs-core);
 * ``obs.mute`` — ToggleInputMute / SetInputMute;
 * ``obs.record`` — StartRecord / StopRecord / ToggleRecord;
 * ``obs.replay`` — SaveReplayBuffer / StartReplayBuffer / StopReplayBuffer;
 * ``obs.filter`` — SetSourceFilterEnabled (np. cenzura, §3.4);
 * ``obs.source_toggle`` — ToggleInputMute (MVP: źródła audio; mapowanie
-  widoczności scen-itemów to zadanie GUI/t9).
+  widoczności scen-itemów należy do warstwy GUI).
 """
 
 from __future__ import annotations
@@ -320,7 +320,6 @@ class ObsSceneAction(Action):
     description = "Przełącz scenę OBS (scena z nazwy lub __next__/__prev__)."
 
     def execute(self, slots: Mapping[str, Any], ctx: ActionContext) -> ActionResult:
-        t0 = time.monotonic()
         client = _obs_client(ctx)
         if client is None or not client.connected:
             return ActionResult(False, error="obs_not_connected", message=OBS_REQUIREMENTS)
@@ -334,7 +333,7 @@ class ObsSceneAction(Action):
                     True,
                     message=f"scena → {target}",
                     details={"scene": target, "direction": "next"},
-                    latency_ms=_latency(t0),
+                    latency_ms=_latency,
                 )
             if scene == "__prev__":
                 target = client.step_scene(-1)
@@ -342,16 +341,16 @@ class ObsSceneAction(Action):
                     True,
                     message=f"scena → {target}",
                     details={"scene": target, "direction": "prev"},
-                    latency_ms=_latency(t0),
+                    latency_ms=_latency,
                 )
             client.set_scene(scene)
-            return ActionResult(True, message=f"scena → {scene}", latency_ms=_latency(t0))
+            return ActionResult(True, message=f"scena → {scene}", latency_ms=_latency)
         except ObsError as exc:
             return ActionResult(
                 False,
                 error=f"obs_error:{exc.code}:{exc.message}",
                 message=str(exc),
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -368,7 +367,6 @@ class ObsMuteAction(Action):
     description = "Wycisz/odcisz źródło OBS (toggle/on/off)."
 
     def execute(self, slots: Mapping[str, Any], ctx: ActionContext) -> ActionResult:
-        t0 = time.monotonic()
         client = _obs_client(ctx)
         if client is None or not client.connected:
             return ActionResult(False, error="obs_not_connected", message=OBS_REQUIREMENTS)
@@ -381,7 +379,7 @@ class ObsMuteAction(Action):
                     True,
                     message=f"mute {source!r} → {resp.get('inputMuted')}",
                     details={"source": source, "muted": resp.get("inputMuted")},
-                    latency_ms=_latency(t0),
+                    latency_ms=_latency,
                 )
             muted = state in ("on", "true", "1")
             client.set_mute(source, muted)
@@ -389,14 +387,14 @@ class ObsMuteAction(Action):
                 True,
                 message=f"mute {source!r} = {muted}",
                 details={"source": source, "muted": muted},
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
         except ObsError as exc:
             return ActionResult(
                 False,
                 error=f"obs_error:{exc.code}:{exc.message}",
                 message=str(exc),
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -413,7 +411,6 @@ class ObsRecordAction(Action):
     description = "Nagrywanie OBS: start/stop/toggle."
 
     def execute(self, slots: Mapping[str, Any], ctx: ActionContext) -> ActionResult:
-        t0 = time.monotonic()
         client = _obs_client(ctx)
         if client is None or not client.connected:
             return ActionResult(False, error="obs_not_connected", message=OBS_REQUIREMENTS)
@@ -425,13 +422,13 @@ class ObsRecordAction(Action):
                 client.stop_record()
             else:
                 client.toggle_record()
-            return ActionResult(True, message=f"record → {state}", latency_ms=_latency(t0))
+            return ActionResult(True, message=f"record → {state}", latency_ms=_latency)
         except ObsError as exc:
             return ActionResult(
                 False,
                 error=f"obs_error:{exc.code}:{exc.message}",
                 message=str(exc),
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -448,7 +445,6 @@ class ObsReplayAction(Action):
     description = "Replay buffer OBS: save/start/stop (wymaga włączonego bufora)."
 
     def execute(self, slots: Mapping[str, Any], ctx: ActionContext) -> ActionResult:
-        t0 = time.monotonic()
         client = _obs_client(ctx)
         if client is None or not client.connected:
             return ActionResult(False, error="obs_not_connected", message=OBS_REQUIREMENTS)
@@ -460,13 +456,13 @@ class ObsReplayAction(Action):
                 client.stop_replay_buffer()
             else:
                 client.save_replay_buffer()
-            return ActionResult(True, message=f"replay → {action}", latency_ms=_latency(t0))
+            return ActionResult(True, message=f"replay → {action}", latency_ms=_latency)
         except ObsError as exc:
             return ActionResult(
                 False,
                 error=f"obs_error:{exc.code}:{exc.message}",
                 message=str(exc),
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -483,7 +479,6 @@ class ObsFilterAction(Action):
     description = "Włącz/wyłącz filtr źródła OBS (np. cenzura, §3.4)."
 
     def execute(self, slots: Mapping[str, Any], ctx: ActionContext) -> ActionResult:
-        t0 = time.monotonic()
         client = _obs_client(ctx)
         if client is None or not client.connected:
             return ActionResult(False, error="obs_not_connected", message=OBS_REQUIREMENTS)
@@ -503,14 +498,14 @@ class ObsFilterAction(Action):
             return ActionResult(
                 True,
                 message=f"filtr {filter_name!r} ({source!r}) = {enabled}",
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
         except ObsError as exc:
             return ActionResult(
                 False,
                 error=f"obs_error:{exc.code}:{exc.message}",
                 message=str(exc),
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:
@@ -527,7 +522,6 @@ class ObsSourceToggleAction(Action):
     description = "Toggle źródła OBS (MVP: ToggleInputMute dla źródeł audio)."
 
     def execute(self, slots: Mapping[str, Any], ctx: ActionContext) -> ActionResult:
-        t0 = time.monotonic()
         client = _obs_client(ctx)
         if client is None or not client.connected:
             return ActionResult(False, error="obs_not_connected", message=OBS_REQUIREMENTS)
@@ -540,14 +534,14 @@ class ObsSourceToggleAction(Action):
                 True,
                 message=f"toggle {source!r} → muted={resp.get('inputMuted')}",
                 details={"source": source, "muted": resp.get("inputMuted")},
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
         except ObsError as exc:
             return ActionResult(
                 False,
                 error=f"obs_error:{exc.code}:{exc.message}",
                 message=str(exc),
-                latency_ms=_latency(t0),
+                latency_ms=_latency,
             )
 
     def available(self, ctx: ActionContext | None = None) -> bool:

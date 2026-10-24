@@ -3,7 +3,7 @@
  *   - functions/api/subscribe.js   (Cloudflare Pages Functions — PRODUKCJA)
  *   - scripts/dev-server.mjs        (lokalny serwer: Pages Functions + statyki)
  *
- * Zasada z t7: e-mail NIE trafia do collectora zdarzeń. Ten moduł jest jedynym miejscem,
+ * Zasada: e-mail NIE trafia do collectora zdarzeń. Ten moduł jest jedynym miejscem,
  * które w ogóle widzi adres e-mail.
  *
  * Rejestr zgodności/Ochrony Danych (RODO):

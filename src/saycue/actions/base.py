@@ -1,4 +1,4 @@
-"""Kontrakt akcji (architektura §3.3): Action, ActionContext, ActionResult."""
+"""Kontrakt akcji: Action, ActionContext, ActionResult."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ class ActionResult:
 
 @dataclass
 class ActionContext:
-    """Kontekst wykonania (wstrzykiwany przez orchestratora, t9).
+    """Kontekst wykonania wstrzykiwany przez orchestratora.
 
     ``apps`` — zunifikowana mapa aplikacji (parser.rules); ``obs`` — ObsClient;
     ``dry_run`` — planowanie bez dotykania systemu (używane w testach).

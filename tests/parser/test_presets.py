@@ -1,4 +1,4 @@
-"""Testy loadera presetów (presets/<id>/preset.yaml, schema t8) i aktywacji."""
+"""Testy loadera presetów (presets/<id>/preset.yaml + schema) i aktywacji."""
 
 from __future__ import annotations
 
@@ -88,7 +88,7 @@ def test_game_preset_active_switches_grammar(presets_dir):
 
 
 def test_game_prefixes_share_vocabulary(presets_dir):
-    """Gry dzielą słownictwo — prefiks gry rozstrzyga (decyzja t13/kapitan)."""
+    """Gry dzielą słownictwo — prefiks gry rozstrzyga kolizje fraz."""
     parser = IntentParser(
         active_presets=["obs-core", "apps-open", "apps-streaming", "elite-dangerous"]
     )

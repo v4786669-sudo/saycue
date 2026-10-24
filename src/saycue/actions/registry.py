@@ -1,4 +1,4 @@
-"""Rejestr akcji: intent (np. ``app.open``) → Action (architektura §3.3)."""
+"""Rejestr akcji: intent (np. ``app.open``) → Action."""
 
 from __future__ import annotations
 
@@ -66,7 +66,7 @@ class Registry:
 
 
 def build_default_registry() -> Registry:
-    """Wbudowane akcje MVP (architektura §5.1 + intencje presetów t8)."""
+    """Wbudowane akcje MVP."""
     registry = Registry()
     for action in (
         AppOpenAction(),

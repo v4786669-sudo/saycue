@@ -1,5 +1,5 @@
 # SayCue preset — Minecraft (Java Edition 1.20+)
-# Tylko pojedyncze klawisze gry. ZERO makr omijających anty-cheat serwerów (PLAN.md §3).
+# Tylko pojedyncze klawisze gry. ZERO makr omijających anty-cheat serwerów.
 # Uwaga: na serwerach z anty-cheatem automatyczne sekwencje mogą być banowane — tu ich nie ma.
 id: minecraft
 version: 1.0.0

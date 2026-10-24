@@ -1,4 +1,4 @@
-"""`saycue doctor` — self-diagnostyka (architektura §6, v0.2 Addendum t2).
+"""`saycue doctor` — self-diagnostyka.
 
 Sprawdza: mikrofon (RMS), OBS (WebSocket v5 + wersja), modele (SHA-256 vs
 manifest + wolne dysk/RAM), fałszywe wybudzenia (FP/h z 24 h events.jsonl),
@@ -320,7 +320,7 @@ Jeśli powyżej jest „brak danych" — nie zgłaszałeś jeszcze problemów. D
 
 ## Wayland — hotkey/klawisze nie działają
 
-Wayland blokuje globalne hotkeye i wstrzykiwanie klawiszy (architektura §3.3).
+Wayland blokuje globalne hotkeye i wstrzykiwanie klawiszy.
 Działają: komendy OBS, otwieranie aplikacji, głośność (pactl). Wybudzanie:
 wake-word („hej asystent") zamiast push-to-talk.
 
@@ -344,5 +344,5 @@ sumy SHA-256 (ryzyko R10: modele nigdy nie są w repo).
 ## Czego NIE robimy (uczciwość)
 
 - Makra omijające antycheat, dyktowanie do czatu gry, modele LLM w ścieżce
-  sterowania, macOS. Pełna lista: README + PLAN.md §3.
+  sterowania, macOS. Pełna lista: README.
 """

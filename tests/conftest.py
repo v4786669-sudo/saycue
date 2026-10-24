@@ -28,7 +28,7 @@ PRESETS_DIR = ROOT / "presets"
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
 SAMPLE_RATE = 16000
 
-# arcade-dash: frazy dash (dasz/uniki) przeniesione z rdzenia (N-01, t15)
+# arcade-dash: frazy dash (dasz/uniki) przeniesione z rdzenia
 RECOMMENDED_PRESETS = ["obs-core", "apps-open", "apps-streaming", "arcade-dash"]
 
 

@@ -70,7 +70,7 @@ CREATE TABLE events (
 DELETE FROM events WHERE ts < datetime('now', '-180 days');
 ```
 
-## Podgląd metryk bramki (PLAN.md §4)
+## Podgląd metryk strony
 
 ```sql
 -- ≥20% wizyt → klik pobierania

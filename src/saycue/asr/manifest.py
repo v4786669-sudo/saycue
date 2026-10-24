@@ -3,7 +3,7 @@
 Modele NIGDY nie trafiają do repo — tylko manifest `models/manifest.json`
 z URL-ami i sumami SHA-256. Wagi lądują w katalogu cache użytkownika
 (`~/.cache/saycue/models/`), pobierane wyłącznie przez jawną komendę
-`python scripts/download_models.py` (architektura §3.2).
+`python scripts/download_models.py`.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Telemetria: metrics.jsonl + events.jsonl (architektura §2.4).
+"""Telemetria: metrics.jsonl + events.jsonl.
 
 - `events.jsonl` — 9 zdarzeń G4a–G4h, rdzeń OSS ON z jawnym opt-out,
   NIGDY treści wypowiedzi (zakazane pola: asr_text/text/phrase/transcript);

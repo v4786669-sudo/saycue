@@ -1,6 +1,6 @@
 # Pre-release checklist — aplikacje (8 aplikacji)
 
-Sprawdzane **na W3**, po tym jak engineer wpięte presety i `saycue presets validate`.
+Sprawdzane po tym, jak presety zostaną wpięte i przejdą `saycue presets validate`.
 Każda pozycja = polecenie głosowe → oczekiwany efekt na **obu platformach** (Win 10/11 i Linux X11).
 
 ## 1. Aplikacje — otwórz/zamknij (`apps-open`)
@@ -38,5 +38,5 @@ Każda pozycja = polecenie głosowe → oczekiwany efekt na **obu platformach** 
 
 ## 4. Jak raportować
 
-Wynik idzie do `notes/testers.md` (dziennik testów), kolumna „Komendy 5/5" i „Quote".
+Wynik zapisujemy w dzienniku testów (kolumna „Komendy 5/5" i „Quote").
 Nowa aplikacja → PR do `presets/apps-open` (patrz `docs/presets/CONTRIBUTING.md`).

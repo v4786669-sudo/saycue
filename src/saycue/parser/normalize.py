@@ -1,10 +1,10 @@
-"""Normalizacja tekstu PL/EN (pipeline bez LLM, architektura §2.3).
+"""Normalizacja tekstu PL/EN (pipeline bez LLM).
 
 * W1 (eval G1): ``normalize()`` — lowercase, NFKC, interpunkcja, fold PL.
   Funkcja bez zmian — eval G1 dalej jej używa.
-* W2 (t13): ``normalize_text()`` — pełny pipeline §2.3 z usuwaniem
-  wypełniaczy TYLKO z początku wypowiedzi (fix R-01, t10/t15).
-* v0.3 (t15): ``normalize_verbose()`` — diagnostyka ``rewritten_fillers``
+* ``normalize_text()`` — pełny pipeline §2.3 z usuwaniem
+  wypełniaczy TYLKO z początku wypowiedzi (reguła R-01).
+* : ``normalize_verbose()`` — diagnostyka ``rewritten_fillers``
   (licznik/tokeny stałego słownika, nigdy treść mowy).
 """
 
@@ -42,7 +42,7 @@ def normalize(text: str) -> str:
 def normalize_verbose(
     text: str | None, *, remove_fillers: bool = True
 ) -> tuple[str, tuple[str, ...]]:
-    """Normalizacja + diagnostyka usuniętych wypełniaczy (v0.3 §2.3).
+    """Normalizacja + diagnostyka usuniętych wypełniaczy ( §2.3).
 
     Zwraca ``(norm, removed_fillers)``. ``removed_fillers`` zawiera WYŁĄCZNIE
     tokeny ze stałego słownika FILLER_TOKENS (nigdy treść mowy) — to pole

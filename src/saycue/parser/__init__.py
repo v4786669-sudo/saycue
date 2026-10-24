@@ -1,9 +1,9 @@
-"""Parser intencji — deterministyczny pipeline bez LLM (architektura §2.3).
+"""Parser intencji — deterministyczny pipeline bez LLM.
 
 normalizacja PL → Aho-Corasick (dokładne frazy) → rapidfuzz (fuzzy ≥ 0.78)
 → ekstrakcja slotów z YAML/szablonów → ParseResult(name, slots, score, matches).
 
-W1 dostarczał tylko ``normalize()`` (eval G1). W2 (t13): pełny matcher,
+W1 dostarczał tylko ``normalize()`` (eval G1). pełny matcher,
 loader rdzenia i presetów (JSON Schema) oraz ``IntentParser`` z hot-reload.
 """
 

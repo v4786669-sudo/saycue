@@ -2,7 +2,7 @@
 
 > RC1 = build dla 5 testerów (bramka G3: ≥60% „pierwsza komenda" ≤10 min).
 > NIE jest to publikacja publiczna — ta nastąpi jako v0.1.0 (T0) po zamknięciu
-> t15 (utwardzenie parsera) i G3.
+> po utwardzeniu parsera i zamknięciu G3.
 
 ## Co jest w środku
 

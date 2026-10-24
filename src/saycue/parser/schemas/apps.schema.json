@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://saycue.dev/schemas/apps.schema.json",
   "title": "SayCue apps (rdzeń, data/apps.yaml)",
-  "description": "Mapowanie nazw PL/EN aplikacji na identyfikatory systemowe (architektura §3.3).",
+  "description": "Mapowanie nazw PL/EN aplikacji na identyfikatory systemowe .",
   "type": "object",
   "additionalProperties": false,
   "required": ["version", "apps"],

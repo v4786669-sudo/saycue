@@ -1,5 +1,5 @@
 # SayCue preset — Elite Dangerous
-# Tylko pojedyncze bindy, które gra udostępnia w Ship Controls. Bez sekwencji i makr (PLAN.md §3).
+# Tylko pojedyncze bindy, które gra udostępnia w Ship Controls. Bez sekwencji i makr.
 # Ważne: ustaw bindy "klawiatura" na te same, które są w `keys` — resztę preset pokazuje w GUI.
 id: elite-dangerous
 version: 1.0.0

@@ -1,6 +1,6 @@
 """Ścieżki katalogów SayCue (cache modeli, konfiguracja użytkownika, dane).
 
-Uwaga na PyInstaller (defekty B-02/B-03, notes/build-defects-g3.md):
+Uwaga na PyInstaller (aplikacja spakowana ma inny układ katalogów):
 w spakowanej aplikacji `__file__` wskazuje `_internal/saycue/config/paths.py`,
 więc `parents[3]` NIE jest katalogiem instalacji. `sys._MEIPASS` (onedir:
 `_internal`; onefile: katalog tymczasowy) jednoznacznie wskazuje zasoby —

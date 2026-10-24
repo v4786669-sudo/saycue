@@ -8,7 +8,7 @@ Przebieg:
 3. normalizuje transkrypcję (saycue.parser.normalize) i porównuje z frazami:
    dokładnie lub fuzzy (difflib ≥ 0.85) — najlepsze dopasowanie wygrywa,
 4. intencja OK ⇔ dopasowana fraza ma TĘ SAMĄ intencję co fraza referencyjna
-   (metryka G1: „poprawnie rozpoznane intencje", architektura §7.1),
+   (metryka G1: „poprawnie rozpoznane intencje")
 5. zapisuje eval/results/g1_eval_<ts>.json + wypisuje tabelę.
 
 Próg G1: ≥85% (13/15). Wyjście: 0=go, 1=no-go.
@@ -34,8 +34,8 @@ from saycue.parser.normalize import fuzzy_similarity, normalize  # noqa: E402
 
 GATE_THRESHOLD = 0.85  # G1: ≥85% poprawnych intencji
 FUZZY_MIN = 0.85  # próg „ścisłego" dopasowania frazy (metryka informacyjna)
-PARSER_FUZZY_MIN = 0.78  # próg fuzzy parsera, architektura §2.3 (difflib ≥ 0.78)
-PARSER_LEV_MAX = 1  # architektura §2.3: levenshtein ≤ 1 na słowach kluczowych
+PARSER_FUZZY_MIN = 0.78  # próg fuzzy parsera (difflib ≥ 0.78)
+PARSER_LEV_MAX = 1  # levenshtein ≤ 1 na słowach kluczowych
 
 
 def cpu_info() -> str:
@@ -70,7 +70,7 @@ def match_phrase(
     """Najlepsze dopasowanie transkrypcji do fraz.
 
     Zwraca (entry, score, accepted): accepted=True, gdy dokładne trafienie,
-    fuzzy ≥ fuzzy_min lub levenshtein ≤ 1 (reguły parsera, architektura §2.3)."""
+    fuzzy ≥ fuzzy_min lub levenshtein ≤ 1 (reguły parsera)."""
     norm = normalize(transcript)
     best, best_score = None, 0.0
     for entry in phrases:

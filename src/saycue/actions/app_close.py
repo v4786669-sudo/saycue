@@ -1,4 +1,4 @@
-"""Akcja `app.close` — grzeczne zamknięcie aplikacji (decyzja t13/kapitan).
+"""Akcja `app.close` — grzeczne zamknięcie aplikacji (WM_CLOSE, nie kill).
 
 Windows: WM_CLOSE przez ctypes (aplikacja może zapytać o zapis — bez taskkill).
 Linux X11: xdotool search --class → wmctrl -ic (polite _NET_CLOSE_WINDOW).

@@ -1,6 +1,6 @@
-"""Ustawienia SayCue (W3): config.yaml użytkownika + domyślne wartości.
+"""Ustawienia SayCue : config.yaml użytkownika + domyślne wartości.
 
-Telemetria (architektura §2.4, twardy wymóg):
+Telemetria, twardy wymóg):
 - `events.jsonl` — włączony domyślnie (rdzeń OSS), jawny opt-out (`events: false`
   lub `--no-events`); NIGDY treści wypowiedzi.
 - `metrics.jsonl` — opt-in (pyta przy pierwszym uruchomieniu); `asr_text`

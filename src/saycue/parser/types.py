@@ -1,4 +1,4 @@
-"""Typy wynikowe parsera (architektura §2.3 krok 7)."""
+"""Typy wynikowe parsera krok 7)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from typing import Any
 class ParseResult:
     """Wynik dopasowania: Intent(name, slots, score, matches, …).
 
-    ``rewritten_fillers`` — DIAGNOSTYKA R-01 (architektura v0.3 §2.3):
+    ``rewritten_fillers`` — DIAGNOSTYKA R-01:
     wyłącznie licznik/tokeny usuniętych wypełniaczy ze stałego słownika
     (prosze/hej/asystent/ok), NIGDY treść mowy — bezpieczne dla events.jsonl.
     """

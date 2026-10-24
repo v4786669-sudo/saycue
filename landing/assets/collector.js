@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SayCue — licznik zdarzeń (PLAN.md §4 pkt 6, §8 bramka G4c/G4d).
+   SayCue — licznik zdarzeń strony walidacyjnej (bez danych osobowych).
    Wysyła WYŁĄCZNIE: {ts, event, utm_source, referrer_domain}.
    - żadnego adresu IP po naszej stronie (nie logujemy go),
    - żadnych cookies, localStorage, fingerprintingu, identyfikatora urządzenia,

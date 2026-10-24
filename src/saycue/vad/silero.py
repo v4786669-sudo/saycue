@@ -8,7 +8,7 @@ filtrowania całych plików, nie do strumienia.
 
 Ramka wejściowa: 512 próbek @ 16 kHz (32 ms).
 
-Parametry (architektura §2.1, §3.2):
+Parametry, §3.2):
 - koniec mowy: 600 ms ciągłej ciszy (GUI 400–1200 ms w W3),
 - maksymalna wypowiedź: 8 s (uwalnia mikrofon dla czatu/gry),
 - próg prawdopodobieństwa mowy: 0.5 (domyślny Silero).
@@ -29,7 +29,7 @@ VAD_CONTEXT = 64  # kontekst LSTM poprzedzający okno
 DEFAULT_THRESHOLD = 0.5
 END_SILENCE_S = 0.6
 MAX_UTTERANCE_S = 8.0
-TIMEOUT_NO_SPEECH_S = 2.0  # architektura §2.1: cisza po wybudzeniu → powrót do IDLE
+TIMEOUT_NO_SPEECH_S = 2.0  # cisza po wybudzeniu → powrót do IDLE
 
 log = logging.getLogger(__name__)
 
@@ -130,7 +130,7 @@ class VadSession:
 
     @property
     def timed_out(self) -> bool:
-        """2.0 s ciszy bez żadnej mowy po wybudzeniu (architektura §2.1)."""
+        """2.0 s ciszy bez żadnej mowy po wybudzeniu."""
         return not self.speech_started and self.total_frames >= self.timeout_frames
 
     @property

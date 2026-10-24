@@ -1,6 +1,6 @@
 """Dopasowywanie tekstu do intencji: Aho-Corasick (dokładne) + rapidfuzz (fuzzy).
 
-Zasady (architektura §2.3 + v0.3 utwardzenie R-01/R-02, t10/t15):
+Zasady:
 * deterministycznie — ten sam tekst = ten sam intent;
 * dokładne trafienie frazy → score 1.0; fuzzy ≥ fuzzy_threshold (0.78);
 * R-02: WYKONANIE wymaga score ≥ min_action_score (0.8); fuzzy w
@@ -107,7 +107,7 @@ class Matcher:
         # R-02: fuzzy w [fuzzy_threshold, min_action_score) NIE wykonuje
         # akcji — trafia do ASK (kandydaci). 1.0 = dokładne/szablon.
         self.min_action_score = float(min_action_score)
-        # R-01 (v0.3 §2.3): dopasowanie dokładne musi pokryć ≥ 70% tokenów
+        # R-01 ( §2.3): dopasowanie dokładne musi pokryć ≥ 70% tokenów
         # wypowiedzi — fragment frazy w środku zdania nie wyzwala akcji.
         self.min_phrase_coverage = float(min_phrase_coverage)
         # R-01: szablony z wolnym slotem ({target}/{scene}) są wyjątkiem od
@@ -222,7 +222,7 @@ class Matcher:
         for _end, indices in self._automaton.iter(norm):
             for idx in indices:
                 entry = self._exact[idx]
-                # R-01 (v0.3 §2.3): reguła pokrycia ≥70% tokenów wypowiedzi —
+                # R-01 ( §2.3): reguła pokrycia ≥70% tokenów wypowiedzi —
                 # fragment frazy w środku zdania („…na spotkanie o 8",
                 # „powiedz scena pvp") nie może wyzwolić akcji.
                 if self._token_coverage(entry.phrase, norm) < self.min_phrase_coverage:

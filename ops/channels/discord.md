@@ -1,13 +1,13 @@
 # Discord — struktura serwera SayCue (tydzień 0)
 
-> Zgodne z PLAN.md §11 (researcher: kanały, posty, testerzy) i architekt §2.5 (tryb PR do presetów).
+> Struktura serwera wsparcia: kanały beta i presetów, zgłaszanie błędów, tryb PR do presetów.
 > Cel: **mieć miejsce, do którego prowadzi landing i posty, zanim będzie produkt**. Puste kanały nie szkodzą; brak kanałów = utracony ruch z W4.
 
 ## Uprawnienia (minimalnie)
 
 - Kanały `#regulamin` i `#status` — **tylko do odczytu** dla członków poza modem (read-only announcement).
 - Reszta — pisanie dla wszystkich, którzy zaakceptowali regulamin (bramka reakcyjna albo role).
-- Tylko mod: `@architect`/`@maintainer` mogą oznaczać `@everyone` (żadnych masowych pingów).
+- Tylko moderatorzy (`@maintainer`) mogą oznaczać `@everyone` (żadnych masowych pingów).
 - Boty: żadne (albo tylko jeden do powiadomień GitHuba — do decyzji po W2).
 
 ## Kanały (kolejność = kolejność wyświetlania)
@@ -21,7 +21,7 @@
 | 5 | **`#presets`** | dyskusja | „Presety YAML: propozycje, popisy, zgłoszenia braków. PR do repo albo plik tutaj." |
 | 6 | `#obs-i-streaming` | dyskusja | „Sceny, mute, replay, obs-websocket — konfiguracje i gotowe pomysły." |
 | 7 | `#showcase` | dyskusja | „Twoje setupy, overlaye, wideo. Zgoda na pokazanie = zgoda na użycie w devlogu." |
-| 8 | `#pomysly` | dyskusja | „Pomysły na funkcje. Zanim napiszesz: czy to jest w MVP (PLAN.md §5)?" |
+| 8 | `#pomysly` | dyskusja | „Pomysły na funkcje. Zanim napiszesz: czy to mieści się w obecnym zakresie?" |
 | 9 | `#oferty-wsparcia` | read-only | „Sponsorzy i patroni: statusy wieczoru. Bez sprzedaży w DM." |
 | 10 | `#mod` | prywatny | „Moderacja, zgłoszenia, decyzje." |
 
@@ -29,7 +29,7 @@
 
 | Rola | Kto | Uprawnienia |
 |---|---|---|
-| `@maintainer` | engineer, architect | wszystko, pin messages |
+| `@maintainer` | opiekun projektu | wszystko, pin messages |
 | `@contributor` | osoby z zaakceptowanym PR presetów | pisanie we wszystkich kanałach publicznych |
 | `@beta-tester` | **5 testerów W3 + osoby z W4** | `#beta` priorytet, dostęp do buildów |
 | `@patron-15` / `@patron-25` / `@patron-40` | z Patreon (rola nadawana ręcznie lub przez bota) | `#oferty-wsparcia` + wzmianka w roadmapie |
@@ -51,5 +51,5 @@
 ## Czego NIE tworzymy na start
 
 - `#ogolny` zamiast tematycznych (rozmywa sygnał, który potrzebujemy do bramki).
-- Automatycznych botów „welcome + ticket" — to koszt utrzymania, zanim mamy użytkowników (t2: koszt wsparcia = ryzyko nr 1).
+- Automatycznych botów „welcome + ticket" — to koszt utrzymania, zanim mamy użytkowników (koszt wsparcia = ryzyko nr 1).
 - Kanału `#medycyna` — byłby zaproszeniem do tematu, którego prawnie nie obsługujemy.

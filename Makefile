@@ -1,4 +1,4 @@
-# SayCue — dev shortcuts (architektura §6, dzień 1: „make dev działa")
+# SayCue — skróty deweloperskie
 .PHONY: dev lint test bench eval models recordings clean
 
 dev:

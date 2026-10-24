@@ -1,4 +1,4 @@
-"""Telemetria SayCue: dwa rozdzielone strumienie (architektura §2.4, twardy wymóg).
+"""Telemetria SayCue: dwa rozdzielone strumienie, twardy wymóg).
 
 `events.jsonl` — płatnościowe/aktywacyjne, włączony w rdzeniu OSS z jawnym
 opt-out, **NIGDY treści wypowiedzi**. 9 typów zdarzeń (G4a–G4h):

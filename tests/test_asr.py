@@ -34,7 +34,7 @@ def test_model_resolves_from_manifest_cache(engine):
 def test_silence_transcribes_empty(engine):
     """Plumbing: transkrypcja ciszy zwraca wynik i nie rzuca.
 
-    UWAGA (stabilizacja flaky, flag t13/t9): NIE asertujemy treści —
+    UWAGA (stabilizacja flaky): NIE asertujemy treści —
     przy pełnym obciążeniu CPU sumy FP w int8 potrafią przestawić marginalne
     tokeny i greedy decode z initial_prompt potrafi zapętlić frazę na czystej
     ciszy (zmierzone: „włącz kalkulator, włącz kalkulator, …"). Prawdziwy

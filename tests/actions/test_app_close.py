@@ -1,4 +1,4 @@
-"""Testy `app.close` (decyzja t13/kapitan: grzeczne WM_CLOSE, nie kill)."""
+"""Testy `app.close` — aplikacja zamykana grzecznie (WM_CLOSE), nie zabijana."""
 
 from __future__ import annotations
 

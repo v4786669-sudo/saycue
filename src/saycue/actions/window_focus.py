@@ -118,5 +118,5 @@ class WindowFocusAction(Action):
         if self.available(ctx):
             return ""
         if ctx and ctx.platform.startswith("linux"):
-            return "brak xdotool (Wayland bez XTest — architektura §3.3)"
+            return "brak xdotool (Wayland bez XTest)"
         return "window.focus wspierany na Windows i Linux X11"

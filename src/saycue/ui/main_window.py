@@ -1,4 +1,4 @@
-"""MainWindow — 5 widoków wg architektury §3.5 + panel „Wsparcie" (v0.2).
+"""MainWindow — 5 widoków wg architektury §3.5 + panel „Wsparcie" ( ).
 
 Status / Mikrofon / Komendy / Integracje / Statystyki.
 Statystyki zawierają panel wsparcia: `support_ticket.hours` vs próg G4g
@@ -340,7 +340,7 @@ class MainWindow:
     def _save_integrations(self) -> None:
         self.settings.events_enabled = self.events_check.isChecked()
         self.settings.metrics_enabled = self.metrics_check.isChecked()
-        # N-02 (t17): domyślnie dry-run; live = świadoma decyzja użytkownika/testera
+        # N-02: domyślnie dry-run; live = świadoma decyzja użytkownika/testera
         self.settings.dry_run = not self.live_check.isChecked()
         self.settings.save()
         self.obs_status.setText("zapisano — restart orchestrationa (Stop→Start) wczyta tryb live")

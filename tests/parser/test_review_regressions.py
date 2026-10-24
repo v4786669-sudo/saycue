@@ -1,4 +1,4 @@
-"""Regresje R-01/R-02 (findingi przeglądu t11, fixy t10).
+"""Regresje reguł parsera R-01/R-02.
 
 R-01: dopasowanie musi objąć CAŁĄ wypowiedź (nie fragment w środku);
      fillery „proszę/hej/asystent/ok" usuwane TYLKO z początku.
@@ -86,11 +86,7 @@ def test_r02_ask_still_shows_candidate_with_raw_value(intent_parser, text):
     cands = intent_parser.candidates(text, k=8)
     assert cands, f"brak kandydatów dla {text!r}"
 
-
-# ---------------------------------------------------------------- v0.3 (t15)
-
-
-def test_r02_ask_candidate_is_not_actionable_and_lists_allowed_values(intent_parser):
+    # ---------------------------------------------------------------- def test_r02_ask_candidate_is_not_actionable_and_lists_allowed_values(intent_parser):
     """R-02: nierozpoznany slot → kandydat ASK z listą dozwolonych wartości."""
     cands = intent_parser.candidates("scena 3", k=8)
     tpl = [c for c in cands if c.source == "template"]
@@ -109,7 +105,7 @@ def test_r02_resolved_template_candidate_is_actionable(intent_parser):
 
 
 def test_r01_min_phrase_coverage_parameter():
-    """R-01 (v0.3 §2.3): dokładna fraza musi pokryć ≥ min_phrase_coverage
+    """R-01 ( §2.3): dokładna fraza musi pokryć ≥ min_phrase_coverage
     tokenów wypowiedzi — fragment w środku zdania nie wyzwala akcji."""
     commands = [
         {
@@ -147,7 +143,7 @@ def test_r01_min_phrase_coverage_parameter():
 
 
 def test_r01_allow_free_text_exception_for_templates():
-    """R-01 (v0.3 §2.3): szablony z wolnym slotem są wyjątkiem od reguły
+    """R-01 ( §2.3): szablony z wolnym slotem są wyjątkiem od reguły
     pokrycia (allow_free_text=True) — slot konsumuje wolne tokeny."""
     commands = [
         {
@@ -167,7 +163,7 @@ def test_r01_allow_free_text_exception_for_templates():
 
 
 def test_rewritten_fillers_diagnostics_are_tokens_only(intent_parser):
-    """v0.3 §2.3: rewritten_fillers = licznik/tokeny stałego słownika,
+    """§2.3: rewritten_fillers = licznik/tokeny stałego słownika,
     nigdy treść mowy."""
     from saycue.parser.normalize import FILLER_TOKENS
 

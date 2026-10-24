@@ -1,4 +1,4 @@
-"""Onboarding „pierwsze 5 minut" (architektura §3.5): mikrofon → 3 komendy →
+"""Onboarding „pierwsze 5 minut": mikrofon → 3 komendy →
 test → FAQ. Pokazywany raz (settings.first_run_done)."""
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Ekstrakcja i rozwiązywanie slotów (architektura §2.3 krok 6).
+"""Ekstrakcja i rozwiązywanie slotów krok 6).
 
 Sloty statyczne pochodzą z YAML. Sloty dynamiczne (frazy-szablony
 ``otwórz {app}``, ``scena {scene}``) są wycinane z tekstu i rozwiązywane

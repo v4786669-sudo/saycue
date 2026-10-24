@@ -1,4 +1,4 @@
-"""CLI SayCue (W2): pętla audio → ASR → parser → akcje (bez GUI).
+"""CLI SayCue : pętla audio → ASR → parser → akcje (bez GUI).
 
 python -m saycue                     # pętla na żywo (wake-word + PTT), akcje dry-run
 python -m saycue --live              # jak wyżej, ale akcje NAPRAWDĘ wykonują się w systemie
@@ -39,7 +39,7 @@ def _build_parser() -> argparse.ArgumentParser:
     dp.add_argument("--mic-time", type=float, default=2.0, help="czas pomiaru mikrofonu (s)")
 
     # saycue gui [--no-tray] [--offscreen]
-    gp = sub.add_parser("gui", help="GUI + tray (W3); --offscreen dla testów")
+    gp = sub.add_parser("gui", help="GUI + tray ; --offscreen dla testów")
     gp.add_argument("--no-tray", action="store_true", help="bez ikony w trayu")
     gp.add_argument("--offscreen", action="store_true", help="platforma offscreen (testy/CI)")
 
@@ -202,7 +202,7 @@ def _cmd_live(args) -> int:
     capture = AudioCapture(device=args.device, alsa_device=args.alsa_device)
     vad = SileroVAD()
     parser, registry, ctx = _build_components(args)
-    # N-01 (t15): frazy gier poza rdzeniem — bias promptu = rdzeń + KRÓTKIE
+    # Frazy gier trzymamy poza rdzeniem — bias promptu = rdzeń + KRÓTKIE
     # frazy aktywnych presetów (cap 60; degeneracja greedy przy ~220)
     prompt = load_initial_prompt(
         extra_phrases=[str(c.get("phrase")) for c in _active_phrases(parser)],

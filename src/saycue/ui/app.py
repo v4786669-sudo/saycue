@@ -1,7 +1,7 @@
-"""UI — PySide6: MainWindow (5 widoków §3.5), tray, onboarding, autostart (W3).
+"""UI — PySide6: MainWindow (5 widoków §3.5), tray, onboarding, autostart .
 
 Wątki: Qt w głównym wątku; orchestrator w wątku roboczym; komunikacja przez
-sygnały (architektura §3.5 — żadnego Qt w wątkach audio)."""
+sygnały — żadnego Qt w wątkach audio)."""
 
 from __future__ import annotations
 

@@ -58,7 +58,7 @@ def test_template_resolves_vocab(matcher):
 
 
 def test_template_unresolved_goes_ask(matcher):
-    # R-02 (t10): nierozpoznana wartość slotu NIE wykonuje akcji → ASK.
+    # R-02: nierozpoznana wartość slotu NIE wykonuje akcji → ASK.
     r = matcher.parse("scena stream")
     assert r is None
     # surowa wartość zostaje w kandydatach dla widoku ASK
@@ -80,7 +80,7 @@ def test_fuzzy_above_threshold(matcher):
 
 
 def test_substring_exact_does_not_fire(matcher):
-    # R-01 (t10): fragment w środku wypowiedzi NIE odpala akcji.
+    # R-01: fragment w środku wypowiedzi NIE odpala akcji.
     # „wlancz discord" nie może trafić w podciąg „discord" — dopiero fuzzy
     # na CAŁYM zdaniu („wlancz discord" vs „wlacz discord") daje intencję.
     r = matcher.parse("wlancz discord")
