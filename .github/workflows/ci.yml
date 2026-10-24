@@ -55,7 +55,7 @@ jobs:
         run: |
           pip install pyyaml jsonschema pynacl
           python presets/validate.py --json
-      - name: Podpis manifestu presetów (t19, supply-chain)
+      - name: Podpis manifestu presetów (supply-chain)
         run: |
           python scripts/sign_presets_index.py --verify
       - name: Zakaz plików wykonywalnych w katalogach presetów (R-04)
