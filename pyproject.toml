@@ -31,6 +31,7 @@ dependencies = [
     "onnxruntime>=1.16",
     "openwakeword>=0.6.0",
     "platformdirs>=4.0",
+    "pynacl>=1.5",
     "pynput>=1.7",
     "pyyaml>=6.0",
     "requests>=2.31",
@@ -38,12 +39,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# W2+: parser fuzzy matching + Aho-Corasick + walidacja YAML (t13, architektura §2.3/§2.5)
+# parser fuzzy matching + Aho-Corasick + walidacja YAML
 parser = ["pyahocorasick>=2.0", "rapidfuzz>=3.0", "jsonschema>=4.18", "watchdog>=4.0"]
-# W2: OS actions (Linux X11 backend) + OBS WebSocket v5 (t13)
+# OS actions (Linux X11 backend) + OBS WebSocket v5
 actions = ["python-xlib>=0.33", "watchdog>=4.0", "jsonschema>=4.18", "websockets>=12"]
-# W2: OBS WebSocket v5 — goły `websockets`, nie obsws-python (decyzja t13: pełna
-# kontrola reconnectu, architektura §3.4)
+# OBS WebSocket v5 — goły `websockets`, nie obsws-python (potrzebna pełna
+# kontrola reconnectu)
 obs = ["websockets>=12"]
 # W2: backend Windows (lazy import; nieinstalowany na Linuxie)
 win = ["pydirectinput>=1.0", "pycaw>=20240210"]

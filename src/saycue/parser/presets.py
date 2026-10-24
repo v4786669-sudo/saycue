@@ -1,8 +1,8 @@
-"""Loader presetów YAML (architektura §2.5) — dane, nie kod.
+"""Loader presetów YAML — dane, nie kod.
 
 Każdy preset to katalog ``presets/<id>/`` z plikiem ``preset.yaml``
 walidowanym względem ``presets/schema.json`` (draft 2020-12, kontrakt
-zdefiniowany w t8). Loader zwraca znormalizowane komendy gotowe dla
+zdefiniowany w schemacie presetów). Loader zwraca znormalizowane komendy gotowe dla
 ``parser/matcher.py``:
 
 * ``input.keys`` + slot ``keybind`` → rozwiązywany na ``keys`` z mapy ``keys:`` presetu;
@@ -102,15 +102,47 @@ def parse_linux_launch(value: str) -> dict[str, Any]:
 class PresetLoader:
     """Ładowanie i walidacja presetów z katalogu ``presets/``."""
 
-    def __init__(self, presets_dir: Path | None = None, *, validate: bool = True):
+    def __init__(
+        self,
+        presets_dir: Path | None = None,
+        *,
+        validate: bool = True,
+        verify_key=None,  # klucz Ed25519 do podpisu manifestu (domyślnie wbudowany)
+    ):
         # B-03 (build-defects-g3.md): w bundle PyInstallera presety leżą w
         # _internal/presets — rozstrzyga paths.presets_dir() (fallback _internal).
         self.presets_dir = Path(presets_dir) if presets_dir is not None else _default_presets_dir()
         self.validate = validate
+        # Łańcuch dostaw: manifest presetów musi być podpisany naszym
+        # kluczem Ed25519 — hook, bez przepisywania logiki loadera.
+        self.verify_index_signature(verify_key=verify_key)
 
     @property
     def schema_path(self) -> Path:
         return self.presets_dir / "schema.json"
+
+    def verify_index_signature(self, verify_key=None) -> None:
+        """index.json (jeśli istnieje) musi mieć zgodny podpis Ed25519.
+
+        Zmodyfikowany/wstrzyknięty manifest = PresetError (ochrona przed
+        złośliwym presetem — threat-model §4 pkt 2). Dla katalogów bez
+        index.json (testy/temp) hook jest no-op."""
+        index = self.presets_dir / "index.json"
+        if not index.is_file():
+            return
+        try:
+            from ..licensing.manifest import verify_index_signature
+        except ImportError as exc:  # pragma: no cover — pynacl brak: bezpiecznie odmów
+            raise PresetError(
+                "presets", "brak modułu weryfikacji (pynacl) — odmawiam załadowania presetów"
+            ) from exc
+        if not verify_index_signature(index, verify_key=verify_key):
+            raise PresetError(
+                "presets",
+                "manifest presetów (index.json) zmodyfikowany lub bez poprawnego "
+                "podpisu Ed25519 — odmawiam. Po zmianie presetów uruchom: "
+                "python scripts/sign_presets_index.py",
+            )
 
     def list_available(self) -> list[str]:
         """Identyfikatory presetów (katalogi z preset.yaml), posortowane."""

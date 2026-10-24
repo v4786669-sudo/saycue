@@ -19,6 +19,12 @@ models/*.bin
 models/*.onnx
 # TTS voices (piper) — wagi nigdy w repo (R10)
 voices/
+# Klucz prywatny Ed25519 (t19) — NIGDY w repo; backup u kapitana
+scripts/.keys/
+signing_key*
+# wygenerowane licencje (artefakty, nie źródło)
+licenses/
+*.license.json
 *.wav
 *.mp3
 *.flac
@@ -43,3 +49,6 @@ landing/node_modules/
 
 # katalog publikacji generowany z landing/ (node scripts/build-site.mjs)
 public/
+
+# wewnętrzne notatki projektowe (nie publikowane)
+notes/

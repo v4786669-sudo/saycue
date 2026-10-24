@@ -13,6 +13,7 @@ ROOT = Path(SPECPATH).resolve().parent  # noqa: F821 — SPECPATH = katalog ze s
 
 hiddenimports = [
     "saycue.data",
+    "saycue.licensing",  # t19: weryfikacja licencji/podpisów Ed25519 (pynacl)
     "openwakeword", "faster_whisper", "ctranslate2", "av", "onnxruntime",
     "pynput", "yaml", "platformdirs", "requests", "websockets",
 ]
@@ -47,6 +48,10 @@ a = Analysis(
         (str(ROOT / "data" / "apps.yaml"), "data"),
         # B-02c: schematy JSON parsera (commands/apps) — walidacja w rules.py
         (str(ROOT / "src" / "saycue" / "parser" / "schemas"), "saycue/parser/schemas"),
+        # t19: klucz publiczny Ed25519 (weryfikacja offline licencji i manifestu presetów)
+        (str(ROOT / "src" / "saycue" / "licensing" / "pubkey.pem"), "saycue/licensing"),
+        # podpis manifestu presetów (supply-chain)
+        (str(ROOT / "presets" / "index.json.sig"), "presets"),
     ],
     hiddenimports=hiddenimports,
     hookspath=[],

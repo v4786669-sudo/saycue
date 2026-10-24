@@ -45,3 +45,21 @@ Nasłuchuje komendy → rozpoznaje mowę **lokalnie** → dopasowuje do znanej f
 
 - Otwórz issue w tym repo albo napisz na Discord (`#beta`).
 - Wrażliwe znaleziska: napisz do nas najpierw, nie publikuj publicznie exploita przed naprawą.
+
+
+## Licencje i podpisy
+
+- **Licencja** (płatne pakiety) = podpisany JSON Ed25519: `license_id` (UUID,
+  unikalny — do śledzenia wycieków), `product`, `issued_to`, `expires`
+  (null = jednorazowa; data = subskrypcja).
+- **Weryfikacja jest w 100% offline** (klucz publiczny wbudowany w aplikację).
+  **Świadomie BEZ device-binding i online-activation** — to jawna decyzja
+  projektowa chroniąca obietnice „100% offline" i wygodnej instalacji.
+  Ed25519 daje integralność i proweniencję, nie anty-piractwo
+  (open core jest z definicji obejściowy).
+- **Podpis manifestu presetów** (`presets/index.json.sig`, ten sam klucz):
+  loader odmawia załadowania paczek, gdy manifest został zmodyfikowany —
+  ochrona supply-chain przed złośliwym presetem.
+- Klucz prywatny NIE jest w repo (`scripts/.keys/`, .gitignore); generacja:
+  `python scripts/gen_keypair.py`; licencje: `scripts/gen_license.py`;
+  ponowne podpisanie manifestu: `python scripts/sign_presets_index.py`.
